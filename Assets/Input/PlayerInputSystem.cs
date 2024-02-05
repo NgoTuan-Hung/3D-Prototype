@@ -53,13 +53,22 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""38c8c7ba-487d-4b6e-9207-0120301fd68c"",
+                    ""expectedControlType"": ""Delta"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": ""WASD"",
                     ""id"": ""92e71934-113a-4a67-b43b-1ad1b35030c6"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -68,7 +77,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
+                    ""name"": ""Up"",
                     ""id"": ""cbf2ccb4-b635-4a28-b1eb-ed516de7c307"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
@@ -79,7 +88,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""down"",
+                    ""name"": ""Down"",
                     ""id"": ""9824aab7-a128-4939-bbe6-b8f2be579bfd"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
@@ -90,8 +99,8 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""865d36ce-e1ea-4599-94d6-cf11a2e2d53a"",
+                    ""name"": ""Left"",
+                    ""id"": ""08aebc59-01cd-4615-945b-d5b77fb8916e"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -101,8 +110,8 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""right"",
-                    ""id"": ""9a0dbabe-522e-4dc5-ba3e-5f7727b86937"",
+                    ""name"": ""Right"",
+                    ""id"": ""204597b9-68f4-4e2c-8877-dda8c548ea2f"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -132,6 +141,17 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""View"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6bde0c27-6727-4d1d-a11d-c377c5196104"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -143,6 +163,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_Control_Move = m_Control.FindAction("Move", throwIfNotFound: true);
         m_Control_Jump = m_Control.FindAction("Jump", throwIfNotFound: true);
         m_Control_View = m_Control.FindAction("View", throwIfNotFound: true);
+        m_Control_Zoom = m_Control.FindAction("Zoom", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -207,6 +228,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Control_Move;
     private readonly InputAction m_Control_Jump;
     private readonly InputAction m_Control_View;
+    private readonly InputAction m_Control_Zoom;
     public struct ControlActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -214,6 +236,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Control_Move;
         public InputAction @Jump => m_Wrapper.m_Control_Jump;
         public InputAction @View => m_Wrapper.m_Control_View;
+        public InputAction @Zoom => m_Wrapper.m_Control_Zoom;
         public InputActionMap Get() { return m_Wrapper.m_Control; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -232,6 +255,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @View.started += instance.OnView;
             @View.performed += instance.OnView;
             @View.canceled += instance.OnView;
+            @Zoom.started += instance.OnZoom;
+            @Zoom.performed += instance.OnZoom;
+            @Zoom.canceled += instance.OnZoom;
         }
 
         private void UnregisterCallbacks(IControlActions instance)
@@ -245,6 +271,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @View.started -= instance.OnView;
             @View.performed -= instance.OnView;
             @View.canceled -= instance.OnView;
+            @Zoom.started -= instance.OnZoom;
+            @Zoom.performed -= instance.OnZoom;
+            @Zoom.canceled -= instance.OnZoom;
         }
 
         public void RemoveCallbacks(IControlActions instance)
@@ -267,5 +296,6 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnView(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
     }
 }

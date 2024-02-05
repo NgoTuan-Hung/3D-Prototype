@@ -31,13 +31,22 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "38c8c7ba-487d-4b6e-9207-0120301fd68c",
+                    "expectedControlType": "Delta",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "WASD",
                     "id": "92e71934-113a-4a67-b43b-1ad1b35030c6",
-                    "path": "2DVector",
+                    "path": "2DVector(mode=1)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -46,7 +55,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
+                    "name": "Up",
                     "id": "cbf2ccb4-b635-4a28-b1eb-ed516de7c307",
                     "path": "<Keyboard>/w",
                     "interactions": "",
@@ -57,7 +66,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "down",
+                    "name": "Down",
                     "id": "9824aab7-a128-4939-bbe6-b8f2be579bfd",
                     "path": "<Keyboard>/s",
                     "interactions": "",
@@ -68,8 +77,8 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
-                    "id": "865d36ce-e1ea-4599-94d6-cf11a2e2d53a",
+                    "name": "Left",
+                    "id": "08aebc59-01cd-4615-945b-d5b77fb8916e",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -79,8 +88,8 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "right",
-                    "id": "9a0dbabe-522e-4dc5-ba3e-5f7727b86937",
+                    "name": "Right",
+                    "id": "204597b9-68f4-4e2c-8877-dda8c548ea2f",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
@@ -108,6 +117,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "View",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6bde0c27-6727-4d1d-a11d-c377c5196104",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
