@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -158,6 +158,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1399424241}
+  - {fileID: 886036318}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &282835341
@@ -276,6 +277,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 38c8c7ba-487d-4b6e-9207-0120301fd68c
     m_ActionName: Control/Zoom
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 47b772c0-df47-4c95-9826-5f97e7310e37
+    m_ActionName: Control/ViewDirection[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Control
@@ -312,17 +317,23 @@ MonoBehaviour:
   screenResolution: {x: 0, y: 0}
   zoom: {x: 0, y: 0}
   zoomAmount: 0.5
-  rotateAmountAbs: 3
-  rotateAmount: 0
-  curentAngle: 0
-  toAngle: 0
-  prevToAngle: 0
-  rotateDirection: 0
   directionVector: {x: 0, y: 0, z: 0}
-  moveAngle: 0
-  optimalMoveAngle: 0
-  movedAngle: 0
   moveVector: {x: 0, y: 0}
+  rotatableObject:
+    rotateAmountAbs: 0
+    rotateAmount: 0
+    curentAngle: 0
+    toAngle: 0
+    prevToAngle: 0
+    rotateDirection: 0
+    moveAngle: 0
+    optimalMoveAngle: 0
+    movedAngle: 0
+    objectTransform: {fileID: 0}
+  viewRotationPoint: {fileID: 886036317}
+  rawMouse: {x: 0, y: 0}
+  isViewDirection: 0
+  viewDirection: {x: 0, y: 0, z: 0}
 --- !u!95 &282835346
 Animator:
   serializedVersion: 5
@@ -839,6 +850,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &886036317
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 886036318}
+  m_Layer: 0
+  m_Name: ViewRotationPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &886036318
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886036317}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.33, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 282835339}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1399424240
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -850,12 +892,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: abba19913b734a044b82a7aa2705216c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: abba19913b734a044b82a7aa2705216c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.13
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: abba19913b734a044b82a7aa2705216c,
         type: 3}

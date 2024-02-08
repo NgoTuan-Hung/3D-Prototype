@@ -27,6 +27,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private Vector3 directionVector;
     [SerializeField] private Vector2 moveVector;
     [SerializeField] private RotatableObject rotatableObject;
+    [SerializeField] private GameObject viewRotationPoint;
 
     // Start is called before the first frame update
     void Awake()
@@ -45,12 +46,13 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
-        View();
+        
     }
 
     private void FixedUpdate() 
     {
+        Move();
+        View();
         Zoom();
     }
     public void Move()
@@ -65,7 +67,7 @@ public class PlayerScript : MonoBehaviour
             directionVector = new Vector3(moveVector.x, 0, moveVector.y);
             transform.position +=  directionVector * moveSpeed;
 
-            rotatableObject.RotateToDirection(utilObject, directionVector);
+            if (!isViewDirection) rotatableObject.RotateToDirection(utilObject, directionVector);
         }
     }
 
@@ -103,7 +105,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     public bool isViewDirection = false;
-    public Vector2 viewDirection;
+    public Vector3 viewDirection;
     public IEnumerator ViewDirectionHandler(InputAction viewDirection)
     {
         isViewDirection = true;
@@ -111,9 +113,11 @@ public class PlayerScript : MonoBehaviour
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            var rawPose = Camera.main.WorldToScreenPoint(transform.position);
+            var rawPose = Camera.main.WorldToScreenPoint(viewRotationPoint.transform.position);
             rawPose.Scale(new Vector3(1 / screenResolution.x, 1 / screenResolution.y, 1f));
-            this.viewDirection = new Vector2(mouse.x - rawPose.x, mouse.y - rawPose.y) - new Vector2(0.5f, 0.5f);
+            this.viewDirection = new Vector3(mouse.x - rawPose.x, 0, mouse.y - rawPose.y);
+            
+            rotatableObject.RotateToDirection(utilObject, this.viewDirection);
         }
         isViewDirection = false;
     }
