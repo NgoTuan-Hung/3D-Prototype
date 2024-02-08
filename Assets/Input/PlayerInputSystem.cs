@@ -62,13 +62,22 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ViewDirection"",
+                    ""type"": ""Button"",
+                    ""id"": ""47b772c0-df47-4c95-9826-5f97e7310e37"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": ""WASD"",
                     ""id"": ""92e71934-113a-4a67-b43b-1ad1b35030c6"",
-                    ""path"": ""2DVector(mode=1)"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -152,6 +161,17 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""df07bdba-d9f0-4bbf-8d57-71f0146a86f1"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ViewDirection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -164,6 +184,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_Control_Jump = m_Control.FindAction("Jump", throwIfNotFound: true);
         m_Control_View = m_Control.FindAction("View", throwIfNotFound: true);
         m_Control_Zoom = m_Control.FindAction("Zoom", throwIfNotFound: true);
+        m_Control_ViewDirection = m_Control.FindAction("ViewDirection", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,6 +250,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Control_Jump;
     private readonly InputAction m_Control_View;
     private readonly InputAction m_Control_Zoom;
+    private readonly InputAction m_Control_ViewDirection;
     public struct ControlActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -237,6 +259,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Control_Jump;
         public InputAction @View => m_Wrapper.m_Control_View;
         public InputAction @Zoom => m_Wrapper.m_Control_Zoom;
+        public InputAction @ViewDirection => m_Wrapper.m_Control_ViewDirection;
         public InputActionMap Get() { return m_Wrapper.m_Control; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -258,6 +281,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Zoom.started += instance.OnZoom;
             @Zoom.performed += instance.OnZoom;
             @Zoom.canceled += instance.OnZoom;
+            @ViewDirection.started += instance.OnViewDirection;
+            @ViewDirection.performed += instance.OnViewDirection;
+            @ViewDirection.canceled += instance.OnViewDirection;
         }
 
         private void UnregisterCallbacks(IControlActions instance)
@@ -274,6 +300,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Zoom.started -= instance.OnZoom;
             @Zoom.performed -= instance.OnZoom;
             @Zoom.canceled -= instance.OnZoom;
+            @ViewDirection.started -= instance.OnViewDirection;
+            @ViewDirection.performed -= instance.OnViewDirection;
+            @ViewDirection.canceled -= instance.OnViewDirection;
         }
 
         public void RemoveCallbacks(IControlActions instance)
@@ -297,5 +326,6 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnView(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
+        void OnViewDirection(InputAction.CallbackContext context);
     }
 }

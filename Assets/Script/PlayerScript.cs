@@ -8,22 +8,26 @@ using UnityEngine.InputSystem;
 
 public class PlayerScript : MonoBehaviour
 {
-    //PlayerInput playerInput;
-    public InputAction move;
-    public float moveSpeed = 0.1f;
-    public float jumpVelocity = 1f;
+    [Header("General")]
+    [SerializeField] private InputAction move;
+    [SerializeField] private float moveSpeed = 0.1f;
+    [SerializeField] private float jumpVelocity = 1f;
     private new Rigidbody rigidbody;
-    public Vector2 mouse;
-    public Vector2 prevMouse = Vector2.zero;
-    public Vector2 mouseMoved;
-    public float mouseSpeed = 5f;
-    public GameObject cameraOfPlayer;
-    public Vector2 screenResolution;
+    [SerializeField] private Vector2 mouse;
+    [SerializeField] private Vector2 prevMouse = Vector2.zero;
+    [SerializeField] private Vector2 mouseMoved;
+    [SerializeField] private float mouseSpeed = 5f;
+    [SerializeField] private GameObject cameraOfPlayer;
+    [SerializeField] private Vector2 screenResolution;
     PlayerInputSystem playerInputSystem;
-    public Vector2 zoom;
-    public float zoomAmount = 0.5f;
+    [SerializeField] private Vector2 zoom;
+    [SerializeField] private float zoomAmount = 0.5f;
     private UtilObject utilObject = new UtilObject();
     private Animator animator;
+    [SerializeField] private Vector3 directionVector;
+    [SerializeField] private Vector2 moveVector;
+    [SerializeField] private RotatableObject rotatableObject;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -31,9 +35,11 @@ public class PlayerScript : MonoBehaviour
         //playerInput = gameObject.GetComponent<PlayerInput>();
         playerInputSystem = new PlayerInputSystem();
         playerInputSystem.Control.Jump.performed += Jump;
+        playerInputSystem.Control.ViewDirection.performed += ViewDirection;
         rigidbody = GetComponent<Rigidbody>();
         screenResolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
         animator = GetComponent<Animator>();
+        rotatableObject = new RotatableObject(transform);
     }
 
     // Update is called once per frame
@@ -47,55 +53,19 @@ public class PlayerScript : MonoBehaviour
     {
         Zoom();
     }
-
-    public float rotateAmountAbs = 3f;
-    public float rotateAmount;
-    public float curentAngle = 0;
-    public float toAngle;
-    public float absToAngle;
-    public float prevToAngle = 0;
-    public enum directionEnum {Clockwise = 1, CounterClockwise = -1}
-    public directionEnum rotateDirection;
-    public Vector3 directionVector;
-    public float rotationTempValue = 0;
-    public float moveAngle;
-    public float minMoveAngle;
-    public float movedAngle = 0;
-    public Vector2 moveVector;
     public void Move()
     {
         // var moveVector = move.ReadValue<Vector2>();
         moveVector = playerInputSystem.Control.Move.ReadValue<Vector2>();
         animator.SetFloat("Speed", moveVector.magnitude);
 
+
         if (moveVector != Vector2.zero)
         {
             directionVector = new Vector3(moveVector.x, 0, moveVector.y);
             transform.position +=  directionVector * moveSpeed;
 
-            toAngle = Vector3.SignedAngle(Vector3.forward, directionVector, Vector3.up);
-            absToAngle = Math.Abs(toAngle);
-            if (toAngle != prevToAngle)
-            {
-                moveAngle = Math.Abs(toAngle - curentAngle);
-                rotateDirection = toAngle >= curentAngle ? directionEnum.Clockwise : directionEnum.CounterClockwise;
-                minMoveAngle = 360 - moveAngle;
-                if (minMoveAngle < moveAngle)
-                {
-                    rotateDirection = rotateDirection == directionEnum.Clockwise ? directionEnum.CounterClockwise : directionEnum.Clockwise;
-                    moveAngle = minMoveAngle;
-                }
-                rotateAmount = (int)rotateDirection * rotateAmountAbs;
-                movedAngle = 0;
-            }
-            prevToAngle = toAngle;
-
-            if (movedAngle < moveAngle)
-            {
-                transform.Rotate(new Vector3(0, rotateAmount, 0));
-                curentAngle += rotateAmount;
-                movedAngle += rotateAmountAbs;
-            }
+            rotatableObject.RotateToDirection(utilObject, directionVector);
         }
     }
 
@@ -104,19 +74,18 @@ public class PlayerScript : MonoBehaviour
         Debug.Log("this");
         rigidbody.velocity += new Vector3(0, jumpVelocity);
     }
+
+    public Vector2 rawMouse;
     public void View()
     {
-        mouse = playerInputSystem.Control.View.ReadValue<Vector2>();
-        mouse = new Vector2(mouse.x/screenResolution.x, mouse.y/screenResolution.y);
+        rawMouse = playerInputSystem.Control.View.ReadValue<Vector2>();
+        mouse = new Vector2(rawMouse.x/screenResolution.x, rawMouse.y/screenResolution.y);
         mouseMoved = mouse - prevMouse; mouseMoved *= mouseSpeed;
         // cameraOfPlayer.transform.rotation = Quaternion.Euler(new Vector3(cameraOfPlayer.transform.rotation.eulerAngles.x - mouseMoved.y
         // , cameraOfPlayer.transform.rotation.eulerAngles.y + mouseMoved.x, 0));
         utilObject.RotateByAmount(cameraOfPlayer.transform, -mouseMoved.y, mouseMoved.x);
         prevMouse = mouse;
     }
-
-    float tp = 0; float tl = 1f;
-    float i = 1;
     public void Zoom()
     {
         zoom = playerInputSystem.Control.Zoom.ReadValue<Vector2>();
@@ -126,6 +95,27 @@ public class PlayerScript : MonoBehaviour
         var z = zoom.y > 0 ? zoomAmount : (zoom.y < 0 ? -zoomAmount : 0);
         //var temp = cameraOfPlayer.transform.TransformPoint(0, 0, z);
         //cameraOfPlayer.transform.position = cameraOfPlayer.transform.TransformPoint(-1, 0, 0);
+    }
+
+    public void ViewDirection(InputAction.CallbackContext callbackContext)
+    {
+        StartCoroutine(ViewDirectionHandler(callbackContext.action));
+    }
+
+    public bool isViewDirection = false;
+    public Vector2 viewDirection;
+    public IEnumerator ViewDirectionHandler(InputAction viewDirection)
+    {
+        isViewDirection = true;
+        while (viewDirection.IsPressed())
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+            var rawPose = Camera.main.WorldToScreenPoint(transform.position);
+            rawPose.Scale(new Vector3(1 / screenResolution.x, 1 / screenResolution.y, 1f));
+            this.viewDirection = new Vector2(mouse.x - rawPose.x, mouse.y - rawPose.y) - new Vector2(0.5f, 0.5f);
+        }
+        isViewDirection = false;
     }
 
     public IEnumerator test(object value)
