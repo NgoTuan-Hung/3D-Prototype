@@ -7,7 +7,7 @@ using UnityEngine;
 public class RotatableObject
 {
     [Header("Rotation")]
-    [SerializeField] protected float rotateAmountAbs = 3f;
+    [SerializeField] protected float rotateAmountAbs = 10f;
     [SerializeField] protected float rotateAmount;
     [SerializeField] protected float curentAngle = 0;
     [SerializeField] protected float toAngle;
