@@ -71,6 +71,15 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Target"",
+                    ""type"": ""Button"",
+                    ""id"": ""545254d5-3c9f-40c2-8dad-f99722f6f51f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""ViewDirection"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2a70152-2ba6-4f0a-bc5b-7571fba421f3"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Target"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +205,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_Control_View = m_Control.FindAction("View", throwIfNotFound: true);
         m_Control_Zoom = m_Control.FindAction("Zoom", throwIfNotFound: true);
         m_Control_ViewDirection = m_Control.FindAction("ViewDirection", throwIfNotFound: true);
+        m_Control_Target = m_Control.FindAction("Target", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,6 +272,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Control_View;
     private readonly InputAction m_Control_Zoom;
     private readonly InputAction m_Control_ViewDirection;
+    private readonly InputAction m_Control_Target;
     public struct ControlActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -260,6 +282,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @View => m_Wrapper.m_Control_View;
         public InputAction @Zoom => m_Wrapper.m_Control_Zoom;
         public InputAction @ViewDirection => m_Wrapper.m_Control_ViewDirection;
+        public InputAction @Target => m_Wrapper.m_Control_Target;
         public InputActionMap Get() { return m_Wrapper.m_Control; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -284,6 +307,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @ViewDirection.started += instance.OnViewDirection;
             @ViewDirection.performed += instance.OnViewDirection;
             @ViewDirection.canceled += instance.OnViewDirection;
+            @Target.started += instance.OnTarget;
+            @Target.performed += instance.OnTarget;
+            @Target.canceled += instance.OnTarget;
         }
 
         private void UnregisterCallbacks(IControlActions instance)
@@ -303,6 +329,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @ViewDirection.started -= instance.OnViewDirection;
             @ViewDirection.performed -= instance.OnViewDirection;
             @ViewDirection.canceled -= instance.OnViewDirection;
+            @Target.started -= instance.OnTarget;
+            @Target.performed -= instance.OnTarget;
+            @Target.canceled -= instance.OnTarget;
         }
 
         public void RemoveCallbacks(IControlActions instance)
@@ -327,5 +356,6 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnView(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
         void OnViewDirection(InputAction.CallbackContext context);
+        void OnTarget(InputAction.CallbackContext context);
     }
 }

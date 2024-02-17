@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,6 +19,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private GameObject viewRotationPoint;
     [SerializeField] private bool strafeHorizontal;
     private GlobalObject globalObject;
+    private TargetableObject targetableObject;
 
     // Start is called before the first frame update
     void Awake()
@@ -27,10 +29,12 @@ public class PlayerScript : MonoBehaviour
         playerInputSystem = new PlayerInputSystem();
         playerInputSystem.Control.Jump.performed += Jump;
         playerInputSystem.Control.ViewDirection.performed += ViewDirection;
+        playerInputSystem.Control.Target.performed += Target;
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         rotatableObject = new RotatableObject(transform);
         globalObject = GlobalObject.Instance;
+        targetableObject = GetComponentInChildren<TargetableObject>();
     }
 
     // Update is called once per frame
@@ -48,6 +52,8 @@ public class PlayerScript : MonoBehaviour
         // var moveVector = move.ReadValue<Vector2>();
         moveVector = playerInputSystem.Control.Move.ReadValue<Vector2>();
         animator.SetFloat("Speed", moveVector.magnitude);
+        animator.SetFloat("MoveVectorX", moveVector.x);
+        animator.SetFloat("MoveVectorY", moveVector.y);
         strafeHorizontal = moveVector.x > 0 ? false : true;
         animator.SetBool("StrafeHorizontal", strafeHorizontal);
 
@@ -56,7 +62,7 @@ public class PlayerScript : MonoBehaviour
             directionVector = new Vector3(moveVector.x, 0, moveVector.y);
             transform.position +=  directionVector * moveSpeed;
             
-            if (!isViewDirection) rotatableObject.RotateToDirection(utilObject, directionVector);
+            if (!isViewDirection && !isTarget) rotatableObject.RotateToDirection(utilObject, directionVector);
         }
     }
 
@@ -64,6 +70,36 @@ public class PlayerScript : MonoBehaviour
     {
         Debug.Log("this");
         rigidbody.velocity += new Vector3(0, jumpVelocity);
+    }
+
+    [SerializeField] private bool isTarget = false;
+    public void Target(InputAction.CallbackContext callbackContext)
+    {
+        if (!isTarget)
+        {
+            isTarget = true;
+            animator.SetBool("Target", true);
+            StartCoroutine(TargetHandler());
+        }
+        else
+        {
+            isTarget = false;
+            animator.SetBool("Target", false);
+        }
+    }
+
+    [SerializeField] private Vector3 tH_directionVector = Vector3.zero;
+    public IEnumerator TargetHandler()
+    {
+        // discard c#
+        while (isTarget)
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+            tH_directionVector.x = targetableObject.nearestTarget.transform.position.x - transform.position.x;
+            tH_directionVector.z = targetableObject.nearestTarget.transform.position.z - transform.position.z;
+            rotatableObject.RotateToDirection(utilObject, tH_directionVector);
+        }
     }
 
     public void ViewDirection(InputAction.CallbackContext callbackContext)

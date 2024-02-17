@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\GlobalObject.cs" />
+    <Compile Include="Assets\Script\TargetableObject.cs" />
     <Compile Include="Assets\Script\RotatableObject.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Input\PlayerInputSystem.cs" />
