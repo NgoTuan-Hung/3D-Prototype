@@ -4,27 +4,10 @@ using UnityEngine;
 
 public class TestObject : MonoBehaviour
 {
-    public GameObject gameObjectRef;
-    public Vector3 v3 = Vector3.zero;
-    // Update is called once per frame
-    public float angle;
-    // private void Start() 
-    // {
-    //     StartCoroutine(test());
-    // }
-
-    // public float time = 1;
-    // public IEnumerator test()
-    // {
-    //     while (true)
-    //     {
-    //         yield return new WaitForSeconds(time);
-
-    //         Debug.Log(Vector3.SignedAngle(Vector3.forward, v3, Vector3.up));
-    //     }
-    // }
-    // void Update()
-    // {
-        
-    // }
+    public GameObject testBehindObject;
+    public Vector3 behindPosition = new Vector3(0, 0, -10);
+    private void FixedUpdate() 
+    {
+        testBehindObject.transform.position = transform.TransformPoint(behindPosition);
+    }
 }

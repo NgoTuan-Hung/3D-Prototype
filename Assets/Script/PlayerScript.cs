@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 public class PlayerScript : MonoBehaviour
@@ -20,7 +21,11 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private bool strafeHorizontal;
     private GlobalObject globalObject;
     private TargetableObject targetableObject;
-
+    MultiAimConstraint multiAimConstraint;
+    public MultiAimConstraintData multiAimConstraintData;
+    public RigBuilder rigBuilder;
+    public delegate void CameraDelegate(GameObject target);
+    public static CameraDelegate cameraDelegate;
     // Start is called before the first frame update
     void Awake()
     {
@@ -35,6 +40,10 @@ public class PlayerScript : MonoBehaviour
         rotatableObject = new RotatableObject(transform);
         globalObject = GlobalObject.Instance;
         targetableObject = GetComponentInChildren<TargetableObject>();
+        multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();
+        multiAimConstraintData = multiAimConstraint.data;
+        rigBuilder = GetComponentInChildren<RigBuilder>();
+        //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
     }
 
     // Update is called once per frame
@@ -54,15 +63,19 @@ public class PlayerScript : MonoBehaviour
         animator.SetFloat("Speed", moveVector.magnitude);
         animator.SetFloat("MoveVectorX", moveVector.x);
         animator.SetFloat("MoveVectorY", moveVector.y);
-        strafeHorizontal = moveVector.x > 0 ? false : true;
-        animator.SetBool("StrafeHorizontal", strafeHorizontal);
 
         if (moveVector != Vector2.zero)
         {
+            if (isTarget)
+            {
+                if (moveVector == Vector2.up) moveVector = new Vector2(targetableObject.nearestTarget.transform.position.x - transform.position.x, 
+                targetableObject.nearestTarget.transform.position.y - transform.position.y).normalized;
+            }
             directionVector = new Vector3(moveVector.x, 0, moveVector.y);
+            
             transform.position +=  directionVector * moveSpeed;
             
-            if (!isViewDirection && !isTarget) rotatableObject.RotateToDirection(utilObject, directionVector);
+            if (!isViewDirection) rotatableObject.RotateToDirection(utilObject, directionVector);
         }
     }
 
@@ -78,13 +91,14 @@ public class PlayerScript : MonoBehaviour
         if (!isTarget)
         {
             isTarget = true;
-            animator.SetBool("Target", true);
+            //animator.SetBool("Target", true);
             StartCoroutine(TargetHandler());
         }
         else
         {
             isTarget = false;
-            animator.SetBool("Target", false);
+            cameraDelegate?.Invoke(null);
+            //animator.SetBool("Target", false);
         }
     }
 
@@ -92,14 +106,23 @@ public class PlayerScript : MonoBehaviour
     public IEnumerator TargetHandler()
     {
         // discard c#
-        while (isTarget)
-        {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        var nearestTarget = targetableObject.nearestTarget;
+        cameraDelegate?.Invoke(nearestTarget);
+        
+        var weightedTransformArray = multiAimConstraintData.sourceObjects;
+        weightedTransformArray.SetTransform(0, nearestTarget.transform);
+        multiAimConstraintData.sourceObjects = weightedTransformArray;
+        multiAimConstraint.data = multiAimConstraintData;
+        rigBuilder.Build();
+        // while (isTarget)
+        // {
+        //     yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            tH_directionVector.x = targetableObject.nearestTarget.transform.position.x - transform.position.x;
-            tH_directionVector.z = targetableObject.nearestTarget.transform.position.z - transform.position.z;
-            rotatableObject.RotateToDirection(utilObject, tH_directionVector);
-        }
+        //     tH_directionVector.x = nearestTarget.transform.position.x - transform.position.x;
+        //     tH_directionVector.z = nearestTarget.transform.position.z - transform.position.z;
+        //     rotatableObject.RotateToDirection(utilObject, tH_directionVector);
+        // }
+        yield return new WaitForSeconds(0);
     }
 
     public void ViewDirection(InputAction.CallbackContext callbackContext)

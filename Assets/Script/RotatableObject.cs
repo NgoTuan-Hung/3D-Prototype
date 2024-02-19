@@ -7,49 +7,67 @@ using UnityEngine;
 public class RotatableObject
 {
     [Header("Rotation")]
-    [SerializeField] protected float rotateAmountAbs = 10f;
-    [SerializeField] protected float rotateAmount;
-    [SerializeField] protected float curentAngle = 0;
-    [SerializeField] protected float toAngle;
-    [SerializeField] protected float prevToAngle = 0;
-    [SerializeField] protected enum directionEnum {Clockwise = 1, CounterClockwise = -1}
-    [SerializeField] protected directionEnum rotateDirection;
-    [SerializeField] protected float moveAngle;
-    [SerializeField] protected float optimalMoveAngle;
-    [SerializeField] protected float movedAngle = 0;
-    [SerializeField] protected Transform objectTransform;
+    [SerializeField] private float rotateAmountAbs = 10f;
+    [SerializeField] private float rotateAmount;
+    [SerializeField] private float curentAngle = 0;
+    [SerializeField] private float toAngle;
+    [SerializeField] private float prevToAngle = 0;
+    [SerializeField] private enum directionEnum {Clockwise = 1, CounterClockwise = -1}
+    [SerializeField] private directionEnum rotateDirection;
+    [SerializeField] private float moveAngle;
+    [SerializeField] private float optimalMoveAngle;
+    [SerializeField] private float movedAngle = 0;
+    [SerializeField] private Transform objectTransform;
+    [SerializeField] private bool finish = false;
+
+    public float RotateAmountAbs { get => rotateAmountAbs; set => rotateAmountAbs = value; }
+    public float RotateAmount { get => rotateAmount; set => rotateAmount = value; }
+    public float CurentAngle { get => curentAngle; set => curentAngle = value; }
+    public float ToAngle { get => toAngle; set => toAngle = value; }
+    public float PrevToAngle { get => prevToAngle; set => prevToAngle = value; }
+    private directionEnum RotateDirection { get => rotateDirection; set => rotateDirection = value; }
+    public float MoveAngle { get => moveAngle; set => moveAngle = value; }
+    public float OptimalMoveAngle { get => optimalMoveAngle; set => optimalMoveAngle = value; }
+    public float MovedAngle { get => movedAngle; set => movedAngle = value; }
+    public Transform ObjectTransform { get => objectTransform; set => objectTransform = value; }
+    public bool Finish { get => finish; set => finish = value; }
 
     public RotatableObject(Transform objectTransform)
     {
-        this.objectTransform = objectTransform;
+        this.ObjectTransform = objectTransform;
     }
 
     public void RotateToDirection(UtilObject utilObject, Vector3 directionVector)
     {
         #region Handle Rotaion
-        toAngle = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
-        if (toAngle != prevToAngle)
+        ToAngle = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
+        if (ToAngle != PrevToAngle)
         {
-            moveAngle = Math.Abs(toAngle - curentAngle);
-            rotateDirection = toAngle >= curentAngle ? directionEnum.Clockwise : directionEnum.CounterClockwise;
-            optimalMoveAngle = 360 - moveAngle;
-            if (optimalMoveAngle < moveAngle)
+            MoveAngle = Math.Abs(ToAngle - CurentAngle);
+            RotateDirection = ToAngle >= CurentAngle ? directionEnum.Clockwise : directionEnum.CounterClockwise;
+            OptimalMoveAngle = 360 - MoveAngle;
+            if (OptimalMoveAngle < MoveAngle)
             {
-                rotateDirection = rotateDirection == directionEnum.Clockwise ? directionEnum.CounterClockwise : directionEnum.Clockwise;
-                moveAngle = optimalMoveAngle;
+                RotateDirection = RotateDirection == directionEnum.Clockwise ? directionEnum.CounterClockwise : directionEnum.Clockwise;
+                MoveAngle = OptimalMoveAngle;
             }
-            rotateAmount = (int)rotateDirection * rotateAmountAbs;
-            movedAngle = 0;
+            RotateAmount = (int)RotateDirection * RotateAmountAbs;
+            MovedAngle = 0;
         }
-        prevToAngle = toAngle;
+        PrevToAngle = ToAngle;
 
-        if (movedAngle < moveAngle)
+        if (MovedAngle < MoveAngle)
         {
-            objectTransform.Rotate(new Vector3(0, rotateAmount, 0));
-            curentAngle += rotateAmount;
-            if (curentAngle < 0) curentAngle = 360 + curentAngle;
-            else if (curentAngle > 360) curentAngle %= 360;
-            movedAngle += rotateAmountAbs;
+            Finish = false;
+            ObjectTransform.Rotate(new Vector3(0, RotateAmount, 0));
+            CurentAngle += RotateAmount;
+            if (CurentAngle < 0) CurentAngle = 360 + CurentAngle;
+            else if (CurentAngle > 360) CurentAngle %= 360;
+            MovedAngle += RotateAmountAbs;
+        }
+        else
+        {
+            Finish = true;
         }
         #endregion
 
