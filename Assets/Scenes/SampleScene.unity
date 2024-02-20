@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -189,6 +189,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1399424240}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &237861704
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 237861705}
+  m_Layer: 0
+  m_Name: CameraDefault
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &237861705
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237861704}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1959458279}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &242636857 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 411026301916818062, guid: abba19913b734a044b82a7aa2705216c,
@@ -312,6 +343,7 @@ MonoBehaviour:
     optimalMoveAngle: 0
     movedAngle: 0
     objectTransform: {fileID: 0}
+    finish: 0
   viewRotationPoint: {fileID: 886036317}
   strafeHorizontal: 0
   multiAimConstraintData:
@@ -578,12 +610,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.09541142, y: 0, z: 0, w: 0.9954379}
-  m_LocalPosition: {x: 0, y: 2.58, z: -3.25}
+  m_LocalRotation: {x: 0.09541142, y: -0, z: -0, w: 0.9954379}
+  m_LocalPosition: {x: 1.3032427, y: 2.0440106, z: -3.9475603}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1959458279}
   m_LocalEulerAnglesHint: {x: 10.95, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
@@ -643,6 +675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 282835338}
   defaultPosition: {x: 0, y: 2.3, z: -3.27}
+  cameraDefault: {fileID: 237861704}
   behindPosition: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0}
   zoom: {x: 0, y: 0}
@@ -658,10 +691,12 @@ MonoBehaviour:
     optimalMoveAngle: 0
     movedAngle: 0
     objectTransform: {fileID: 0}
+    finish: 0
   isTarget: 0
   th_gameObj: {fileID: 291814166}
   directionVector: {x: 0, y: 0, z: 0}
   testPos: {x: 0, y: 0, z: 0}
+  lock1: 0
 --- !u!4 &335766828 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6582942952909536244, guid: abba19913b734a044b82a7aa2705216c,
@@ -1812,6 +1847,39 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1399424240}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1959458278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1959458279}
+  m_Layer: 0
+  m_Name: CameraObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1959458279
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959458278}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.3032427, y: 0.53598917, z: 0.6975603}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 330585546}
+  - {fileID: 237861705}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1989066530 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4562083118368882700, guid: abba19913b734a044b82a7aa2705216c,
@@ -1932,7 +2000,6 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 872847865}
@@ -1943,3 +2010,4 @@ SceneRoots:
   - {fileID: 558632956}
   - {fileID: 1117235188}
   - {fileID: 291814167}
+  - {fileID: 1959458279}

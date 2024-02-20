@@ -7,6 +7,7 @@ public class CameraMovement : MonoBehaviour
 {
     public GameObject player;
     public Vector3 defaultPosition = new Vector3(0, 2.3f, -3.27f);
+    [SerializeField] private GameObject cameraDefault;
     public Vector3 behindPosition;
     public Vector3 rotation = new Vector3(10.95f, 0, 0);
     public PlayerInputSystem playerInputSystem;
@@ -31,8 +32,9 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Zoom();
         transform.position = player.transform.position + behindPosition;
+        cameraDefault.transform.position = player.transform.position + defaultPosition;
+        Zoom();
     }
 
     [SerializeField] private bool isTarget;
@@ -64,10 +66,6 @@ public class CameraMovement : MonoBehaviour
 
             directionVector = new Vector3(target.transform.position.x - transform.position.x, 0, target.transform.position.z - transform.position.z);
             th_gameObj.transform.position = player.transform.position;
-            // th_gameObj.transform.Rotate(new Vector3(0, 
-            // //utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up)
-            // Vector3.SignedAngle(Vector3.forward, directionVector, Vector3.up)
-            // , 0));
             th_gameObj.transform.rotation = Quaternion.Euler(new Vector3(0, 
             utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up)
             , 0));
@@ -83,19 +81,12 @@ public class CameraMovement : MonoBehaviour
         // prevMouse = mouse;
     }
 
+    [SerializeField] private float z;
     public void Zoom()
     {
         zoom = playerInputSystem.Control.Zoom.ReadValue<Vector2>();
-        var z = zoom.y > 0 ? zoomAmount : (zoom.y < 0 ? -zoomAmount : 0);
-        if (z != 0) defaultPosition = transform.TransformPoint(0, 0, z) - player.transform.position;
-        // behindPosition = defaultPosition;
-
-        // var current = cameraOfPlayer.transform;
-        // utilObject.BackWardByAmount(cameraOfPlayer.transform, new Vector3(0, 0, zoom.y > 0 ? -zoomAmount : (zoom.y < 0 ? zoomAmount : 0)));
-        // if (current != cameraOfPlayer.transform) Debug.Log("OK");
-        //var z = zoom.y > 0 ? zoomAmount : (zoom.y < 0 ? -zoomAmount : 0);
-        //var temp = cameraOfPlayer.transform.TransformPoint(0, 0, z);
-        //cameraOfPlayer.transform.position = cameraOfPlayer.transform.TransformPoint(-1, 0, 0);
+        z = zoom.y > 0 ? zoomAmount : (zoom.y < 0 ? -zoomAmount : 0);
+        if (z != 0 && rotatableObject.Finish) defaultPosition = cameraDefault.transform.TransformPoint(0, 0, z) - player.transform.position;
     }
 
     void OnEnable()

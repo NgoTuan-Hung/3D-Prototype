@@ -92,7 +92,14 @@ public class PlayerScript : MonoBehaviour
         {
             isTarget = true;
             //animator.SetBool("Target", true);
-            StartCoroutine(TargetHandler());
+            var nearestTarget = targetableObject.nearestTarget;
+            cameraDelegate?.Invoke(nearestTarget);
+            
+            var weightedTransformArray = multiAimConstraintData.sourceObjects;
+            weightedTransformArray.SetTransform(0, nearestTarget.transform);
+            multiAimConstraintData.sourceObjects = weightedTransformArray;
+            multiAimConstraint.data = multiAimConstraintData;
+            rigBuilder.Build();
         }
         else
         {
@@ -100,29 +107,6 @@ public class PlayerScript : MonoBehaviour
             cameraDelegate?.Invoke(null);
             //animator.SetBool("Target", false);
         }
-    }
-
-    [SerializeField] private Vector3 tH_directionVector = Vector3.zero;
-    public IEnumerator TargetHandler()
-    {
-        // discard c#
-        var nearestTarget = targetableObject.nearestTarget;
-        cameraDelegate?.Invoke(nearestTarget);
-        
-        var weightedTransformArray = multiAimConstraintData.sourceObjects;
-        weightedTransformArray.SetTransform(0, nearestTarget.transform);
-        multiAimConstraintData.sourceObjects = weightedTransformArray;
-        multiAimConstraint.data = multiAimConstraintData;
-        rigBuilder.Build();
-        // while (isTarget)
-        // {
-        //     yield return new WaitForSeconds(Time.fixedDeltaTime);
-
-        //     tH_directionVector.x = nearestTarget.transform.position.x - transform.position.x;
-        //     tH_directionVector.z = nearestTarget.transform.position.z - transform.position.z;
-        //     rotatableObject.RotateToDirection(utilObject, tH_directionVector);
-        // }
-        yield return new WaitForSeconds(0);
     }
 
     public void ViewDirection(InputAction.CallbackContext callbackContext)
