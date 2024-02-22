@@ -12,7 +12,6 @@ public class PlayerScript : MonoBehaviour
     private new Rigidbody rigidbody;
     [SerializeField] private GameObject cameraOfPlayer;
     PlayerInputSystem playerInputSystem;
-    private UtilObject utilObject = new UtilObject();
     private Animator animator;
     [SerializeField] private Vector3 directionVector;
     [SerializeField] private Vector2 moveVector;
@@ -75,7 +74,7 @@ public class PlayerScript : MonoBehaviour
             
             transform.position +=  directionVector * moveSpeed;
             
-            if (!isViewDirection) rotatableObject.RotateToDirection(utilObject, directionVector);
+            if (!isViewDirection) rotatableObject.RotateToDirectionAxisXZ(directionVector);
         }
     }
 
@@ -129,7 +128,7 @@ public class PlayerScript : MonoBehaviour
             rawPose.Scale(new Vector3(1 / GlobalObject.Instance.screenResolution.x, 1 / GlobalObject.Instance.screenResolution.y, 1f));
             this.viewDirection = new Vector3(GlobalObject.Instance.mouse.x - rawPose.x, 0, GlobalObject.Instance.mouse.y - rawPose.y);
             
-            rotatableObject.RotateToDirection(utilObject, this.viewDirection);
+            rotatableObject.RotateToDirectionAxisXZ(this.viewDirection);
         }
         isViewDirection = false;
         animator.SetBool("ViewDirection", isViewDirection);

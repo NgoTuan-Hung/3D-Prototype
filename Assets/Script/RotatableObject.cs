@@ -37,10 +37,10 @@ public class RotatableObject
         this.ObjectTransform = objectTransform;
     }
 
-    public void RotateToDirection(UtilObject utilObject, Vector3 directionVector)
+    public void RotateToDirectionAxisXZ(Vector3 directionVector)
     {
         #region Handle Rotaion
-        ToAngle = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
+        ToAngle = UtilObject.Instance.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
         if (ToAngle != PrevToAngle)
         {
             MoveAngle = Math.Abs(ToAngle - CurentAngle);
@@ -74,5 +74,19 @@ public class RotatableObject
         #region Or Simplier Approach
         // objectTransform.rotation = Quaternion.RotateTowards(objectTransform.rotation, Quaternion.LookRotation(directionVector, Vector3.up), rotateAmountAbs * 100);
         #endregion
+    }
+
+    public void RotateToAngleAxisXZImediatly(float angle)
+    {
+        objectTransform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+        toAngle = angle;
+        curentAngle = angle;
+    }
+
+    public void RotateToAngleAxisXZImediatly(Vector3 directionVector)
+    {
+        toAngle = UtilObject.Instance.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
+        curentAngle = UtilObject.Instance.GetPositiveAngle(toAngle);
+        objectTransform.rotation = Quaternion.Euler(0, curentAngle, 0);
     }
 }

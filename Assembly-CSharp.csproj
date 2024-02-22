@@ -64,10 +64,12 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.14f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\VarcanRex\LongSword\Scripts\SimpleRotate.cs" />
     <Compile Include="Assets\Script\GlobalObject.cs" />
     <Compile Include="Assets\Script\TargetableObject.cs" />
     <Compile Include="Assets\Script\RotatableObject.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <Compile Include="Assets\Script\Singleton.cs" />
     <Compile Include="Assets\Input\PlayerInputSystem.cs" />
     <Compile Include="Assets\Script\TestObject.cs" />
     <Compile Include="Assets\Script\CameraMovement.cs" />
