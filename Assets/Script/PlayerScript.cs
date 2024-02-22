@@ -68,8 +68,8 @@ public class PlayerScript : MonoBehaviour
         {
             if (isTarget)
             {
-                if (moveVector == Vector2.up) moveVector = new Vector2(targetableObject.nearestTarget.transform.position.x - transform.position.x, 
-                targetableObject.nearestTarget.transform.position.y - transform.position.y).normalized;
+                if (moveVector == Vector2.up) moveVector = new Vector2(currentTarget.transform.position.x - transform.position.x, 
+                currentTarget.transform.position.z - transform.position.z).normalized;
             }
             directionVector = new Vector3(moveVector.x, 0, moveVector.y);
             
@@ -86,17 +86,18 @@ public class PlayerScript : MonoBehaviour
     }
 
     [SerializeField] private bool isTarget = false;
+    [SerializeField] private GameObject currentTarget;
     public void Target(InputAction.CallbackContext callbackContext)
     {
         if (!isTarget)
         {
             isTarget = true;
             //animator.SetBool("Target", true);
-            var nearestTarget = targetableObject.nearestTarget;
-            cameraDelegate?.Invoke(nearestTarget);
+            currentTarget = targetableObject.nearestTarget;
+            cameraDelegate?.Invoke(currentTarget);
             
             var weightedTransformArray = multiAimConstraintData.sourceObjects;
-            weightedTransformArray.SetTransform(0, nearestTarget.transform);
+            weightedTransformArray.SetTransform(0, currentTarget.transform);
             multiAimConstraintData.sourceObjects = weightedTransformArray;
             multiAimConstraint.data = multiAimConstraintData;
             rigBuilder.Build();

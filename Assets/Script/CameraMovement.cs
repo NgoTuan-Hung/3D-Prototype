@@ -55,8 +55,6 @@ public class CameraMovement : MonoBehaviour
 
     public GameObject th_gameObj;
     public Vector3 directionVector;
-    public Vector3 testPos;
-    public bool lock1  = false;
     public IEnumerator TargetHandler(GameObject target)
     {
         isTarget = true;
@@ -73,6 +71,8 @@ public class CameraMovement : MonoBehaviour
             rotatableObject.RotateToDirection(utilObject, directionVector);
             behindPosition = th_gameObj.transform.TransformPoint(defaultPosition) - player.transform.position;
         }
+        behindPosition = defaultPosition;
+        transform.rotation = Quaternion.Euler(rotation);
     }
 
     void View()
@@ -86,7 +86,19 @@ public class CameraMovement : MonoBehaviour
     {
         zoom = playerInputSystem.Control.Zoom.ReadValue<Vector2>();
         z = zoom.y > 0 ? zoomAmount : (zoom.y < 0 ? -zoomAmount : 0);
-        if (z != 0 && rotatableObject.Finish) defaultPosition = cameraDefault.transform.TransformPoint(0, 0, z) - player.transform.position;
+        if (z != 0)
+        {
+            if (isTarget)
+            {
+                if (rotatableObject.Finish) defaultPosition = cameraDefault.transform.TransformPoint(0, 0, z) - player.transform.position;
+            }
+            else
+            {
+                defaultPosition = cameraDefault.transform.TransformPoint(0, 0, z) - player.transform.position;
+                behindPosition = defaultPosition;
+            }
+        }
+        
     }
 
     void OnEnable()
@@ -98,5 +110,6 @@ public class CameraMovement : MonoBehaviour
     void OnDisable()
     {
         playerInputSystem.Control.Disable();
+        PlayerScript.cameraDelegate -= Target;
     }
 }
