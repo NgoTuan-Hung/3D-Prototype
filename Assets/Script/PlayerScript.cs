@@ -25,6 +25,8 @@ public class PlayerScript : MonoBehaviour
     public RigBuilder rigBuilder;
     public delegate void CameraDelegate(GameObject target);
     public static CameraDelegate cameraDelegate;
+    BlackSword blackSword;
+    [SerializeField] private Transform attackPosition;
     // Start is called before the first frame update
     void Awake()
     {
@@ -34,6 +36,7 @@ public class PlayerScript : MonoBehaviour
         playerInputSystem.Control.Jump.performed += Jump;
         playerInputSystem.Control.ViewDirection.performed += ViewDirection;
         playerInputSystem.Control.Target.performed += Target;
+        playerInputSystem.Control.Attack.performed += Attack;
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         rotatableObject = new RotatableObject(transform);
@@ -42,7 +45,13 @@ public class PlayerScript : MonoBehaviour
         multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();
         multiAimConstraintData = multiAimConstraint.data;
         rigBuilder = GetComponentInChildren<RigBuilder>();
+        blackSword = GetComponent<BlackSword>();
+        blackSword.Init();
         //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
+    }
+    void Attack(InputAction.CallbackContext callbackContext)
+    {
+        blackSword.Attack(attackPosition);
     }
 
     // Update is called once per frame

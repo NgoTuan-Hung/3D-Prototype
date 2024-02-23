@@ -3,27 +3,32 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
+public class ObjectPool
 {
-    public List<T> pool;
+    public List<GameObject> pool;
+    public GameObject prefab;
     public int size;
-    
-    void Start()
+
+    public ObjectPool(GameObject prefab, int size)
     {
-        pool = new List<T>(size);
+        this.prefab = prefab;
+        this.size = size;
+
+        pool = new List<GameObject>(size);
         for (int i=0;i<pool.Capacity;i++)
         {
-            // pool[i] = Instantiate<T>()
+            pool.Add(GameObject.Instantiate(prefab));
+            pool[i].SetActive(false);
         }
     }
 
-    public T PickOne()
+    public GameObject PickOne()
     {
         for (int i=0;i<pool.Count;i++)
         {
-            if (!pool[i].enabled)
+            if (!pool[i].activeSelf)
             {
-                pool[i].enabled = true;
+                pool[i].SetActive(true);
                 return pool[i];
             }
         }
