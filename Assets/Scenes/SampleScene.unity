@@ -390,6 +390,7 @@ MonoBehaviour:
       y: 0
       z: 0
   rigBuilder: {fileID: 0}
+  swordSkill: {fileID: 0}
   attackPosition: {fileID: 1824813597}
   isTarget: 0
   currentTarget: {fileID: 0}
@@ -492,11 +493,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 282835338}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 902c552675cb039428cc2baa5a863ccf, type: 3}
+  m_Script: {fileID: 11500000, guid: 348695e874b6ddb48a2ec4345d3fad92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackSwordPrefab: {fileID: 3579429333786220714, guid: badde13969856854e816496cfb403c20,
+  swordPrefab: {fileID: 3579429333786220714, guid: badde13969856854e816496cfb403c20,
     type: 3}
+  canAttack: 1
+  attackCooldown: 0
 --- !u!1 &291814166
 GameObject:
   m_ObjectHideFlags: 0

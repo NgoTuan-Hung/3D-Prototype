@@ -77,7 +77,7 @@
     <Compile Include="Assets\Script\UtilObject.cs" />
     <Compile Include="Assets\Script\PlayerScript.cs" />
     <Compile Include="Assets\Script\ObjectPool.cs" />
-    <Compile Include="Assets\Script\Weapon\BlackSword.cs" />
+    <Compile Include="Assets\Script\Weapon\SwordSkill.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon
+public class Weapon : MonoBehaviour
 {
-    public ObjectPool weaponPool;
-    public GameObject weaponPrefab;
-    public bool canAttack = true;
-    public float attackCooldown;
+    Animator animator;
 
-    public Weapon(GameObject weaponPrefab, int poolSize, float attackCooldown)
+    private void Start() 
     {
-        this.weaponPrefab = weaponPrefab;
-        weaponPool = new ObjectPool(weaponPrefab, poolSize);
-        this.attackCooldown = attackCooldown;
+        animator = GetComponent<Animator>();
+    }
+
+    public void StopAttack()
+    {
+        animator.SetBool("Attack", false);
+        transform.parent.gameObject.SetActive(false);
     }
 }

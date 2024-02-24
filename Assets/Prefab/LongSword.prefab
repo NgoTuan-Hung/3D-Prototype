@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 657376153108087188}
   - component: {fileID: 1967909901608091383}
   m_Layer: 0
-  m_Name: SwordVFX
+  m_Name: VFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4846,7 +4846,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1341732101188920753}
   - component: {fileID: 38933800621580785}
-  - component: {fileID: 6230605302719640587}
+  - component: {fileID: 8827824363522173598}
   m_Layer: 0
   m_Name: LongSwordComponent
   m_TagString: Untagged
@@ -4892,7 +4892,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6230605302719640587
+--- !u!114 &8827824363522173598
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4901,10 +4901,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 213687389812110473}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 902c552675cb039428cc2baa5a863ccf, type: 3}
+  m_Script: {fileID: 11500000, guid: abb589145b7bd2b4b8cab2f65ff02de9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackSwordPrefab: {fileID: 0}
 --- !u!1 &3579429333786220714
 GameObject:
   m_ObjectHideFlags: 0
@@ -5106,7 +5105,7 @@ ParticleSystem:
   m_GameObject: {fileID: 7236361807404817798}
   serializedVersion: 8
   lengthInSec: 5
-  simulationSpeed: 1
+  simulationSpeed: 4
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -9936,7 +9935,7 @@ ParticleSystem:
   m_GameObject: {fileID: 7317533803395102478}
   serializedVersion: 8
   lengthInSec: 3
-  simulationSpeed: 1
+  simulationSpeed: 4
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -14766,7 +14765,7 @@ ParticleSystem:
   m_GameObject: {fileID: 8790562226129414607}
   serializedVersion: 8
   lengthInSec: 1.5
-  simulationSpeed: 1
+  simulationSpeed: 4
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
