@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(SkillableObject))]
 public class PlayerScript : MonoBehaviour
 {
     [Header("General")]
@@ -25,8 +26,8 @@ public class PlayerScript : MonoBehaviour
     public RigBuilder rigBuilder;
     public delegate void CameraDelegate(GameObject target);
     public static CameraDelegate cameraDelegate;
-    public SwordSkill swordSkill;
     [SerializeField] private Transform attackPosition;
+    public SkillableObject skillableObject;
     // Start is called before the first frame update
     void Awake()
     {
@@ -45,12 +46,29 @@ public class PlayerScript : MonoBehaviour
         multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();
         multiAimConstraintData = multiAimConstraint.data;
         rigBuilder = GetComponentInChildren<RigBuilder>();
-        swordSkill = GetComponent<SwordSkill>();
+        skillableObject = GetComponent<SkillableObject>();
         //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
     }
     void Attack(InputAction.CallbackContext callbackContext)
     {
-        swordSkill.Attack(attackPosition);
+        skillableObject.PerformAttack(attackPosition);
+        canMove = false;
+        StartCoroutine(ResetMoveAfterAttack());
+        if (Random.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
+        else animator.SetBool("Attack_Mirror", false);
+        animator.SetBool("Attack", true);
+    }
+
+    public IEnumerator ResetMoveAfterAttack()
+    {
+        yield return new WaitForSeconds(0.27f);
+
+        canMove = true;
+    }
+
+    public void StopAttack()
+    {
+        animator.SetBool("Attack", false);
     }
 
     // Update is called once per frame
@@ -63,6 +81,8 @@ public class PlayerScript : MonoBehaviour
     {
         Move();
     }
+
+    [SerializeField] private bool canMove = true;
     public void Move()
     {
         // var moveVector = move.ReadValue<Vector2>();
@@ -71,7 +91,7 @@ public class PlayerScript : MonoBehaviour
         animator.SetFloat("MoveVectorX", moveVector.x);
         animator.SetFloat("MoveVectorY", moveVector.y);
 
-        if (moveVector != Vector2.zero)
+        if (moveVector != Vector2.zero && canMove)
         {
             if (isTarget)
             {

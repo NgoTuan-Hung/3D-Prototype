@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class SwordSkill : MonoBehaviour
+public class SwordSkill : MonoBehaviour, WeaponSkill
 {
     public static ObjectPool weaponPool;
     public GameObject swordPrefab;
@@ -11,6 +12,7 @@ public class SwordSkill : MonoBehaviour
 
     private void Start() 
     {
+        swordPrefab = Instantiate(Resources.Load("LongSword")).GameObject();
         weaponPool = new ObjectPool(swordPrefab, 20);
     }
 
