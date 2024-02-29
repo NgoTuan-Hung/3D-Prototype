@@ -22,6 +22,12 @@ public class UtilObject : Singleton<UtilObject>
         return calculateAngleBase360_angle;
     }
 
+    public float CalculateAngle(Vector3 from, Vector3 to, Vector3 axis)
+    {
+        calculateAngleBase360_angle = Vector3.SignedAngle(from, to, axis);
+        return calculateAngleBase360_angle;
+    }
+
     public float GetPositiveAngle(float angle)
     {
         return angle < 0 ? 360 + angle : angle;

@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
+using UnityRandom = UnityEngine.Random;
 
 [RequireComponent(typeof(SkillableObject))]
 public class PlayerScript : MonoBehaviour
@@ -28,6 +30,7 @@ public class PlayerScript : MonoBehaviour
     public static CameraDelegate cameraDelegate;
     [SerializeField] private Transform attackPosition;
     public SkillableObject skillableObject;
+    [SerializeField] private GameObject bodyRotationSourceObject;
     // Start is called before the first frame update
     void Awake()
     {
@@ -54,7 +57,7 @@ public class PlayerScript : MonoBehaviour
         skillableObject.PerformAttack(attackPosition);
         canMove = false;
         StartCoroutine(ResetMoveAfterAttack());
-        if (Random.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
+        if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
         else animator.SetBool("Attack_Mirror", false);
         animator.SetBool("Attack", true);
     }
@@ -93,11 +96,11 @@ public class PlayerScript : MonoBehaviour
 
         if (moveVector != Vector2.zero && canMove)
         {
-            if (isTarget)
-            {
-                if (moveVector == Vector2.up) moveVector = new Vector2(currentTarget.transform.position.x - transform.position.x, 
-                currentTarget.transform.position.z - transform.position.z).normalized;
-            }
+            // if (isTarget)
+            // {
+            //     if (moveVector == Vector2.up) moveVector = new Vector2(currentTarget.transform.position.x - transform.position.x, 
+            //     currentTarget.transform.position.z - transform.position.z).normalized;            
+            // }
             directionVector = new Vector3(moveVector.x, 0, moveVector.y);
             
             transform.position +=  directionVector * moveSpeed;
@@ -114,6 +117,7 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField] private bool isTarget = false;
     [SerializeField] private GameObject currentTarget;
+    private Vector3 targetTempVec;
     public void Target(InputAction.CallbackContext callbackContext)
     {
         if (!isTarget)
@@ -121,7 +125,8 @@ public class PlayerScript : MonoBehaviour
             isTarget = true;
             //animator.SetBool("Target", true);
             currentTarget = targetableObject.nearestTarget;
-            cameraDelegate?.Invoke(currentTarget);
+            //cameraDelegate?.Invoke(currentTarget);
+            StartCoroutine(TargetHandler());
             
             var weightedTransformArray = multiAimConstraintData.sourceObjects;
             weightedTransformArray.SetTransform(0, currentTarget.transform);
@@ -132,8 +137,22 @@ public class PlayerScript : MonoBehaviour
         else
         {
             isTarget = false;
-            cameraDelegate?.Invoke(null);
+            //cameraDelegate?.Invoke(null);
             //animator.SetBool("Target", false);
+        }
+    }
+
+    public IEnumerator TargetHandler()
+    {
+        while (isTarget)
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+            bodyRotationSourceObject.transform.position = transform.position;
+            var direction = new Vector2(currentTarget.transform.position.x - transform.position.x,
+            currentTarget.transform.position.z - transform.position.z);
+            var angle = UtilObject.Instance.CalculateAngle(Vector3.forward, new Vector3(direction.x, 0, direction.y), Vector3.up);
+            bodyRotationSourceObject.transform.rotation = Quaternion.Euler(0, angle, 0);
         }
     }
 
