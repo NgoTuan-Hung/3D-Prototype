@@ -35,6 +35,33 @@ public class RotatableObject
     public RotatableObject(Transform objectTransform)
     {
         this.ObjectTransform = objectTransform;
+        gORDAMA_returnValue[0] = new object[2];
+    }
+
+    public float GetMoveAngle(float toAngle)
+    {
+        return Math.Abs(toAngle - curentAngle);
+    }
+
+    private float gORDAMA_moveAngle;
+    private directionEnum gORDAMA_rotateDirection;
+    private float gORDAMA_optimalMoveAngle;
+    private object[][] gORDAMA_returnValue = new object[1][];
+    public object[][] GetOptimalRotateDirectionAndMoveAngle(float toAngle)
+    {
+        gORDAMA_moveAngle = Math.Abs(toAngle - curentAngle);
+        gORDAMA_rotateDirection = toAngle >= curentAngle ? directionEnum.Clockwise : directionEnum.CounterClockwise;
+        gORDAMA_optimalMoveAngle = 360 - gORDAMA_moveAngle;
+        if (gORDAMA_optimalMoveAngle < gORDAMA_moveAngle)
+        {
+            gORDAMA_rotateDirection = gORDAMA_rotateDirection == directionEnum.Clockwise ? directionEnum.CounterClockwise : directionEnum.Clockwise;
+            gORDAMA_moveAngle = gORDAMA_optimalMoveAngle;
+        }
+
+        gORDAMA_returnValue[0][0] = gORDAMA_moveAngle;
+        gORDAMA_returnValue[0][1] = gORDAMA_rotateDirection;
+
+        return gORDAMA_returnValue;
     }
 
     public void RotateToDirectionAxisXZ(Vector3 directionVector)
