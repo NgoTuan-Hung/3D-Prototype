@@ -55,18 +55,9 @@ public class PlayerScript : MonoBehaviour
     void Attack(InputAction.CallbackContext callbackContext)
     {
         skillableObject.PerformAttack(attackPosition);
-        canMove = false;
-        StartCoroutine(ResetMoveAfterAttack());
         if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
         else animator.SetBool("Attack_Mirror", false);
         animator.SetBool("Attack", true);
-    }
-
-    public IEnumerator ResetMoveAfterAttack()
-    {
-        yield return new WaitForSeconds(0.27f);
-
-        canMove = true;
     }
 
     public void StopAttack()
@@ -105,6 +96,7 @@ public class PlayerScript : MonoBehaviour
             
             transform.position +=  directionVector * moveSpeed;
             
+            if (!isTarget) bodyRotationSourceObject.transform.rotation = Quaternion.Euler(0, rotatableObject.CurentAngle, 0);
             if (!isViewDirection) rotatableObject.RotateToDirectionAxisXZ(directionVector);
         }
     }
@@ -152,7 +144,9 @@ public class PlayerScript : MonoBehaviour
             var direction = new Vector2(currentTarget.transform.position.x - transform.position.x,
             currentTarget.transform.position.z - transform.position.z);
             var angle = UtilObject.Instance.CalculateAngle(Vector3.forward, new Vector3(direction.x, 0, direction.y), Vector3.up);
-            bodyRotationSourceObject.transform.rotation = Quaternion.Euler(0, angle, 0);
+            object[][] returnValue = rotatableObject.GetOptimalRotateDirectionAndMoveAngle(angle);
+            bodyRotationSourceObject.transform.rotation = Quaternion.Euler(0
+            , rotatableObject.CurentAngle + Math.Clamp((int)returnValue[0][0] * (float)returnValue[0][1], -90, 90), 0);
         }
     }
 

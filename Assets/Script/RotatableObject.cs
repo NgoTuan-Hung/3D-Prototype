@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -13,21 +14,18 @@ public class RotatableObject
     [SerializeField] private float toAngle;
     [SerializeField] private float prevToAngle = 0;
     [SerializeField] private enum directionEnum {Clockwise = 1, CounterClockwise = -1}
-    [SerializeField] private directionEnum rotateDirection;
     [SerializeField] private float moveAngle;
-    [SerializeField] private float optimalMoveAngle;
     [SerializeField] private float movedAngle = 0;
     [SerializeField] private Transform objectTransform;
     [SerializeField] private bool finish = false;
+    private object[][] returnValue;
 
     public float RotateAmountAbs { get => rotateAmountAbs; set => rotateAmountAbs = value; }
     public float RotateAmount { get => rotateAmount; set => rotateAmount = value; }
     public float CurentAngle { get => curentAngle; set => curentAngle = value; }
     public float ToAngle { get => toAngle; set => toAngle = value; }
     public float PrevToAngle { get => prevToAngle; set => prevToAngle = value; }
-    private directionEnum RotateDirection { get => rotateDirection; set => rotateDirection = value; }
     public float MoveAngle { get => moveAngle; set => moveAngle = value; }
-    public float OptimalMoveAngle { get => optimalMoveAngle; set => optimalMoveAngle = value; }
     public float MovedAngle { get => movedAngle; set => movedAngle = value; }
     public Transform ObjectTransform { get => objectTransform; set => objectTransform = value; }
     public bool Finish { get => finish; set => finish = value; }
@@ -35,7 +33,6 @@ public class RotatableObject
     public RotatableObject(Transform objectTransform)
     {
         this.ObjectTransform = objectTransform;
-        gORDAMA_returnValue[0] = new object[2];
     }
 
     public float GetMoveAngle(float toAngle)
@@ -43,12 +40,15 @@ public class RotatableObject
         return Math.Abs(toAngle - curentAngle);
     }
 
-    private float gORDAMA_moveAngle;
-    private directionEnum gORDAMA_rotateDirection;
-    private float gORDAMA_optimalMoveAngle;
-    private object[][] gORDAMA_returnValue = new object[1][];
     public object[][] GetOptimalRotateDirectionAndMoveAngle(float toAngle)
     {
+        object[][] gORDAMA_returnValue = new object[1][];
+        gORDAMA_returnValue[0] = new object[2];
+
+        float gORDAMA_moveAngle;
+        directionEnum gORDAMA_rotateDirection;
+        float gORDAMA_optimalMoveAngle;
+
         gORDAMA_moveAngle = Math.Abs(toAngle - curentAngle);
         gORDAMA_rotateDirection = toAngle >= curentAngle ? directionEnum.Clockwise : directionEnum.CounterClockwise;
         gORDAMA_optimalMoveAngle = 360 - gORDAMA_moveAngle;
@@ -58,8 +58,8 @@ public class RotatableObject
             gORDAMA_moveAngle = gORDAMA_optimalMoveAngle;
         }
 
-        gORDAMA_returnValue[0][0] = gORDAMA_moveAngle;
-        gORDAMA_returnValue[0][1] = gORDAMA_rotateDirection;
+        gORDAMA_returnValue[0][0] = gORDAMA_rotateDirection;
+        gORDAMA_returnValue[0][1] = gORDAMA_moveAngle;
 
         return gORDAMA_returnValue;
     }
@@ -70,15 +70,9 @@ public class RotatableObject
         ToAngle = UtilObject.Instance.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
         if (ToAngle != PrevToAngle)
         {
-            MoveAngle = Math.Abs(ToAngle - CurentAngle);
-            RotateDirection = ToAngle >= CurentAngle ? directionEnum.Clockwise : directionEnum.CounterClockwise;
-            OptimalMoveAngle = 360 - MoveAngle;
-            if (OptimalMoveAngle < MoveAngle)
-            {
-                RotateDirection = RotateDirection == directionEnum.Clockwise ? directionEnum.CounterClockwise : directionEnum.Clockwise;
-                MoveAngle = OptimalMoveAngle;
-            }
-            RotateAmount = (int)RotateDirection * RotateAmountAbs;
+            returnValue = GetOptimalRotateDirectionAndMoveAngle(ToAngle);
+            MoveAngle = (float)returnValue[0][1];
+            RotateAmount = (int)returnValue[0][0] * RotateAmountAbs;
             MovedAngle = 0;
         }
         PrevToAngle = ToAngle;
