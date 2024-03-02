@@ -14,6 +14,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private Vector2 zoom;
     [SerializeField] private float zoomAmount = 0.5f;
     [SerializeField] private RotatableObject rotatableObject;
+    private UtilObject utilObject = new UtilObject();
 
     private void Awake() 
     {
@@ -64,7 +65,7 @@ public class CameraMovement : MonoBehaviour
             directionVector = new Vector3(target.transform.position.x - transform.position.x, 0, target.transform.position.z - transform.position.z);
             th_gameObj.transform.position = player.transform.position;
             th_gameObj.transform.rotation = Quaternion.Euler(new Vector3(0, 
-            UtilObject.Instance.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up)
+            utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up)
             , 0));
 
             rotatableObject.RotateToDirectionAxisXZ(directionVector);

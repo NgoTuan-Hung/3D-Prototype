@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
-public class UtilObject : Singleton<UtilObject>
+public class UtilObject
 {
     private float calculateAngleBase360_angle;
     public void RotateByAmount(Transform transform, float x, float y, float z = 0f)
@@ -31,5 +32,10 @@ public class UtilObject : Singleton<UtilObject>
     public float GetPositiveAngle(float angle)
     {
         return angle < 0 ? 360 + angle : angle;
+    }
+
+    public EntityData LoadEntityDataFromJson()
+    {
+        return null;
     }
 }

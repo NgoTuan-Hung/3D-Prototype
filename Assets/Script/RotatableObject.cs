@@ -18,6 +18,7 @@ public class RotatableObject
     [SerializeField] private float movedAngle = 0;
     [SerializeField] private Transform objectTransform;
     [SerializeField] private bool finish = false;
+    private UtilObject utilObject = new UtilObject();
     private object[][] returnValue;
 
     public float RotateAmountAbs { get => rotateAmountAbs; set => rotateAmountAbs = value; }
@@ -67,7 +68,7 @@ public class RotatableObject
     public void RotateToDirectionAxisXZ(Vector3 directionVector)
     {
         #region Handle Rotaion
-        ToAngle = UtilObject.Instance.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
+        ToAngle = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
         if (ToAngle != PrevToAngle)
         {
             returnValue = GetOptimalRotateDirectionAndMoveAngle(ToAngle);
@@ -106,8 +107,8 @@ public class RotatableObject
 
     public void RotateToAngleAxisXZImediatly(Vector3 directionVector)
     {
-        toAngle = UtilObject.Instance.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
-        curentAngle = UtilObject.Instance.GetPositiveAngle(toAngle);
+        toAngle = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
+        curentAngle = utilObject.GetPositiveAngle(toAngle);
         objectTransform.rotation = Quaternion.Euler(0, curentAngle, 0);
     }
 }

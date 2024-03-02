@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class GlobalObject : Singleton<GlobalObject>
@@ -11,6 +13,8 @@ public class GlobalObject : Singleton<GlobalObject>
     public Vector2 mouseMoved;
     public float mouseSpeed = 5f;
     public PlayerInputSystem playerInputSystem;
+    public String entityDataPath;
+    public List<EntityData> entityDatas;
 
     private void Awake() 
     {
@@ -20,6 +24,13 @@ public class GlobalObject : Singleton<GlobalObject>
     void Start()
     {
         screenResolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
+        entityDataPath = Application.dataPath + "/JsonData/EntityData.json";
+
+        entityDatas = new List<EntityData>();
+        string json = File.ReadAllText(GlobalObject.Instance.entityDataPath);
+        entityDatas = JsonUtility.FromJson<List<EntityData>>(json);
+
+        Debug.Log(entityDatas.ToString());
     }
 
     // Update is called once per frame

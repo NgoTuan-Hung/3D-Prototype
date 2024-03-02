@@ -21,7 +21,6 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private RotatableObject rotatableObject;
     [SerializeField] private GameObject viewRotationPoint;
     [SerializeField] private bool strafeHorizontal;
-    private GlobalObject globalObject;
     private TargetableObject targetableObject;
     MultiAimConstraint multiAimConstraint;
     public MultiAimConstraintData multiAimConstraintData;
@@ -31,6 +30,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private Transform attackPosition;
     public SkillableObject skillableObject;
     [SerializeField] private GameObject bodyRotationSourceObject;
+    UtilObject utilObject = new UtilObject();
     // Start is called before the first frame update
     void Awake()
     {
@@ -44,7 +44,6 @@ public class PlayerScript : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         rotatableObject = new RotatableObject(transform);
-        globalObject = GlobalObject.Instance;
         targetableObject = GetComponentInChildren<TargetableObject>();
         multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();
         multiAimConstraintData = multiAimConstraint.data;
@@ -143,7 +142,7 @@ public class PlayerScript : MonoBehaviour
             bodyRotationSourceObject.transform.position = transform.position;
             var direction = new Vector2(currentTarget.transform.position.x - transform.position.x,
             currentTarget.transform.position.z - transform.position.z);
-            var angle = UtilObject.Instance.CalculateAngle(Vector3.forward, new Vector3(direction.x, 0, direction.y), Vector3.up);
+            var angle = utilObject.CalculateAngle(Vector3.forward, new Vector3(direction.x, 0, direction.y), Vector3.up);
             object[][] returnValue = rotatableObject.GetOptimalRotateDirectionAndMoveAngle(angle);
             bodyRotationSourceObject.transform.rotation = Quaternion.Euler(0
             , rotatableObject.CurentAngle + Math.Clamp((int)returnValue[0][0] * (float)returnValue[0][1], -90, 90), 0);
