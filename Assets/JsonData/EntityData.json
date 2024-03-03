@@ -1,6 +1,13 @@
-[
-	{
-		"entityName" : "Skeleton",
-		"entityComponents": ["MoveToTarget"]
-	}
-]
+{
+	"items" : 
+	[
+		{
+			"entityName" : "Skeleton",
+			"entityComponents": ["MoveToTarget"]
+		},
+		{
+			"entityName" : "Skeleton-Archer",
+			"entityComponents": ["MoveToTarget"]
+		}
+	]
+}

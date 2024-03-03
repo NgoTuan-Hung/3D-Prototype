@@ -19,6 +19,7 @@ public class MoveToTarget : MonoBehaviour
         MoveSpeed = 1f;
         RotationSpeed = 1f;
         animator = GetComponent<Animator>();
+        target = GameObject.Find("Player").transform;
     }
 
     private void FixedUpdate() 
@@ -37,7 +38,7 @@ public class MoveToTarget : MonoBehaviour
             Vector3 newDirection = Vector3.RotateTowards(transform.forward, funcMove_DistanceVector, rotationSpeed, 0.0f);
             Debug.DrawRay(transform.position, newDirection, Color.red);
             transform.rotation = Quaternion.LookRotation(newDirection);
-            
+
             animator.SetBool("Move", true);
         }
         else

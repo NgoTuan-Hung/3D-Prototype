@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Leguar.TotalJSON;
+using UnityEditor.ShaderGraph.Serialization;
 using UnityEngine;
 
 public class GlobalObject : Singleton<GlobalObject>
@@ -19,18 +22,15 @@ public class GlobalObject : Singleton<GlobalObject>
     private void Awake() 
     {
         playerInputSystem = new PlayerInputSystem();
+        entityDataPath = Application.dataPath + "/JsonData/EntityData.json";
+        entityDatas = new List<EntityData>();
+        string json = File.ReadAllText(GlobalObject.Instance.entityDataPath);
+        entityDatas = FromJson<EntityData>(json);
     }
     // Start is called before the first frame update
     void Start()
     {
         screenResolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
-        entityDataPath = Application.dataPath + "/JsonData/EntityData.json";
-
-        entityDatas = new List<EntityData>();
-        string json = File.ReadAllText(GlobalObject.Instance.entityDataPath);
-        entityDatas = JsonUtility.FromJson<List<EntityData>>(json);
-
-        Debug.Log(entityDatas.ToString());
     }
 
     // Update is called once per frame
@@ -46,6 +46,14 @@ public class GlobalObject : Singleton<GlobalObject>
         mouseMoved = mouse - prevMouse; mouseMoved *= mouseSpeed;    
     }
 
+    public List<T> FromJson<T> (string json)
+    {
+        JSON JsonObject = JSON.ParseString(json);
+        Wrapper<T> wrapper = JsonObject.Deserialize<Wrapper<T>>();
+        JsonObject.Deserialize<Wrapper<T>>();
+        return wrapper.items;
+    }
+
     void OnEnable()
     {
         playerInputSystem.Control.Enable();
@@ -56,3 +64,9 @@ public class GlobalObject : Singleton<GlobalObject>
         playerInputSystem.Control.Disable();
     }
 }
+
+public class Wrapper<T>
+{
+    public List<T> items;
+}
+

@@ -64,7 +64,8 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.14f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
+    <Compile Include="Assets\TotalJSON\Internal\Editor\JSONValidator.cs" />
+    <Compile Include="Assets\TotalJSON\Internal\Editor\JSONRuntimeDebug.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

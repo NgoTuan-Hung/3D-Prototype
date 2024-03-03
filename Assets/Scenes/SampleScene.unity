@@ -26143,7 +26143,7 @@ CapsuleCollider:
   m_Height: 1.5492
   m_Direction: 1
   m_Center: {x: 0, y: 0.75798965, z: -0.017359138}
---- !u!114 &735095009
+--- !u!114 &735095012
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -26152,14 +26152,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 735095007}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79c16dcc317438246a434ffafb049202, type: 3}
+  m_Script: {fileID: 11500000, guid: 5bd524c98545e9d4aa073b579efe62f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 282835339}
-  animator: {fileID: 0}
-  canMove: 1
-  moveSpeed: 0
-  rotationSpeed: 0
+  entityName: Skeleton
 --- !u!1001 &740823753
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41877,7 +41873,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 165424, guid: 9f4313a771e05c64d8da7ae6bd19a19f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 735095009}
+      addedObject: {fileID: 735095012}
   m_SourcePrefab: {fileID: 100100000, guid: 9f4313a771e05c64d8da7ae6bd19a19f, type: 3}
 --- !u!4 &1205357964 stripped
 Transform:

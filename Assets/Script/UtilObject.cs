@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class UtilObject
@@ -34,8 +35,8 @@ public class UtilObject
         return angle < 0 ? 360 + angle : angle;
     }
 
-    public EntityData LoadEntityDataFromJson()
+    public EntityData LoadEntityData(string name)
     {
-        return null;
+        return GlobalObject.Instance.entityDatas.First((entityData) => entityData.entityName.Equals(name));
     }
 }
