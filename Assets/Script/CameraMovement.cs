@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class CameraMovement : MonoBehaviour
 {
     public GameObject player;
@@ -19,14 +20,14 @@ public class CameraMovement : MonoBehaviour
     private void Awake() 
     {
         playerInputSystem = new PlayerInputSystem();
-        rotatableObject = new RotatableObject(transform);
-        rotatableObject.RotateAmountAbs = 0.5f;
     }
     // Start is called before the first frame update
     void Start()
     {
         transform.rotation = Quaternion.Euler(rotation);
         behindPosition = defaultPosition;
+        rotatableObject = GetComponent<RotatableObject>();
+        rotatableObject.RotateAmountAbs = 0.5f;
     }
 
     // Update is called once per frame

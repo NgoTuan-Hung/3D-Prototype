@@ -70,6 +70,7 @@
     <Compile Include="Assets\Script\GlobalObject.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\JBoolean.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\JSON.cs" />
+    <Compile Include="Assets\Script\EntityComponent\MeleeSimpleAttackWhenNear.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JNumberFormatException.cs" />
     <Compile Include="Assets\TotalJSON\Examples\ExampleSerializeObjects\ExamplePlayerItemObject.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JArgumentException.cs" />

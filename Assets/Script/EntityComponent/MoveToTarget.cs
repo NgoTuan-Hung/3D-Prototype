@@ -2,24 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RotatableObject))]
 public class MoveToTarget : MonoBehaviour
 {
     [SerializeField] private Transform target;
     [SerializeField] private Animator animator;
     [SerializeField] private bool canMove = true;
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float rotationSpeed;
+    [SerializeField] private float distanceToTarget;
+    private RotatableObject rotatableObject;
     public bool CanMove { get => canMove; set => canMove = value; }
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value * 0.03f; }
-    public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value * 0.03f; }
+    public float DistanceToTarget { get => distanceToTarget; set => distanceToTarget = value; }
 
     // Start is called before the first frame update
     void Start()
     {
         MoveSpeed = 1f;
-        RotationSpeed = 1f;
         animator = GetComponent<Animator>();
         target = GameObject.Find("Player").transform;
+        rotatableObject = GetComponent<RotatableObject>();
     }
 
     private void FixedUpdate() 
@@ -30,14 +32,14 @@ public class MoveToTarget : MonoBehaviour
     private Vector3 funcMove_DistanceVector;
     public void Move()
     {
+        funcMove_DistanceVector = new Vector3(target.transform.position.x - transform.position.x, 0, target.transform.position.z - transform.position.z);
+        distanceToTarget = funcMove_DistanceVector.magnitude;
         if (canMove)
         {
-            funcMove_DistanceVector = target.transform.position - transform.position;
             transform.position += funcMove_DistanceVector.normalized * moveSpeed;
 
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, funcMove_DistanceVector, rotationSpeed, 0.0f);
-            Debug.DrawRay(transform.position, newDirection, Color.red);
-            transform.rotation = Quaternion.LookRotation(newDirection);
+            rotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
+            Debug.DrawRay(transform.position, funcMove_DistanceVector, Color.red);
 
             animator.SetBool("Move", true);
         }

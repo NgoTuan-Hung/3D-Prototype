@@ -10187,10 +10187,12 @@ GameObject:
   - component: {fileID: 282835339}
   - component: {fileID: 282835341}
   - component: {fileID: 282835343}
-  - component: {fileID: 282835345}
   - component: {fileID: 282835346}
   - component: {fileID: 282835348}
+  - component: {fileID: 282835351}
+  - component: {fileID: 282835350}
   - component: {fileID: 282835349}
+  - component: {fileID: 282835352}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -10261,91 +10263,12 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.24034464
   m_Height: 1.7920983
   m_Direction: 1
   m_Center: {x: 0.0051932335, y: 0.8851582, z: 0}
---- !u!114 &282835345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 282835338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b31f01769774bf2498d4c24d09d56b73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 0.1
-  jumpVelocity: 1
-  cameraOfPlayer: {fileID: 330585543}
-  directionVector: {x: 0, y: 0, z: 0}
-  moveVector: {x: 0, y: 0}
-  rotatableObject:
-    rotateAmountAbs: 0
-    rotateAmount: 0
-    curentAngle: 0
-    toAngle: 0
-    prevToAngle: 0
-    moveAngle: 0
-    movedAngle: 0
-    objectTransform: {fileID: 0}
-    finish: 0
-  viewRotationPoint: {fileID: 886036317}
-  strafeHorizontal: 0
-  multiAimConstraintData:
-    m_ConstrainedObject: {fileID: 0}
-    m_SourceObjects:
-      m_Length: 0
-      m_Item0:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item1:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item2:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item3:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item4:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item5:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item6:
-        transform: {fileID: 0}
-        weight: 0
-      m_Item7:
-        transform: {fileID: 0}
-        weight: 0
-    m_Offset: {x: 0, y: 0, z: 0}
-    m_MinLimit: 0
-    m_MaxLimit: 0
-    m_AimAxis: 0
-    m_UpAxis: 0
-    m_WorldUpType: 0
-    m_WorldUpObject: {fileID: 0}
-    m_WorldUpAxis: 0
-    m_MaintainOffset: 0
-    m_ConstrainedAxes:
-      x: 0
-      y: 0
-      z: 0
-  rigBuilder: {fileID: 0}
-  attackPosition: {fileID: 1824813597}
-  skillableObject: {fileID: 0}
-  bodyRotationSourceObject: {fileID: 798450457}
-  canMove: 1
-  isTarget: 0
-  currentTarget: {fileID: 0}
-  isViewDirection: 0
-  viewDirection: {x: 0, y: 0, z: 0}
 --- !u!95 &282835346
 Animator:
   serializedVersion: 5
@@ -10443,9 +10366,115 @@ MonoBehaviour:
   m_GameObject: {fileID: 282835338}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b31f01769774bf2498d4c24d09d56b73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 0.1
+  jumpVelocity: 1
+  cameraOfPlayer: {fileID: 0}
+  directionVector: {x: 0, y: 0, z: 0}
+  moveVector: {x: 0, y: 0}
+  multiAimConstraintData:
+    m_ConstrainedObject: {fileID: 0}
+    m_SourceObjects:
+      m_Length: 0
+      m_Item0:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item1:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item2:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item3:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item4:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item5:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item6:
+        transform: {fileID: 0}
+        weight: 0
+      m_Item7:
+        transform: {fileID: 0}
+        weight: 0
+    m_Offset: {x: 0, y: 0, z: 0}
+    m_MinLimit: 0
+    m_MaxLimit: 0
+    m_AimAxis: 0
+    m_UpAxis: 0
+    m_WorldUpType: 0
+    m_WorldUpObject: {fileID: 0}
+    m_WorldUpAxis: 0
+    m_MaintainOffset: 0
+    m_ConstrainedAxes:
+      x: 0
+      y: 0
+      z: 0
+  rigBuilder: {fileID: 0}
+  attackPosition: {fileID: 0}
+  skillableObject: {fileID: 0}
+  bodyRotationSourceObject: {fileID: 0}
+  canMove: 1
+  isTarget: 0
+  currentTarget: {fileID: 0}
+--- !u!114 &282835350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282835338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc06dbf399e96644bb44a21f4f8d279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateAmountAbs: 10
+  rotateAmount: 0
+  curentAngle: 0
+  toAngle: 0
+  prevToAngle: 0
+  moveAngle: 0
+  movedAngle: 0
+  finish: 0
+--- !u!114 &282835351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282835338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96dc7e437f042dc48a42638f8ae5d763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &282835352
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282835338}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.35595846, y: 1.7858298, z: 0.30147746}
+  m_Center: {x: 0.028036356, y: 1.0208534, z: -0.0152531415}
 --- !u!1001 &285757486
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10614,37 +10643,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 289597746}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &291814166
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 291814167}
-  m_Layer: 0
-  m_Name: PlayerObj
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &291814167
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 291814166}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.7264149, y: -8.484833, z: 1.2807481}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &293264759
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12130,6 +12128,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -12274,20 +12273,31 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0}
   zoom: {x: 0, y: 0}
   zoomAmount: 0.5
-  rotatableObject:
-    rotateAmountAbs: 0
-    rotateAmount: 0
-    curentAngle: 0
-    toAngle: 0
-    prevToAngle: 0
-    moveAngle: 0
-    movedAngle: 0
-    objectTransform: {fileID: 0}
-    finish: 0
+  rotatableObject: {fileID: 0}
   isTarget: 0
-  th_gameObj: {fileID: 291814166}
+  th_gameObj: {fileID: 0}
   directionVector: {x: 0, y: 0, z: 0}
   z: 0
+--- !u!114 &330585549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc06dbf399e96644bb44a21f4f8d279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateAmountAbs: 10
+  rotateAmount: 0
+  curentAngle: 0
+  toAngle: 0
+  prevToAngle: 0
+  moveAngle: 0
+  movedAngle: 0
+  finish: 0
 --- !u!1001 &331815436
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26139,11 +26149,11 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.18767065
+  m_Radius: 0.3
   m_Height: 1.5492
   m_Direction: 1
   m_Center: {x: 0, y: 0.75798965, z: -0.017359138}
---- !u!114 &735095012
+--- !u!114 &735095009
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -26152,10 +26162,49 @@ MonoBehaviour:
   m_GameObject: {fileID: 735095007}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bd524c98545e9d4aa073b579efe62f7, type: 3}
+  m_Script: {fileID: 11500000, guid: 72d4e5335e4bf6245818787b187238a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityName: Skeleton
+  distanceToAttack: 0
+  attackCooldown: 0
+  canAttack: 0
+--- !u!114 &735095010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735095007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79c16dcc317438246a434ffafb049202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  animator: {fileID: 0}
+  canMove: 1
+  moveSpeed: 0
+  distanceToTarget: 0
+--- !u!114 &735095011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735095007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc06dbf399e96644bb44a21f4f8d279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateAmountAbs: 5
+  rotateAmount: 0
+  curentAngle: 0
+  toAngle: 0
+  prevToAngle: 0
+  moveAngle: 0
+  movedAngle: 0
+  finish: 0
 --- !u!1001 &740823753
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41873,7 +41922,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 165424, guid: 9f4313a771e05c64d8da7ae6bd19a19f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 735095012}
+      addedObject: {fileID: 735095011}
+    - targetCorrespondingSourceObject: {fileID: 165424, guid: 9f4313a771e05c64d8da7ae6bd19a19f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 735095010}
+    - targetCorrespondingSourceObject: {fileID: 165424, guid: 9f4313a771e05c64d8da7ae6bd19a19f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 735095009}
   m_SourcePrefab: {fileID: 100100000, guid: 9f4313a771e05c64d8da7ae6bd19a19f, type: 3}
 --- !u!4 &1205357964 stripped
 Transform:
@@ -74848,7 +74905,6 @@ SceneRoots:
   - {fileID: 1063119478}
   - {fileID: 558632956}
   - {fileID: 1117235188}
-  - {fileID: 291814167}
   - {fileID: 1959458279}
   - {fileID: 2021277309}
   - {fileID: 573168831}

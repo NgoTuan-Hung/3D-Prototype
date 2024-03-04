@@ -6,7 +6,7 @@ using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 using UnityRandom = UnityEngine.Random;
 
-[RequireComponent(typeof(SkillableObject))]
+[RequireComponent(typeof(SkillableObject), typeof(RotatableObject))]
 public class PlayerScript : MonoBehaviour
 {
     [Header("General")]
@@ -18,9 +18,8 @@ public class PlayerScript : MonoBehaviour
     private Animator animator;
     [SerializeField] private Vector3 directionVector;
     [SerializeField] private Vector2 moveVector;
-    [SerializeField] private RotatableObject rotatableObject;
-    [SerializeField] private GameObject viewRotationPoint;
-    [SerializeField] private bool strafeHorizontal;
+    private RotatableObject rotatableObject;
+    // [SerializeField] private GameObject viewRotationPoint;
     private TargetableObject targetableObject;
     MultiAimConstraint multiAimConstraint;
     public MultiAimConstraintData multiAimConstraintData;
@@ -34,22 +33,27 @@ public class PlayerScript : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        cameraOfPlayer = GameObject.Find("Main Camera");
         //playerInput = gameObject.GetComponent<PlayerInput>();
         playerInputSystem = new PlayerInputSystem();
         playerInputSystem.Control.Jump.performed += Jump;
-        playerInputSystem.Control.ViewDirection.performed += ViewDirection;
         playerInputSystem.Control.Target.performed += Target;
         playerInputSystem.Control.Attack.performed += Attack;
+        //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
+    }
+
+    private void Start() 
+    {
+        cameraOfPlayer = GameObject.Find("Main Camera");
+        rotatableObject = GetComponent<RotatableObject>();
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        rotatableObject = new RotatableObject(transform);
         targetableObject = GetComponentInChildren<TargetableObject>();
         multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();
         multiAimConstraintData = multiAimConstraint.data;
         rigBuilder = GetComponentInChildren<RigBuilder>();
         skillableObject = GetComponent<SkillableObject>();
-        //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
+        attackPosition = GameObject.Find("AttackPosition").transform;
+        bodyRotationSourceObject = GameObject.Find("BodyAimSourceObject");
     }
     void Attack(InputAction.CallbackContext callbackContext)
     {
@@ -86,17 +90,12 @@ public class PlayerScript : MonoBehaviour
 
         if (moveVector != Vector2.zero && canMove)
         {
-            // if (isTarget)
-            // {
-            //     if (moveVector == Vector2.up) moveVector = new Vector2(currentTarget.transform.position.x - transform.position.x, 
-            //     currentTarget.transform.position.z - transform.position.z).normalized;            
-            // }
             directionVector = new Vector3(moveVector.x, 0, moveVector.y);
             
             transform.position +=  directionVector * moveSpeed;
             
             if (!isTarget) bodyRotationSourceObject.transform.rotation = Quaternion.Euler(0, rotatableObject.CurentAngle, 0);
-            if (!isViewDirection) rotatableObject.RotateToDirectionAxisXZ(directionVector);
+            rotatableObject.RotateToDirectionAxisXZ(directionVector);
         }
     }
 
@@ -149,31 +148,6 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    public void ViewDirection(InputAction.CallbackContext callbackContext)
-    {
-        StartCoroutine(ViewDirectionHandler(callbackContext.action));
-    }
-
-    public bool isViewDirection = false;
-    public Vector3 viewDirection;
-    public IEnumerator ViewDirectionHandler(InputAction viewDirection)
-    {
-        isViewDirection = true;
-        animator.SetBool("ViewDirection", isViewDirection);
-        while (viewDirection.IsPressed())
-        {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-
-            var rawPose = Camera.main.WorldToScreenPoint(viewRotationPoint.transform.position);
-            rawPose.Scale(new Vector3(1 / GlobalObject.Instance.screenResolution.x, 1 / GlobalObject.Instance.screenResolution.y, 1f));
-            this.viewDirection = new Vector3(GlobalObject.Instance.mouse.x - rawPose.x, 0, GlobalObject.Instance.mouse.y - rawPose.y);
-            
-            rotatableObject.RotateToDirectionAxisXZ(this.viewDirection);
-        }
-        isViewDirection = false;
-        animator.SetBool("ViewDirection", isViewDirection);
-    }
-
     public IEnumerator test(object value)
     {
         yield return new WaitForSeconds(0.5f);
@@ -190,3 +164,23 @@ public class PlayerScript : MonoBehaviour
         playerInputSystem.Control.Disable();
     }
 }
+
+// public bool isViewDirection = false;
+    // public Vector3 viewDirection;
+    // public IEnumerator ViewDirectionHandler(InputAction viewDirection)
+    // {
+    //     isViewDirection = true;
+    //     animator.SetBool("ViewDirection", isViewDirection);
+    //     while (viewDirection.IsPressed())
+    //     {
+    //         yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+    //         var rawPose = Camera.main.WorldToScreenPoint(viewRotationPoint.transform.position);
+    //         rawPose.Scale(new Vector3(1 / GlobalObject.Instance.screenResolution.x, 1 / GlobalObject.Instance.screenResolution.y, 1f));
+    //         this.viewDirection = new Vector3(GlobalObject.Instance.mouse.x - rawPose.x, 0, GlobalObject.Instance.mouse.y - rawPose.y);
+            
+    //         rotatableObject.RotateToDirectionAxisXZ(this.viewDirection);
+    //     }
+    //     isViewDirection = false;
+    //     animator.SetBool("ViewDirection", isViewDirection);
+    // }

@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
-public class RotatableObject
+public class RotatableObject : MonoBehaviour
 {
     [Header("Rotation")]
     [SerializeField] private float rotateAmountAbs = 10f;
@@ -16,7 +16,6 @@ public class RotatableObject
     [SerializeField] private enum directionEnum {Clockwise = 1, CounterClockwise = -1}
     [SerializeField] private float moveAngle;
     [SerializeField] private float movedAngle = 0;
-    [SerializeField] private Transform objectTransform;
     [SerializeField] private bool finish = false;
     private UtilObject utilObject = new UtilObject();
     private object[][] returnValue;
@@ -28,13 +27,8 @@ public class RotatableObject
     public float PrevToAngle { get => prevToAngle; set => prevToAngle = value; }
     public float MoveAngle { get => moveAngle; set => moveAngle = value; }
     public float MovedAngle { get => movedAngle; set => movedAngle = value; }
-    public Transform ObjectTransform { get => objectTransform; set => objectTransform = value; }
     public bool Finish { get => finish; set => finish = value; }
 
-    public RotatableObject(Transform objectTransform)
-    {
-        this.ObjectTransform = objectTransform;
-    }
 
     public float GetMoveAngle(float toAngle)
     {
@@ -67,6 +61,17 @@ public class RotatableObject
 
     public void RotateToDirectionAxisXZ(Vector3 directionVector)
     {
+        RotateToDirectionAxisXZBase(directionVector);
+    }
+
+    public void RotateToDirectionAxisXZ(Vector2 directionVector)
+    {
+        directionVector = new Vector3(directionVector.x, 0, directionVector.y);
+        RotateToDirectionAxisXZBase(directionVector);
+    }
+
+    public void RotateToDirectionAxisXZBase(Vector3 directionVector)
+    {
         #region Handle Rotaion
         ToAngle = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
         if (ToAngle != PrevToAngle)
@@ -81,7 +86,7 @@ public class RotatableObject
         if (MovedAngle < MoveAngle)
         {
             Finish = false;
-            ObjectTransform.Rotate(new Vector3(0, RotateAmount, 0));
+            transform.Rotate(new Vector3(0, RotateAmount, 0));
             CurentAngle += RotateAmount;
             if (CurentAngle < 0) CurentAngle = 360 + CurentAngle;
             else if (CurentAngle > 360) CurentAngle %= 360;
@@ -94,13 +99,13 @@ public class RotatableObject
         #endregion
 
         #region Or Simplier Approach
-        // objectTransform.rotation = Quaternion.RotateTowards(objectTransform.rotation, Quaternion.LookRotation(directionVector, Vector3.up), rotateAmountAbs * 100);
+        // transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(directionVector, Vector3.up), rotateAmountAbs * 100);
         #endregion
     }
 
     public void RotateToAngleAxisXZImediatly(float angle)
     {
-        objectTransform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+        transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
         toAngle = angle;
         curentAngle = angle;
     }
@@ -109,6 +114,6 @@ public class RotatableObject
     {
         toAngle = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
         curentAngle = utilObject.GetPositiveAngle(toAngle);
-        objectTransform.rotation = Quaternion.Euler(0, curentAngle, 0);
+        transform.rotation = Quaternion.Euler(0, curentAngle, 0);
     }
 }
