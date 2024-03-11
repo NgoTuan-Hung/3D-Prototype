@@ -16,8 +16,8 @@ public class SkillableObject : MonoBehaviour
         gameObject.AddComponent(Type.GetType("SwordSkill"));
         weaponSkills.Add((WeaponSkill)GetComponent("SwordSkill"));
     }
-    public void PerformAttack(Transform location)
+    public void PerformAttack(Transform location, Vector3 rotateDirection)
     {
-        weaponSkills[0].Attack(location);
+        weaponSkills[0].Attack(location, rotateDirection);
     }
 }

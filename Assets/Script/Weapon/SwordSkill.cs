@@ -16,7 +16,7 @@ public class SwordSkill : MonoBehaviour, WeaponSkill
         weaponPool = new ObjectPool(swordPrefab, 20);
     }
 
-    public void Attack(Transform location)
+    public void Attack(Transform target, Vector3 rotationDirection)
     {
         if (canAttack)
         {
@@ -24,8 +24,9 @@ public class SwordSkill : MonoBehaviour, WeaponSkill
             GameObject blackSword = weaponPool.PickOne();
             ParticleSystem particleSystem = blackSword.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystem>();
             if (!particleSystem.isPlaying) particleSystem.Play();
-            blackSword.transform.position = location.position;
-            blackSword.transform.rotation = location.rotation;
+            blackSword.transform.position = target.position;
+            blackSword.transform.rotation = Quaternion.FromToRotation(Vector3.forward, rotationDirection);
+            blackSword.transform.position = blackSword.transform.TransformPoint(0, 0, -2);
             blackSword.GetComponentInChildren<Animator>().SetBool("Attack", true);
             StartCoroutine(ResetAttack());
         }

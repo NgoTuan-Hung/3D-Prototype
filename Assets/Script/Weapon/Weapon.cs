@@ -14,6 +14,7 @@ public class Weapon : MonoBehaviour
     public void StopAttack()
     {
         animator.SetBool("Attack", false);
+        transform.parent.transform.rotation = Quaternion.Euler(0, 0, 0);
         transform.parent.gameObject.SetActive(false);
     }
 }

@@ -54,10 +54,14 @@ public class PlayerScript : MonoBehaviour
         skillableObject = GetComponent<SkillableObject>();
         attackPosition = GameObject.Find("AttackPosition").transform;
         bodyRotationSourceObject = GameObject.Find("BodyAimSourceObject");
+        bodyAimSourceObjectOriginalBodyPoint = GameObject.Find("BodyAimSourceObjectOriginalBodyPoint");
+        bodyAimSourceObjectFirstRotate = GameObject.Find("BodyAimSourceObjectFirstRotate");
     }
+
     void Attack(InputAction.CallbackContext callbackContext)
     {
-        skillableObject.PerformAttack(attackPosition);
+        Vector3 rotateDirection = targetableObject.nearestTarget.transform.position - transform.position;
+        skillableObject.PerformAttack(targetableObject.nearestTarget.transform, rotateDirection);
         if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
         else animator.SetBool("Attack_Mirror", false);
         animator.SetBool("Attack", true);
@@ -132,19 +136,32 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    private GameObject bodyAimSourceObjectOriginalBodyPoint;
+    private GameObject bodyAimSourceObjectFirstRotate;
     public IEnumerator TargetHandler()
     {
         while (isTarget)
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            bodyRotationSourceObject.transform.position = transform.position;
-            var direction = new Vector2(currentTarget.transform.position.x - transform.position.x,
-            currentTarget.transform.position.z - transform.position.z);
-            var angle = utilObject.CalculateAngle(Vector3.forward, new Vector3(direction.x, 0, direction.y), Vector3.up);
-            object[][] returnValue = rotatableObject.GetOptimalRotateDirectionAndMoveAngle(angle);
-            bodyRotationSourceObject.transform.rotation = Quaternion.Euler(0
-            , rotatableObject.CurentAngle + Math.Clamp((int)returnValue[0][0] * (float)returnValue[0][1], -90, 90), 0);
+            Vector3 direction = currentTarget.transform.position - bodyRotationSourceObject.transform.position;
+            var angle =  Quaternion.LookRotation(direction, Vector3.Cross(direction, bodyAimSourceObjectOriginalBodyPoint.transform.TransformPoint(Vector3.forward))).eulerAngles;
+            bodyAimSourceObjectFirstRotate.transform.rotation = Quaternion.Euler(angle);
+            Vector3 tempRotation = bodyAimSourceObjectFirstRotate.transform.localRotation.eulerAngles;
+
+            tempRotation = new Vector3
+            (
+                tempRotation.x > 180 ? tempRotation.x - 360 : tempRotation.x,
+                tempRotation.y > 180 ? tempRotation.y - 360 : tempRotation.y,
+                0
+            );
+
+            bodyRotationSourceObject.transform.localRotation = Quaternion.Euler
+            (
+                Math.Clamp(tempRotation.x, -30f, 30f)
+                , Math.Clamp(tempRotation.y, -90f, 90f)
+                , 0
+            );
         }
     }
 

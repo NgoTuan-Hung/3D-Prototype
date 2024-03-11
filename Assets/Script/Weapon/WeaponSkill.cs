@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface WeaponSkill
 {
-    public void Attack(Transform location);
+    public void Attack(Transform location, Vector3 rotateDirection);
 }

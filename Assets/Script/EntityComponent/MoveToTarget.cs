@@ -10,15 +10,18 @@ public class MoveToTarget : MonoBehaviour
     [SerializeField] private bool canMove = true;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float distanceToTarget;
+    [SerializeField] private float distanceToStopMove;
     private RotatableObject rotatableObject;
     public bool CanMove { get => canMove; set => canMove = value; }
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value * 0.03f; }
     public float DistanceToTarget { get => distanceToTarget; set => distanceToTarget = value; }
+    public float DistanceToStopMove { get => distanceToStopMove; set => distanceToStopMove = value; }
 
     // Start is called before the first frame update
     void Start()
     {
         MoveSpeed = 1f;
+        distanceToStopMove = 1f;
         animator = GetComponent<Animator>();
         target = GameObject.Find("Player").transform;
         rotatableObject = GetComponent<RotatableObject>();
@@ -36,12 +39,15 @@ public class MoveToTarget : MonoBehaviour
         distanceToTarget = funcMove_DistanceVector.magnitude;
         if (canMove)
         {
-            transform.position += funcMove_DistanceVector.normalized * moveSpeed;
+            if (distanceToTarget > distanceToStopMove)
+            {
+                transform.position += funcMove_DistanceVector.normalized * moveSpeed;
 
-            rotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
-            Debug.DrawRay(transform.position, funcMove_DistanceVector, Color.red);
+                rotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
+                Debug.DrawRay(transform.position, funcMove_DistanceVector, Color.red);
 
-            animator.SetBool("Move", true);
+                animator.SetBool("Move", true);
+            }
         }
         else
         {
