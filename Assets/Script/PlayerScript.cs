@@ -6,7 +6,7 @@ using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 using UnityRandom = UnityEngine.Random;
 
-[RequireComponent(typeof(SkillableObject), typeof(RotatableObject))]
+[RequireComponent(typeof(SkillableObject), typeof(RotatableObject), typeof(TargetableObject))]
 public class PlayerScript : MonoBehaviour
 {
     [Header("General")]
@@ -28,7 +28,6 @@ public class PlayerScript : MonoBehaviour
     public static CameraDelegate cameraDelegate;
     [SerializeField] private Transform attackPosition;
     public SkillableObject skillableObject;
-    [SerializeField] private GameObject bodyRotationSourceObject;
     UtilObject utilObject = new UtilObject();
     // Start is called before the first frame update
     void Awake()
@@ -36,7 +35,6 @@ public class PlayerScript : MonoBehaviour
         //playerInput = gameObject.GetComponent<PlayerInput>();
         playerInputSystem = new PlayerInputSystem();
         playerInputSystem.Control.Jump.performed += Jump;
-        playerInputSystem.Control.Target.performed += Target;
         playerInputSystem.Control.Attack.performed += Attack;
         //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
     }
@@ -47,24 +45,22 @@ public class PlayerScript : MonoBehaviour
         rotatableObject = GetComponent<RotatableObject>();
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        targetableObject = GetComponentInChildren<TargetableObject>();
+        targetableObject = GetComponent<TargetableObject>();
         multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();
         multiAimConstraintData = multiAimConstraint.data;
         rigBuilder = GetComponentInChildren<RigBuilder>();
         skillableObject = GetComponent<SkillableObject>();
         attackPosition = GameObject.Find("AttackPosition").transform;
-        bodyRotationSourceObject = GameObject.Find("BodyAimSourceObject");
-        bodyAimSourceObjectOriginalBodyPoint = GameObject.Find("BodyAimSourceObjectOriginalBodyPoint");
-        bodyAimSourceObjectFirstRotate = GameObject.Find("BodyAimSourceObjectFirstRotate");
     }
 
     void Attack(InputAction.CallbackContext callbackContext)
     {
-        Vector3 rotateDirection = targetableObject.nearestTarget.transform.position - transform.position;
-        skillableObject.PerformAttack(targetableObject.nearestTarget.transform, rotateDirection);
-        if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
-        else animator.SetBool("Attack_Mirror", false);
-        animator.SetBool("Attack", true);
+        // Vector3 rotateDirection = targetableObject.nearestTarget.transform.position - transform.position;
+        // skillableObject.PerformAttack(targetableObject.nearestTarget.transform, rotateDirection);
+        // if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
+        // else animator.SetBool("Attack_Mirror", false);
+        // targetableObject.Target();
+        // animator.SetBool("Attack", true);
     }
 
     public void StopAttack()
@@ -98,7 +94,6 @@ public class PlayerScript : MonoBehaviour
             
             transform.position +=  directionVector * moveSpeed;
             
-            if (!isTarget) bodyRotationSourceObject.transform.rotation = Quaternion.Euler(0, rotatableObject.CurentAngle, 0);
             rotatableObject.RotateToDirectionAxisXZ(directionVector);
         }
     }
@@ -109,61 +104,6 @@ public class PlayerScript : MonoBehaviour
         rigidbody.velocity += new Vector3(0, jumpVelocity);
     }
 
-    [SerializeField] private bool isTarget = false;
-    [SerializeField] private GameObject currentTarget;
-    private Vector3 targetTempVec;
-    public void Target(InputAction.CallbackContext callbackContext)
-    {
-        if (!isTarget)
-        {
-            isTarget = true;
-            //animator.SetBool("Target", true);
-            currentTarget = targetableObject.nearestTarget;
-            //cameraDelegate?.Invoke(currentTarget);
-            StartCoroutine(TargetHandler());
-            
-            var weightedTransformArray = multiAimConstraintData.sourceObjects;
-            weightedTransformArray.SetTransform(0, currentTarget.transform);
-            multiAimConstraintData.sourceObjects = weightedTransformArray;
-            multiAimConstraint.data = multiAimConstraintData;
-            rigBuilder.Build();
-        }
-        else
-        {
-            isTarget = false;
-            //cameraDelegate?.Invoke(null);
-            //animator.SetBool("Target", false);
-        }
-    }
-
-    private GameObject bodyAimSourceObjectOriginalBodyPoint;
-    private GameObject bodyAimSourceObjectFirstRotate;
-    public IEnumerator TargetHandler()
-    {
-        while (isTarget)
-        {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-
-            Vector3 direction = currentTarget.transform.position - bodyRotationSourceObject.transform.position;
-            var angle =  Quaternion.LookRotation(direction, Vector3.Cross(direction, bodyAimSourceObjectOriginalBodyPoint.transform.TransformPoint(Vector3.forward))).eulerAngles;
-            bodyAimSourceObjectFirstRotate.transform.rotation = Quaternion.Euler(angle);
-            Vector3 tempRotation = bodyAimSourceObjectFirstRotate.transform.localRotation.eulerAngles;
-
-            tempRotation = new Vector3
-            (
-                tempRotation.x > 180 ? tempRotation.x - 360 : tempRotation.x,
-                tempRotation.y > 180 ? tempRotation.y - 360 : tempRotation.y,
-                0
-            );
-
-            bodyRotationSourceObject.transform.localRotation = Quaternion.Euler
-            (
-                Math.Clamp(tempRotation.x, -30f, 30f)
-                , Math.Clamp(tempRotation.y, -90f, 90f)
-                , 0
-            );
-        }
-    }
 
     public IEnumerator test(object value)
     {
