@@ -51,19 +51,38 @@ public class PlayerScript : MonoBehaviour
         rigBuilder = GetComponentInChildren<RigBuilder>();
         skillableObject = GetComponent<SkillableObject>();
         attackPosition = GameObject.Find("AttackPosition").transform;
+        attackCoroutine = StartCoroutine(NullCoroutine());
     }
 
+    private Coroutine attackCoroutine;
+    private IEnumerator NullCoroutine() {yield return new WaitForSeconds(0);;}
     void Attack(InputAction.CallbackContext callbackContext)
     {
-        // Vector3 rotateDirection = targetableObject.nearestTarget.transform.position - transform.position;
-        // skillableObject.PerformAttack(targetableObject.nearestTarget.transform, rotateDirection);
-        // if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
-        // else animator.SetBool("Attack_Mirror", false);
-        // targetableObject.Target();
-        // animator.SetBool("Attack", true);
+        if (skillableObject.CanAttack)
+        {
+            Vector3 rotateDirection = targetableObject.TargetChecker.nearestTarget.transform.position - transform.position;
+            skillableObject.PerformAttack(targetableObject.TargetChecker.nearestTarget.transform, rotateDirection);
+            if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
+            else animator.SetBool("Attack_Mirror", false);
+            if (!targetableObject.IsTarget)
+            {
+                targetableObject.Target();
+            }
+            animator.SetBool("Attack", true);
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = StartCoroutine(StopAttack());
+        }
     }
 
-    public void StopAttack()
+
+    IEnumerator StopAttack()
+    {
+        yield return new WaitForSeconds(3);
+
+        targetableObject.Reset();
+    }
+
+    public void StopAttackAnimation()
     {
         animator.SetBool("Attack", false);
     }

@@ -5,10 +5,22 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     Animator animator;
+    new ParticleSystem particleSystem;
 
     private void Start() 
     {
         animator = GetComponent<Animator>();
+        particleSystem = transform.GetChild(1).GetComponent<ParticleSystem>();
+    }
+
+    public void PlayAttackParticleSystem()
+    {
+        if (!particleSystem.isPlaying) particleSystem.Play();
+    }
+
+    public void Attack()
+    {
+        animator.SetBool("Attack", true);
     }
 
     public void StopAttack()

@@ -3,39 +3,38 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class SwordSkill : MonoBehaviour, WeaponSkill
+public class SwordSkill : WeaponSkill
 {
-    public static ObjectPool weaponPool;
-    public GameObject swordPrefab;
-    public bool canAttack = true;
-    public float attackCooldown = 0;
+    [SerializeField] private static ObjectPool<Weapon> weaponPool {get; set;}
+    [SerializeField] private GameObject swordPrefab;
 
     private void Start() 
     {
         swordPrefab = Instantiate(Resources.Load("LongSword")).GameObject();
-        weaponPool = new ObjectPool(swordPrefab, 20);
+        weaponPool ??= new ObjectPool<Weapon>(swordPrefab, 20);
     }
 
     public void Attack(Transform target, Vector3 rotationDirection)
     {
-        if (canAttack)
+        if (CanAttack)
         {
-            canAttack = false;
-            GameObject blackSword = weaponPool.PickOne();
-            ParticleSystem particleSystem = blackSword.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystem>();
-            if (!particleSystem.isPlaying) particleSystem.Play();
-            blackSword.transform.position = target.position;
-            blackSword.transform.rotation = Quaternion.FromToRotation(Vector3.forward, rotationDirection);
-            blackSword.transform.position = blackSword.transform.TransformPoint(0, 0, -2);
-            blackSword.GetComponentInChildren<Animator>().SetBool("Attack", true);
+            CanAttack = false;
+            ObjectPoolClass<Weapon> objectPoolClass = weaponPool.PickOne();
+            SwordWeapon swordWeapon = objectPoolClass.Component as SwordWeapon;
+            
+            swordWeapon.PlayAttackParticleSystem();
+            swordWeapon.transform.position = target.position;
+            swordWeapon.transform.rotation = Quaternion.FromToRotation(Vector3.forward, rotationDirection);
+            swordWeapon.transform.position = swordWeapon.transform.TransformPoint(0, 0, -2);
+            swordWeapon.Attack();
             StartCoroutine(ResetAttack());
         }
     }
 
     public IEnumerator ResetAttack()
     {
-        yield return new WaitForSeconds(attackCooldown);
+        yield return new WaitForSeconds(AttackCooldown);
 
-        canAttack = true;
+        CanAttack = true;
     }
 }

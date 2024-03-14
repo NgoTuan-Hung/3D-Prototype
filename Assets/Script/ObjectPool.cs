@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using SystemObject = System.Object;
 
-public class ObjectPool
+public class ObjectPool<T>
 {
-    public List<GameObject> pool;
+    public List<ObjectPoolClass<T>> pool;
     public GameObject prefab;
     public int size;
 
@@ -14,25 +16,40 @@ public class ObjectPool
         this.prefab = prefab;
         this.size = size;
 
-        pool = new List<GameObject>(size);
+        pool = new List<ObjectPoolClass<T>>(size);
         for (int i=0;i<pool.Capacity;i++)
         {
-            pool.Add(GameObject.Instantiate(prefab));
-            pool[i].SetActive(false);
+            ObjectPoolClass<T> objectPoolClass = new ObjectPoolClass<T>
+            {
+                GameObject = GameObject.Instantiate(prefab)
+            };
+            objectPoolClass.Component = objectPoolClass.GameObject.GetComponentInChildren<T>();
+            
+            pool.Add(objectPoolClass);
+            pool[i].GameObject.SetActive(false);
         }
     }
 
-    public GameObject PickOne()
+    public ObjectPoolClass<T> PickOne()
     {
         for (int i=0;i<pool.Count;i++)
         {
-            if (!pool[i].activeSelf)
+            if (!pool[i].GameObject.activeSelf)
             {
-                pool[i].SetActive(true);
+                pool[i].GameObject.SetActive(true);
                 return pool[i];
             }
         }
 
         return null;
     }
+}
+
+public class ObjectPoolClass<T>
+{
+    private GameObject gameObject;
+    private T component;
+
+    public GameObject GameObject { get => gameObject; set => gameObject = value; }
+    public T Component { get => component; set => component = value; }
 }

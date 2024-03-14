@@ -1,0 +1,6 @@
+
+
+public class SwordWeapon : Weapon
+{
+    
+}

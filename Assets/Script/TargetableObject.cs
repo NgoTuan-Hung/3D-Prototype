@@ -13,6 +13,16 @@ public class TargetableObject : MonoBehaviour
     [SerializeField] private GameObject bodyRotationSourceObject;
     [SerializeField] private TargetChecker targetChecker;
 
+    public bool IsTarget { get => isTarget; set => isTarget = value; }
+    public GameObject CurrentTarget { get => currentTarget; set => currentTarget = value; }
+    public GameObject BodyAimSourceObjectOriginalBodyPoint { get => bodyAimSourceObjectOriginalBodyPoint; set => bodyAimSourceObjectOriginalBodyPoint = value; }
+    public GameObject BodyAimSourceObjectFirstRotate { get => bodyAimSourceObjectFirstRotate; set => bodyAimSourceObjectFirstRotate = value; }
+    public GameObject BodyRotationSourceObject { get => bodyRotationSourceObject; set => bodyRotationSourceObject = value; }
+    public TargetChecker TargetChecker { get => targetChecker; set => targetChecker = value; }
+    public Vector3 TargetHandler_direction { get => targetHandler_direction; set => targetHandler_direction = value; }
+    public Vector3 TargetHandler_angle { get => targetHandler_angle; set => targetHandler_angle = value; }
+    public Vector3 TargetHandler_tempRotation { get => targetHandler_tempRotation; set => targetHandler_tempRotation = value; }
+
     private void Start() 
     {
         GameObject bodyAimSourceObjectRoot = transform.Find("BodyAimSourceObjectRoot").gameObject;
@@ -20,30 +30,24 @@ public class TargetableObject : MonoBehaviour
         bodyAimSourceObjectOriginalBodyPoint = bodyAimSourceObjectRoot.transform.Find("BodyAimSourceObjectOriginalBodyPoint").gameObject;
         bodyAimSourceObjectFirstRotate = bodyAimSourceObjectRoot.transform.Find("BodyAimSourceObjectFirstRotate").gameObject;
         targetChecker = Instantiate(Resources.Load("TargetChecker"), transform).GetComponent<TargetChecker>();
-        targetChecker.transform.position = Vector3.zero;
+        targetChecker.transform.position = transform.position;
     }
 
     public void Target()
     {
-        if (!isTarget)
-        {
-            isTarget = true;
-            //animator.SetBool("Target", true);
-            //cameraDelegate?.Invoke(currentTarget);
-            StartCoroutine(TargetHandler());
-            
-            // var weightedTransformArray = multiAimConstraintData.sourceObjects;
-            // weightedTransformArray.SetTransform(0, currentTarget.transform);
-            // multiAimConstraintData.sourceObjects = weightedTransformArray;
-            // multiAimConstraint.data = multiAimConstraintData;
-            // rigBuilder.Build();
-        }
-        else
-        {
-            isTarget = false;
-            //cameraDelegate?.Invoke(null);
-            //animator.SetBool("Target", false);
-        }
+        isTarget = true;
+        StartCoroutine(TargetHandler());
+
+        #region old-code
+        //animator.SetBool("Target", true);
+        //cameraDelegate?.Invoke(currentTarget);
+
+        // var weightedTransformArray = multiAimConstraintData.sourceObjects;
+        // weightedTransformArray.SetTransform(0, currentTarget.transform);
+        // multiAimConstraintData.sourceObjects = weightedTransformArray;
+        // multiAimConstraint.data = multiAimConstraintData;
+        // rigBuilder.Build();
+        #endregion
     }
 
     [SerializeField] private Vector3 targetHandler_direction;
@@ -78,5 +82,11 @@ public class TargetableObject : MonoBehaviour
                 , 0
             );
         }
+    }
+
+    public void Reset()
+    {
+        isTarget = false;
+        bodyRotationSourceObject.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 }
