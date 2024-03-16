@@ -4846,7 +4846,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1341732101188920753}
   - component: {fileID: 38933800621580785}
-  - component: {fileID: 8827824363522173598}
+  - component: {fileID: 8798110934753737808}
   m_Layer: 0
   m_Name: LongSwordComponent
   m_TagString: Untagged
@@ -4892,7 +4892,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8827824363522173598
+--- !u!114 &8798110934753737808
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4901,7 +4901,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 213687389812110473}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abb589145b7bd2b4b8cab2f65ff02de9, type: 3}
+  m_Script: {fileID: 11500000, guid: 48a6d4873d7a8e340af16a496944a6fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3579429333786220714

@@ -7,7 +7,7 @@ public class Weapon : MonoBehaviour
     Animator animator;
     new ParticleSystem particleSystem;
 
-    private void Start() 
+    public void StartParent() 
     {
         animator = GetComponent<Animator>();
         particleSystem = transform.GetChild(1).GetComponent<ParticleSystem>();
@@ -26,7 +26,6 @@ public class Weapon : MonoBehaviour
     public void StopAttack()
     {
         animator.SetBool("Attack", false);
-        transform.parent.transform.rotation = Quaternion.Euler(0, 0, 0);
         transform.parent.gameObject.SetActive(false);
     }
 }
