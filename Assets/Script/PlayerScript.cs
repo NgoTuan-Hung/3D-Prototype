@@ -55,22 +55,39 @@ public class PlayerScript : MonoBehaviour
     }
 
     private Coroutine attackCoroutine;
-    private IEnumerator NullCoroutine() {yield return new WaitForSeconds(0);;}
+    private IEnumerator NullCoroutine() {yield return new WaitForSeconds(0);}
+    [SerializeField] private bool isAttack = false;
     void Attack(InputAction.CallbackContext callbackContext)
     {
-        if (skillableObject.CanAttack)
+        if (!isAttack)
         {
-            Vector3 rotateDirection = targetableObject.TargetChecker.nearestTarget.transform.position - transform.position;
-            skillableObject.PerformAttack(targetableObject.TargetChecker.nearestTarget.transform, rotateDirection);
-            if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
-            else animator.SetBool("Attack_Mirror", false);
-            if (!targetableObject.IsTarget)
+            isAttack = true;
+            StartCoroutine(AttackHandler());
+        }
+        else isAttack = false;
+    }
+
+    IEnumerator AttackHandler()
+    {
+        while (isAttack)
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+            if (skillableObject.CanAttack)
             {
-                targetableObject.Target();
+                Vector3 rotateDirection = targetableObject.TargetChecker.nearestTarget.transform.position - transform.position;
+                skillableObject.PerformAttack(targetableObject.TargetChecker.nearestTarget.transform, rotateDirection);
+                if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
+                else animator.SetBool("Attack_Mirror", false);
+                if (!targetableObject.IsTarget)
+                {
+                    targetableObject.Target();
+                }
+                animator.SetBool("Attack", true);
+                animator.Play("UpperBody.Attack", 1, 0);
+                StopCoroutine(attackCoroutine);
+                attackCoroutine = StartCoroutine(StopAttack());
             }
-            animator.SetBool("Attack", true);
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = StartCoroutine(StopAttack());
         }
     }
 

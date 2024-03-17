@@ -29,7 +29,7 @@ public class SwordSkill : WeaponSkill
             swordWeapon.PlayAttackParticleSystem();
             swordWeaponParent.position = target.position;
             swordWeaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, rotationDirection);
-            swordWeaponParent.position = swordWeapon.transform.TransformPoint(0, 0, -2);
+            swordWeaponParent.position = swordWeaponParent.transform.TransformPoint(0, 0, -2);
             swordWeapon.Attack();
             StartCoroutine(ResetAttack());
 
