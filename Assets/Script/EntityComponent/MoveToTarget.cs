@@ -29,22 +29,32 @@ public class MoveToTarget : MonoBehaviour
 
     private void FixedUpdate() 
     {
+        CalculateDistanceVector();
+        RotateToTarget();
         Move();
     }
 
     private Vector3 funcMove_DistanceVector;
-    public void Move()
+
+    public void CalculateDistanceVector()
     {
         funcMove_DistanceVector = new Vector3(target.transform.position.x - transform.position.x, 0, target.transform.position.z - transform.position.z);
+    }
+
+    public void RotateToTarget()
+    {
+        rotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
+        Debug.DrawRay(transform.position, funcMove_DistanceVector, Color.red);
+    }
+    public void Move()
+    {
+        
         distanceToTarget = funcMove_DistanceVector.magnitude;
         if (canMove)
         {
             if (distanceToTarget > distanceToStopMove)
             {
                 transform.position += funcMove_DistanceVector.normalized * moveSpeed;
-
-                rotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
-                Debug.DrawRay(transform.position, funcMove_DistanceVector, Color.red);
 
                 animator.SetBool("Move", true);
             }
