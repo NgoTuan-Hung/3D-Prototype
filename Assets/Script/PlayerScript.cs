@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityRandom = UnityEngine.Random;
 
 [RequireComponent(typeof(SkillableObject), typeof(RotatableObject), typeof(TargetableObject))]
+[RequireComponent(typeof(CombatEntity))]
 public class PlayerScript : MonoBehaviour
 {
     [Header("General")]

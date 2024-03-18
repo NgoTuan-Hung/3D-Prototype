@@ -6,6 +6,9 @@ public class Weapon : MonoBehaviour
 {
     Animator animator;
     new ParticleSystem particleSystem;
+    private float colliderDamage = 0f;
+
+    public float ColliderDamage { get => colliderDamage; set => colliderDamage = value; }
 
     public void StartParent() 
     {
@@ -27,5 +30,10 @@ public class Weapon : MonoBehaviour
     {
         animator.SetBool("Attack", false);
         transform.parent.gameObject.SetActive(false);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        
     }
 }
