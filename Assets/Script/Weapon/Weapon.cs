@@ -32,8 +32,8 @@ public class Weapon : MonoBehaviour
         transform.parent.gameObject.SetActive(false);
     }
 
-    void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnterParent(Collision collision)
     {
-        
+        GlobalObject.Instance.UpdateCombatEntityHealth(colliderDamage, collision.gameObject);
     }
 }

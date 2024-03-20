@@ -18,6 +18,9 @@ public class GlobalObject : Singleton<GlobalObject>
     public PlayerInputSystem playerInputSystem;
     public String entityDataPath;
     public List<EntityData> entityDatas;
+    public List<CombatEntityInfo> combatEntityInfos;
+    CombatEntityInfoComparer combatEntityInfoComparer = new CombatEntityInfoComparer();
+    UtilObject utilObject = new UtilObject();
 
     private void Awake() 
     {
@@ -27,10 +30,25 @@ public class GlobalObject : Singleton<GlobalObject>
         string json = File.ReadAllText(GlobalObject.Instance.entityDataPath);
         entityDatas = FromJson<EntityData>(json);
     }
+
+    public void UpdateCombatEntityHealth(float value, GameObject gameObject)
+    {
+        utilObject.CombatEntityInfoBinarySearch(combatEntityInfos, gameObject.GetInstanceID())
+        .CombatEntity.UpdateHealth(value);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         screenResolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
+        
+        #region search all combat entities
+        List<CombatEntity> combatEntities = FindObjectsByType<CombatEntity>(FindObjectsSortMode.InstanceID).ToList();
+        combatEntities.ForEach(combatEntity => {combatEntityInfos.Add(new CombatEntityInfo(combatEntity.gameObject, combatEntity)); Debug.Log(combatEntity.gameObject.name);});
+
+        // sort the list by object instance id
+        // combatEntityInfos.Sort(combatEntityInfoComparer);
+        #endregion
     }
 
     // Update is called once per frame
@@ -68,5 +86,34 @@ public class GlobalObject : Singleton<GlobalObject>
 public class Wrapper<T>
 {
     public List<T> items;
+}
+
+public class CombatEntityInfo
+{
+    private GameObject gameObject;
+    private CombatEntity combatEntity;
+
+    public CombatEntityInfo(GameObject gameObject, CombatEntity combatEntity)
+    {
+        this.gameObject = gameObject;
+        this.combatEntity = combatEntity;
+    }
+
+    public GameObject GameObject { get => gameObject; set => gameObject = value; }
+    public CombatEntity CombatEntity { get => combatEntity; set => combatEntity = value; }
+}
+
+
+
+public class CombatEntityInfoComparer : IComparer<CombatEntityInfo>
+{
+    public int Compare(CombatEntityInfo x, CombatEntityInfo y)
+    {
+        if (x == null || y == null) 
+        {
+            return 0;
+        }
+        return x.GameObject.GetInstanceID().CompareTo(y.GameObject.GetInstanceID());
+    }
 }
 

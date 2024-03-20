@@ -6,4 +6,10 @@ public class SwordWeapon : Weapon
     {
         StartParent();    
     }
+
+    private void OnCollisionEnter(Collision other) 
+    {
+        OnCollisionEnterParent(other);
+        Debug.Log("collide");
+    }
 }

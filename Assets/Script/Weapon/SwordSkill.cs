@@ -27,6 +27,7 @@ public class SwordSkill : WeaponSkill
             swordWeaponParent = swordWeapon.transform.parent;
 
             swordWeapon.PlayAttackParticleSystem();
+            swordWeapon.ColliderDamage = 10f;
             swordWeaponParent.position = target.position;
             swordWeaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, rotationDirection);
             swordWeaponParent.position = swordWeaponParent.transform.TransformPoint(0, 0, -2);

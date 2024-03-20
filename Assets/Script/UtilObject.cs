@@ -39,4 +39,32 @@ public class UtilObject
     {
         return GlobalObject.Instance.entityDatas.First((entityData) => entityData.entityName.Equals(name));
     }
+
+    public CombatEntityInfo CombatEntityInfoBinarySearch(List<CombatEntityInfo> arr, int target)
+    {
+        int low = 0;
+        int high = arr.Count - 1;
+ 
+        while (low <= high)
+        {
+            int mid = (low + high) / 2;
+            CombatEntityInfo guess = arr[mid];
+ 
+            if (guess.GameObject.GetInstanceID() == target)
+            {
+                // Return age if the name matches the target
+                return guess;
+            }
+            else if (guess.GameObject.GetInstanceID() > target)
+            {
+                high = mid - 1;
+            }
+            else
+            {
+                low = mid + 1;
+            }
+        }
+ 
+        return null; // Not found
+    }
 }
