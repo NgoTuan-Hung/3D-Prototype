@@ -33,8 +33,6 @@ public class SwordSkill : WeaponSkill
             swordWeaponParent.position = swordWeaponParent.transform.TransformPoint(0, 0, -2);
             swordWeapon.Attack();
             StartCoroutine(ResetAttack());
-
-            Debug.Log("attacked");
         }
     }
 

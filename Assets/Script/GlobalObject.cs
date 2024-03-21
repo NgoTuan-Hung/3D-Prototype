@@ -18,7 +18,7 @@ public class GlobalObject : Singleton<GlobalObject>
     public PlayerInputSystem playerInputSystem;
     public String entityDataPath;
     public List<EntityData> entityDatas;
-    public List<CombatEntityInfo> combatEntityInfos;
+    public List<CombatEntityInfo> combatEntityInfos = new List<CombatEntityInfo>();
     CombatEntityInfoComparer combatEntityInfoComparer = new CombatEntityInfoComparer();
     UtilObject utilObject = new UtilObject();
 
@@ -34,7 +34,11 @@ public class GlobalObject : Singleton<GlobalObject>
     public void UpdateCombatEntityHealth(float value, GameObject gameObject)
     {
         utilObject.CombatEntityInfoBinarySearch(combatEntityInfos, gameObject.GetInstanceID())
-        .CombatEntity.UpdateHealth(value);
+        .CombatEntity.UpdateHealth(10);
+        
+        // var searched = utilObject.CombatEntityInfoBinarySearch(combatEntityInfos, gameObject.GetInstanceID()).CombatEntity;
+        // Debug.Log(searched.CurentHealth + "-" + searched.gameObject.name);
+        // searched.UpdateHealth(10);
     }
 
     // Start is called before the first frame update
@@ -44,7 +48,7 @@ public class GlobalObject : Singleton<GlobalObject>
         
         #region search all combat entities
         List<CombatEntity> combatEntities = FindObjectsByType<CombatEntity>(FindObjectsSortMode.InstanceID).ToList();
-        combatEntities.ForEach(combatEntity => {combatEntityInfos.Add(new CombatEntityInfo(combatEntity.gameObject, combatEntity)); Debug.Log(combatEntity.gameObject.name);});
+        combatEntities.ForEach(combatEntity => {combatEntityInfos.Add(new CombatEntityInfo(combatEntity.gameObject, combatEntity));});
 
         // sort the list by object instance id
         // combatEntityInfos.Sort(combatEntityInfoComparer);
