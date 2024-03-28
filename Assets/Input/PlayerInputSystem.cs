@@ -89,6 +89,15 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""1"",
+                    ""type"": ""Button"",
+                    ""id"": ""c73ebe06-7ce0-493b-aab9-e26ba41346e1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -212,6 +221,17 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c9f94761-e45a-4711-bd8a-e6551b543109"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -227,6 +247,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_Control_ViewDirection = m_Control.FindAction("ViewDirection", throwIfNotFound: true);
         m_Control_Target = m_Control.FindAction("Target", throwIfNotFound: true);
         m_Control_Attack = m_Control.FindAction("Attack", throwIfNotFound: true);
+        m_Control__1 = m_Control.FindAction("1", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -295,6 +316,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Control_ViewDirection;
     private readonly InputAction m_Control_Target;
     private readonly InputAction m_Control_Attack;
+    private readonly InputAction m_Control__1;
     public struct ControlActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -306,6 +328,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @ViewDirection => m_Wrapper.m_Control_ViewDirection;
         public InputAction @Target => m_Wrapper.m_Control_Target;
         public InputAction @Attack => m_Wrapper.m_Control_Attack;
+        public InputAction @_1 => m_Wrapper.m_Control__1;
         public InputActionMap Get() { return m_Wrapper.m_Control; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -336,6 +359,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
+            @_1.started += instance.On_1;
+            @_1.performed += instance.On_1;
+            @_1.canceled += instance.On_1;
         }
 
         private void UnregisterCallbacks(IControlActions instance)
@@ -361,6 +387,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
+            @_1.started -= instance.On_1;
+            @_1.performed -= instance.On_1;
+            @_1.canceled -= instance.On_1;
         }
 
         public void RemoveCallbacks(IControlActions instance)
@@ -387,5 +416,6 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnViewDirection(InputAction.CallbackContext context);
         void OnTarget(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void On_1(InputAction.CallbackContext context);
     }
 }

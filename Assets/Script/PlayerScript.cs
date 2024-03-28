@@ -37,6 +37,7 @@ public class PlayerScript : MonoBehaviour
         playerInputSystem = new PlayerInputSystem();
         playerInputSystem.Control.Jump.performed += Jump;
         playerInputSystem.Control.Attack.performed += Attack;
+        playerInputSystem.Control._1.performed += ClickOne;
         //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
     }
 
@@ -53,6 +54,34 @@ public class PlayerScript : MonoBehaviour
         skillableObject = GetComponent<SkillableObject>();
         attackPosition = GameObject.Find("AttackPosition").transform;
         attackCoroutine = StartCoroutine(NullCoroutine());
+        clickOneCoroutine = StartCoroutine(NullCoroutine());
+        skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject;
+    }
+
+    public bool isClickOne = false;
+    public Coroutine clickOneCoroutine;
+    public GameObject skillCastOriginPoint;
+    public void ClickOne(InputAction.CallbackContext callbackContext)
+    {
+        if (!isClickOne)
+        {
+            StartCoroutine(HandleClickOne());
+        } else isClickOne = false;
+    }
+
+    public Vector2 skillCastVector; 
+    public IEnumerator HandleClickOne()
+    {
+        isClickOne = true;
+        while (isClickOne)
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+            skillCastVector = (playerInputSystem.Control.View.ReadValue<Vector2>() - (Vector2)Camera.main.WorldToScreenPoint(skillCastOriginPoint.transform.position)).normalized;
+            Debug.DrawLine(skillCastOriginPoint.transform.position
+            , skillCastOriginPoint.transform.position + new Vector3(skillCastVector.x * 5, 0, skillCastVector.y * 5),
+            Color.green);
+        }
     }
 
     private Coroutine attackCoroutine;
