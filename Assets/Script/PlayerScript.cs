@@ -69,7 +69,9 @@ public class PlayerScript : MonoBehaviour
         } else isClickOne = false;
     }
 
-    public Vector2 skillCastVector; 
+    public Vector2 skillCastVector;
+    public GameObject skillCast;
+    public float skillCastAngle;
     public IEnumerator HandleClickOne()
     {
         isClickOne = true;
@@ -78,10 +80,13 @@ public class PlayerScript : MonoBehaviour
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
             skillCastVector = (playerInputSystem.Control.View.ReadValue<Vector2>() - (Vector2)Camera.main.WorldToScreenPoint(skillCastOriginPoint.transform.position)).normalized;
-            Debug.DrawLine(skillCastOriginPoint.transform.position
-            , skillCastOriginPoint.transform.position + new Vector3(skillCastVector.x * 5, 0, skillCastVector.y * 5),
-            Color.green);
+            skillCast.transform.position = transform.position;
+            skillCast.SetActive(true);
+            skillCastAngle = Vector2.SignedAngle(Vector2.up, skillCastVector);
+            skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
         }
+
+        skillCast.SetActive(false);
     }
 
     private Coroutine attackCoroutine;
