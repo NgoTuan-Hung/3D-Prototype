@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
@@ -37,7 +38,12 @@ public class PlayerScript : MonoBehaviour
         playerInputSystem = new PlayerInputSystem();
         playerInputSystem.Control.Jump.performed += Jump;
         playerInputSystem.Control.Attack.performed += Attack;
-        playerInputSystem.Control._1.performed += ClickOne;
+
+        #region testing logic for binding key at playtime
+        MethodInfo methodInfo = GetType().GetMethod("Jump");
+        //playerInputSystem.Control._1.performed += (Action<InputAction.CallbackContext>)methodInfo.CreateDelegate;
+
+        #endregion
         //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
     }
 
@@ -82,7 +88,7 @@ public class PlayerScript : MonoBehaviour
             skillCastVector = (playerInputSystem.Control.View.ReadValue<Vector2>() - (Vector2)Camera.main.WorldToScreenPoint(skillCastOriginPoint.transform.position)).normalized;
             skillCast.transform.position = transform.position;
             skillCast.SetActive(true);
-            skillCastAngle = Vector2.SignedAngle(Vector2.up, skillCastVector);
+            skillCastAngle = -Vector2.SignedAngle(Vector2.up, skillCastVector);
             skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
         }
 
