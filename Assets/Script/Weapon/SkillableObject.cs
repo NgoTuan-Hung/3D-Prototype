@@ -1,25 +1,43 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SkillableObject : MonoBehaviour
 {
     public List<WeaponSkill> weaponSkills = new List<WeaponSkill>();
+    public List<String> weaponSkillNames = new List<string>();
     [SerializeField] private bool isAttack = false;
     [SerializeField] private bool canAttack = true;
     public bool IsAttack { get => isAttack; set => isAttack = value; }
     public bool CanAttack { get => canAttack; set => canAttack = value; }
-
+    CustomMonoBehavior customMonoBehavior;
+    public PlayerScript playerScript;
     private void Start() 
     {
         // weaponSkills.ForEach(weaponSkill => 
         // {
         //     gameObject.AddComponent(weaponSkill.GetType());
         // });
+        customMonoBehavior = GetComponent<CustomMonoBehavior>();
 
-        gameObject.AddComponent(Type.GetType("SwordSkill"));
-        weaponSkills.Add((WeaponSkill)GetComponent("SwordSkill"));
+        if (customMonoBehavior.entityType.Equals("Player"))
+        {
+            gameObject.AddComponent(Type.GetType("SwordSkill"));
+            weaponSkills.Add((WeaponSkill)GetComponent("SwordSkill"));
+
+            playerScript = GetComponent<PlayerScript>();
+        }
+        else
+        {
+            weaponSkillNames.ForEach(weaponSkillName => 
+            {
+                gameObject.AddComponent(Type.GetType(weaponSkillName));
+                weaponSkills.Add((WeaponSkill)GetComponent(weaponSkillName));
+            });
+        }
     }
 
     private void FixedUpdate()

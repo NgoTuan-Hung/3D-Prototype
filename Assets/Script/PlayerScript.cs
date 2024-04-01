@@ -9,14 +9,14 @@ using UnityRandom = UnityEngine.Random;
 
 [RequireComponent(typeof(SkillableObject), typeof(RotatableObject), typeof(TargetableObject))]
 [RequireComponent(typeof(CombatEntity))]
-public class PlayerScript : MonoBehaviour
+public class PlayerScript : CustomMonoBehavior
 {
     [Header("General")]
     [SerializeField] private float moveSpeed = 0.1f;
     [SerializeField] private float jumpVelocity = 1f;
     private new Rigidbody rigidbody;
     [SerializeField] private GameObject cameraOfPlayer;
-    PlayerInputSystem playerInputSystem;
+    public PlayerInputSystem playerInputSystem;
     private Animator animator;
     [SerializeField] private Vector3 directionVector;
     [SerializeField] private Vector2 moveVector;
@@ -35,16 +35,22 @@ public class PlayerScript : MonoBehaviour
     void Awake()
     {
         //playerInput = gameObject.GetComponent<PlayerInput>();
+        entityType = "Player";
         playerInputSystem = new PlayerInputSystem();
-        playerInputSystem.Control.Jump.performed += Jump;
-        playerInputSystem.Control.Attack.performed += Attack;
 
-        #region testing logic for binding key at playtime
-        MethodInfo methodInfo = GetType().GetMethod("Jump");
-        //playerInputSystem.Control._1.performed += (Action<InputAction.CallbackContext>)methodInfo.CreateDelegate;
-
-        #endregion
+        BindKey("Attack", "Attack");
+        BindKey("1", "ClickOne");
         //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
+    }
+
+    public void BindKey(String key, String method)
+    {
+        #region Binding key at playtime
+        InputAction inputAction = playerInputSystem.Control.Get().asset.FindAction(key);
+        MethodInfo methodInfo = GetType().GetMethod(method);
+        inputAction.performed += (Action<InputAction.CallbackContext>)
+        Delegate.CreateDelegate(typeof(Action<InputAction.CallbackContext>), this, methodInfo);
+        #endregion
     }
 
     private void Start() 
