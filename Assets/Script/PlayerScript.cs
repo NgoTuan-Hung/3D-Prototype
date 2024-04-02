@@ -67,7 +67,6 @@ public class PlayerScript : CustomMonoBehavior
         attackPosition = GameObject.Find("AttackPosition").transform;
         attackCoroutine = StartCoroutine(NullCoroutine());
         clickOneCoroutine = StartCoroutine(NullCoroutine());
-        skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject;
     }
 
     public bool isClickOne = false;

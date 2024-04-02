@@ -48,26 +48,25 @@ public class SwordSkill : WeaponSkill
 
     public bool isWaiting = false;
     public Coroutine summonCoroutine;
-    public GameObject skillCastOriginPoint;
+    public Vector2 skillCastVector;
+    public GameObject skillCast;
+    public float skillCastAngle;
     public void SummonBigSword(InputAction.CallbackContext callbackContext)
     {
         if (!isWaiting)
         {
-            StartCoroutine(HandleClickOne());
+            StartCoroutine(HandleSummonSword());
         } else isWaiting = false;
     }
 
-    public Vector2 skillCastVector;
-    public GameObject skillCast;
-    public float skillCastAngle;
-    public IEnumerator HandleClickOne()
+    public IEnumerator HandleSummonSword()
     {
         isWaiting = true;
         while (isWaiting)
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            skillCastVector = (skillableObject.playerScript.playerInputSystem.Control.View.ReadValue<Vector2>() - (Vector2)Camera.main.WorldToScreenPoint(skillCastOriginPoint.transform.position)).normalized;
+            skillCastVector = (skillableObject.playerScript.playerInputSystem.Control.View.ReadValue<Vector2>() - (Vector2)Camera.main.WorldToScreenPoint(skillableObject.skillCastOriginPoint.transform.position)).normalized;
             skillCast.transform.position = transform.position;
             skillCast.SetActive(true);
             skillCastAngle = -Vector2.SignedAngle(Vector2.up, skillCastVector);

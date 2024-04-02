@@ -15,6 +15,7 @@ public class SkillableObject : MonoBehaviour
     public bool CanAttack { get => canAttack; set => canAttack = value; }
     CustomMonoBehavior customMonoBehavior;
     public PlayerScript playerScript;
+    public GameObject skillCastOriginPoint;
     private void Start() 
     {
         // weaponSkills.ForEach(weaponSkill => 
@@ -38,6 +39,8 @@ public class SkillableObject : MonoBehaviour
                 weaponSkills.Add((WeaponSkill)GetComponent(weaponSkillName));
             });
         }
+
+        skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject;
     }
 
     private void FixedUpdate()

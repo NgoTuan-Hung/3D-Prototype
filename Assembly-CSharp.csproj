@@ -86,6 +86,7 @@
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\UnknownObjectTypeException.cs" />
     <Compile Include="Assets\Script\RotatableObject.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\ProtectedException.cs" />
+    <Compile Include="Assets\Script\Other\PlayerSkillData.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\ParseException.cs" />
     <Compile Include="Assets\TotalJSON\Internal\ParseStringRunner.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\JNull.cs" />
