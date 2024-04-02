@@ -2,9 +2,9 @@
     "items":
     [
         {
-            "skillName": "",
-            "functionName": "",
-            "keybind":""
+            "skillName": "SwordSkill",
+            "functionName": "SummonBigSword",
+            "keybind":"1"
         }
     ]
 }

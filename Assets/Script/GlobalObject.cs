@@ -18,6 +18,7 @@ public class GlobalObject : Singleton<GlobalObject>
     public PlayerInputSystem playerInputSystem;
     public String entityDataPath;
     public List<EntityData> entityDatas;
+    public String playerSkillDataPath;
     public List<CombatEntityInfo> combatEntityInfos = new List<CombatEntityInfo>();
     CombatEntityInfoComparer combatEntityInfoComparer = new CombatEntityInfoComparer();
     UtilObject utilObject = new UtilObject();
@@ -29,6 +30,7 @@ public class GlobalObject : Singleton<GlobalObject>
         entityDatas = new List<EntityData>();
         string json = File.ReadAllText(GlobalObject.Instance.entityDataPath);
         entityDatas = FromJson<EntityData>(json);
+        playerSkillDataPath = Application.dataPath + "/JsonData/PlayerSkillData.json";
     }
 
     public void UpdateCombatEntityHealth(float value, GameObject gameObject)
@@ -70,6 +72,15 @@ public class GlobalObject : Singleton<GlobalObject>
 
     public List<T> FromJson<T> (string json)
     {
+        JSON JsonObject = JSON.ParseString(json);
+        Wrapper<T> wrapper = JsonObject.Deserialize<Wrapper<T>>();
+        JsonObject.Deserialize<Wrapper<T>>();
+        return wrapper.items;
+    }
+
+    public List<T> FromJson<T> (string path, bool use_path)
+    {
+        string json = File.ReadAllText(path);
         JSON JsonObject = JSON.ParseString(json);
         Wrapper<T> wrapper = JsonObject.Deserialize<Wrapper<T>>();
         JsonObject.Deserialize<Wrapper<T>>();

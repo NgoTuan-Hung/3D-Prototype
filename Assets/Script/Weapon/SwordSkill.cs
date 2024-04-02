@@ -17,6 +17,8 @@ public class SwordSkill : WeaponSkill
         weaponPool ??= new ObjectPool<Weapon>(swordPrefab, 20);
 
         skillableObject = GetComponent<SkillableObject>();
+        skillCast = Instantiate(Resources.Load("BigSwordSkillCast")).GameObject();
+        skillCast.SetActive(false);
     }
 
 
@@ -74,5 +76,14 @@ public class SwordSkill : WeaponSkill
         }
 
         skillCast.SetActive(false);
+        ObjectPoolClass<Weapon> objectPoolClass = weaponPool.PickOne();
+        SwordWeapon swordWeapon = (SwordWeapon)objectPoolClass.Component;
+        // we won't use swordWeaponParent variable because it will affect attack logic
+        Transform swordWeaponParent1 = swordWeapon.transform.parent;
+
+        swordWeapon.ColliderDamage = 90f;
+        swordWeaponParent1.position = skillableObject.skillCastOriginPoint.transform.position;
+        swordWeaponParent1.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle - 90, 0));
+        swordWeapon.SummonBigSword();
     }
 }

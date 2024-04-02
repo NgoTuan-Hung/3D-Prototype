@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(CustomMonoBehavior))]
 public class SkillableObject : MonoBehaviour
 {
     public List<WeaponSkill> weaponSkills = new List<WeaponSkill>();
@@ -16,6 +14,7 @@ public class SkillableObject : MonoBehaviour
     CustomMonoBehavior customMonoBehavior;
     public PlayerScript playerScript;
     public GameObject skillCastOriginPoint;
+    UtilObject utilObject = new UtilObject();
     private void Start() 
     {
         // weaponSkills.ForEach(weaponSkill => 
@@ -26,10 +25,8 @@ public class SkillableObject : MonoBehaviour
 
         if (customMonoBehavior.entityType.Equals("Player"))
         {
-            gameObject.AddComponent(Type.GetType("SwordSkill"));
-            weaponSkills.Add((WeaponSkill)GetComponent("SwordSkill"));
-
             playerScript = GetComponent<PlayerScript>();
+            LoadPlayerSkillData();
         }
         else
         {
@@ -43,13 +40,29 @@ public class SkillableObject : MonoBehaviour
         skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject;
     }
 
+    public void LoadPlayerSkillData()
+    {
+        List<PlayerSkillData> playerSkillDatas = GlobalObject.Instance.FromJson<PlayerSkillData>(GlobalObject.Instance.playerSkillDataPath, true);
+
+        playerSkillDatas.ForEach(playerSkillData => 
+        {
+            Type classType = Type.GetType(playerSkillData.skillName);
+            gameObject.AddComponent(classType);
+            WeaponSkill weaponSkill = (WeaponSkill)GetComponent(playerSkillData.skillName);
+            weaponSkills.Add(weaponSkill);
+
+            utilObject.BindKey(playerScript.playerInputSystem, playerSkillData.keybind, playerSkillData.functionName, classType, weaponSkill);
+        });
+    }
+
     private void FixedUpdate()
     {
-        if (weaponSkills[0].CanAttack)
+        if (weaponSkills.Count != 0 && weaponSkills[0].CanAttack)
         {
             CanAttack = true;
         } else CanAttack = false;
     }
+
     public void PerformAttack(Transform location, Vector3 rotateDirection)
     {
         if (weaponSkills[0].CanAttack)

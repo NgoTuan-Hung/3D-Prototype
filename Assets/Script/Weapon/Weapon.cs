@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    Animator animator;
+    protected Animator animator;
     new ParticleSystem particleSystem;
     private float colliderDamage = 0f;
 

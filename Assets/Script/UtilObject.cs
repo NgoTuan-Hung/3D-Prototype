@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UtilObject
 {
@@ -66,5 +69,15 @@ public class UtilObject
         }
  
         return null; // Not found
+    }
+
+    public void BindKey(PlayerInputSystem playerInputSystem, String key, String method, Type classType, object functionOwner)
+    {
+        #region Binding key at playtime
+        InputAction inputAction = playerInputSystem.Control.Get().asset.FindAction(key);
+        MethodInfo methodInfo = classType.GetMethod(method);
+        inputAction.performed += (Action<InputAction.CallbackContext>)
+        Delegate.CreateDelegate(typeof(Action<InputAction.CallbackContext>), functionOwner, methodInfo);
+        #endregion
     }
 }

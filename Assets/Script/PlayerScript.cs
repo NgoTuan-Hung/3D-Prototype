@@ -38,19 +38,8 @@ public class PlayerScript : CustomMonoBehavior
         entityType = "Player";
         playerInputSystem = new PlayerInputSystem();
 
-        BindKey("Attack", "Attack");
-        BindKey("1", "ClickOne");
+        utilObject.BindKey(playerInputSystem, "Attack", "Attack", GetType(), this);
         //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
-    }
-
-    public void BindKey(String key, String method)
-    {
-        #region Binding key at playtime
-        InputAction inputAction = playerInputSystem.Control.Get().asset.FindAction(key);
-        MethodInfo methodInfo = GetType().GetMethod(method);
-        inputAction.performed += (Action<InputAction.CallbackContext>)
-        Delegate.CreateDelegate(typeof(Action<InputAction.CallbackContext>), this, methodInfo);
-        #endregion
     }
 
     private void Start() 
@@ -66,44 +55,12 @@ public class PlayerScript : CustomMonoBehavior
         skillableObject = GetComponent<SkillableObject>();
         attackPosition = GameObject.Find("AttackPosition").transform;
         attackCoroutine = StartCoroutine(NullCoroutine());
-        clickOneCoroutine = StartCoroutine(NullCoroutine());
-    }
-
-    public bool isClickOne = false;
-    public Coroutine clickOneCoroutine;
-    public GameObject skillCastOriginPoint;
-    public void ClickOne(InputAction.CallbackContext callbackContext)
-    {
-        if (!isClickOne)
-        {
-            StartCoroutine(HandleClickOne());
-        } else isClickOne = false;
-    }
-
-    public Vector2 skillCastVector;
-    public GameObject skillCast;
-    public float skillCastAngle;
-    public IEnumerator HandleClickOne()
-    {
-        isClickOne = true;
-        while (isClickOne)
-        {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-
-            skillCastVector = (playerInputSystem.Control.View.ReadValue<Vector2>() - (Vector2)Camera.main.WorldToScreenPoint(skillCastOriginPoint.transform.position)).normalized;
-            skillCast.transform.position = transform.position;
-            skillCast.SetActive(true);
-            skillCastAngle = -Vector2.SignedAngle(Vector2.up, skillCastVector);
-            skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
-        }
-
-        skillCast.SetActive(false);
     }
 
     private Coroutine attackCoroutine;
     private IEnumerator NullCoroutine() {yield return new WaitForSeconds(0);}
     [SerializeField] private bool isAttack = false;
-    void Attack(InputAction.CallbackContext callbackContext)
+    public void Attack(InputAction.CallbackContext callbackContext)
     {
         if (!isAttack)
         {
