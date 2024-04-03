@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(CustomMonoBehavior))]
@@ -15,6 +16,7 @@ public class SkillableObject : MonoBehaviour
     public PlayerScript playerScript;
     public GameObject skillCastOriginPoint;
     UtilObject utilObject = new UtilObject();
+    public AnimationClip castSkillBlownDown;
     private void Start() 
     {
         // weaponSkills.ForEach(weaponSkill => 
@@ -27,6 +29,8 @@ public class SkillableObject : MonoBehaviour
         {
             playerScript = GetComponent<PlayerScript>();
             LoadPlayerSkillData();
+
+            castSkillBlownDown = playerScript.animator.runtimeAnimatorController.animationClips.FirstOrDefault((animatorClip) => animatorClip.name.Equals("CastSkillBlowDown"));
         }
         else
         {

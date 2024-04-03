@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -85,5 +86,14 @@ public class SwordSkill : WeaponSkill
         swordWeaponParent1.position = skillableObject.skillCastOriginPoint.transform.position;
         swordWeaponParent1.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle - 90, 0));
         swordWeapon.SummonBigSword();
+        skillableObject.playerScript.animator.SetBool("CastSkillBlownDown", true);
+        StartCoroutine(StopSummon());
+    }
+
+    IEnumerator StopSummon()
+    {
+        yield return new WaitForSeconds(skillableObject.castSkillBlownDown.length);
+
+        skillableObject.playerScript.animator.SetBool("CastSkillBlownDown", false);
     }
 }

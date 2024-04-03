@@ -17,7 +17,7 @@ public class PlayerScript : CustomMonoBehavior
     private new Rigidbody rigidbody;
     [SerializeField] private GameObject cameraOfPlayer;
     public PlayerInputSystem playerInputSystem;
-    private Animator animator;
+    public Animator animator;
     [SerializeField] private Vector3 directionVector;
     [SerializeField] private Vector2 moveVector;
     private RotatableObject rotatableObject;
