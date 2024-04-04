@@ -29,5 +29,6 @@ public class SwordWeapon : Weapon
         yield return new WaitForSeconds(1);
 
         transform.parent.gameObject.SetActive(false);
+        transform.localScale = Vector3.one;
     }
 }
