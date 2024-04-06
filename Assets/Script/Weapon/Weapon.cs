@@ -9,6 +9,8 @@ public class Weapon : MonoBehaviour
     private float colliderDamage = 0f;
 
     public float ColliderDamage { get => colliderDamage; set => colliderDamage = value; }
+    public Animator Animator { get => animator; set => animator = value; }
+    public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
 
     public void StartParent() 
     {

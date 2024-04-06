@@ -10,13 +10,19 @@ public class SkillableObject : MonoBehaviour
     public List<String> weaponSkillNames = new List<string>();
     [SerializeField] private bool isAttack = false;
     [SerializeField] private bool canAttack = true;
+    CustomMonoBehavior customMonoBehavior;
+    private PlayerScript playerScript;
+    private GameObject skillCastOriginPoint;
+    private UtilObject utilObject = new UtilObject();
+    private AnimationClip castSkillBlownDown;
+
     public bool IsAttack { get => isAttack; set => isAttack = value; }
     public bool CanAttack { get => canAttack; set => canAttack = value; }
-    CustomMonoBehavior customMonoBehavior;
-    public PlayerScript playerScript;
-    public GameObject skillCastOriginPoint;
-    UtilObject utilObject = new UtilObject();
-    public AnimationClip castSkillBlownDown;
+    public PlayerScript PlayerScript { get => playerScript; set => playerScript = value; }
+    public GameObject SkillCastOriginPoint { get => skillCastOriginPoint; set => skillCastOriginPoint = value; }
+    public UtilObject UtilObject { get => utilObject; set => utilObject = value; }
+    public AnimationClip CastSkillBlownDown { get => castSkillBlownDown; set => castSkillBlownDown = value; }
+
     private void Start() 
     {
         // weaponSkills.ForEach(weaponSkill => 

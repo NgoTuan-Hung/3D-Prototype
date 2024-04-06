@@ -69,7 +69,7 @@ public class SwordSkill : WeaponSkill
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            skillCastVector = (skillableObject.playerScript.playerInputSystem.Control.View.ReadValue<Vector2>() - (Vector2)Camera.main.WorldToScreenPoint(skillableObject.skillCastOriginPoint.transform.position)).normalized;
+            skillCastVector = (skillableObject.PlayerScript.playerInputSystem.Control.View.ReadValue<Vector2>() - (Vector2)Camera.main.WorldToScreenPoint(skillableObject.SkillCastOriginPoint.transform.position)).normalized;
             skillCast.transform.position = transform.position;
             skillCast.SetActive(true);
             skillCastAngle = -Vector2.SignedAngle(Vector2.up, skillCastVector);
@@ -83,17 +83,38 @@ public class SwordSkill : WeaponSkill
         Transform swordWeaponParent1 = swordWeapon.transform.parent;
 
         swordWeapon.ColliderDamage = 90f;
-        swordWeaponParent1.position = skillableObject.skillCastOriginPoint.transform.position;
+        swordWeaponParent1.position = skillableObject.SkillCastOriginPoint.transform.position;
         swordWeaponParent1.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle - 90, 0));
-        swordWeapon.SummonBigSword();
-        skillableObject.playerScript.animator.SetBool("CastSkillBlownDown", true);
+        swordWeapon.Animator.SetBool("BigSword", true);
+        skillableObject.PlayerScript.animator.SetBool("CastSkillBlownDown", true);
         StartCoroutine(StopSummon());
+        StartCoroutine(StopSword(swordWeapon));
+    }
+
+    public IEnumerator StopSword(SwordWeapon swordWeapon)
+    {
+        yield return new WaitForSeconds(swordWeapon.BigSwordClip.length);
+        swordWeapon.Animator.SetBool("BigSword", false);
+        
+        yield return new WaitForSeconds(1);
+        swordWeapon.transform.parent.gameObject.SetActive(false);
+        swordWeapon.transform.localScale = Vector3.one;
     }
 
     IEnumerator StopSummon()
     {
-        yield return new WaitForSeconds(skillableObject.castSkillBlownDown.length);
+        yield return new WaitForSeconds(skillableObject.CastSkillBlownDown.length);
 
-        skillableObject.playerScript.animator.SetBool("CastSkillBlownDown", false);
+        skillableObject.PlayerScript.animator.SetBool("CastSkillBlownDown", false);
+    }
+
+    private Vector3[] thousandSwordOriginalRotation = {new Vector3()};
+    public void ThousandSword(InputAction.CallbackContext callbackContext)
+    {
+        List<ObjectPoolClass<Weapon>> objectPoolClass = weaponPool.Pick(3);
+        if (!isWaiting)
+        {
+            StartCoroutine(HandleSummonSword());
+        } else isWaiting = false;
     }
 }

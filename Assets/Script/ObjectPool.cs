@@ -43,6 +43,25 @@ public class ObjectPool<T>
 
         return null;
     }
+
+    public List<ObjectPoolClass<T>> Pick(int n)
+    {
+        int count = 0;
+        List<ObjectPoolClass<T>> objectPoolClasses = new List<ObjectPoolClass<T>>();
+        for (int i=0;i<pool.Count;i++)
+        {
+            if (count >= n) return objectPoolClasses;
+
+            if (!pool[i].GameObject.activeSelf)
+            {
+                pool[i].GameObject.SetActive(true);
+                objectPoolClasses.Add(pool[i]);
+                count++;
+            }
+        }
+
+        return null;
+    }
 }
 
 public class ObjectPoolClass<T>

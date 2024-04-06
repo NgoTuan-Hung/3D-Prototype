@@ -1,34 +1,21 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class SwordWeapon : Weapon
 {
+    private AnimationClip bigSwordClip;
+
+    public AnimationClip BigSwordClip { get => bigSwordClip; set => bigSwordClip = value; }
+
     private void Awake() 
     {
-        StartParent();    
+        StartParent();
+        bigSwordClip = animator.runtimeAnimatorController.animationClips.FirstOrDefault((animatorClip) => animatorClip.name.Equals("BigSword"));
     }
 
     private void OnCollisionEnter(Collision other) 
     {
         OnCollisionEnterParent(other);
-    }
-
-    public void SummonBigSword()
-    {
-        animator.SetBool("BigSword", true);
-    }
-
-    public void StopSummon()
-    {
-        animator.SetBool("BigSword", false);
-        StartCoroutine(StopSummonHandler());
-    }
-
-    public IEnumerator StopSummonHandler()
-    {
-        yield return new WaitForSeconds(1);
-
-        transform.parent.gameObject.SetActive(false);
-        transform.localScale = Vector3.one;
     }
 }
