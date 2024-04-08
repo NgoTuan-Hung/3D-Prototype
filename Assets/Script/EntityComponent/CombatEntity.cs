@@ -26,7 +26,7 @@ public class CombatEntity : MonoBehaviour
     {
         curentHealth -= value;
 
-        if (curentHealth <= 0) Destroy(gameObject);
+        if (curentHealth <= 0) {gameObject.SetActive(false); curentHealth = maxHealth;}
         else if (curentHealth > maxHealth) curentHealth = maxHealth;
     }
 }

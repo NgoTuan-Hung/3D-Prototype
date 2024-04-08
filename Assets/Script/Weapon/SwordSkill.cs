@@ -109,7 +109,7 @@ public class SwordSkill : WeaponSkill
     }
 
     [SerializeField] private Vector3[] thousandSwordOriginalRotation = {new Vector3(-45, -90, 90), new Vector3(-90, 0, 0), new Vector3(-45, 90, -90)};
-    [SerializeField] private float startFlyingForce = 10f;
+    [SerializeField] private float startFlyingForce = 30f;
     public void ThousandSword(InputAction.CallbackContext callbackContext)
     {
         List<ObjectPoolClass<Weapon>> objectPoolClasses = weaponPool.Pick(3);
@@ -123,17 +123,19 @@ public class SwordSkill : WeaponSkill
             swordWeaponParent1 = swordWeapon.transform.parent;
             swordWeaponParent1.transform.rotation = Quaternion.Euler(thousandSwordOriginalRotation[i]);
             swordWeaponParent1.position = skillableObject.SkillCastOriginPoint.transform.position;
+            swordWeapon.FlyingTrail.enabled = true;
             swordWeapon.Animator.SetBool("ThousandSword", true);
             swordWeapon.ParentRigidBody.AddForce(swordWeaponParent1.transform.forward * startFlyingForce, ForceMode.Impulse);
-            thousandSwordCoroutines[i] = StartCoroutine(ThousandSwordCoroutine(swordWeapon, swordWeaponParent1, target, i));
+            CoroutineWrapper coroutineWrapper = new CoroutineWrapper();
+            IEnumerator thousandSwordCoroutine = ThousandSwordCoroutine(swordWeapon, swordWeaponParent1, target, coroutineWrapper);
+            coroutineWrapper.coroutine = StartCoroutine(thousandSwordCoroutine);
         }
     }
 
     [SerializeField] private float flyingAtTargetSpeed = 1f;
-    [SerializeField] private float rotateSpeed = 3;
+    [SerializeField] private float rotateSpeed = 10;
     private float rotateSpeedPerDeltaTime;
-    public Coroutine[] thousandSwordCoroutines = new Coroutine[3];
-    public IEnumerator ThousandSwordCoroutine(SwordWeapon swordWeapon, Transform swordWeaponParent1, GameObject target, int coroutineIndex)
+    public IEnumerator ThousandSwordCoroutine(SwordWeapon swordWeapon, Transform swordWeaponParent1, GameObject target, CoroutineWrapper coroutineWrapper)
     {
         yield return new WaitForSeconds(1);
 
@@ -141,28 +143,30 @@ public class SwordSkill : WeaponSkill
         moveDirection = moveDirection.normalized * flyingAtTargetSpeed;
         rotateSpeedPerDeltaTime = rotateSpeed * Time.fixedDeltaTime;
         swordWeapon.ParentRigidBody.velocity = Vector3.zero;
-        StartCoroutine(StopThousandSword(swordWeapon, swordWeaponParent1, coroutineIndex));
+        StartCoroutine(StopThousandSword(swordWeapon, swordWeaponParent1, coroutineWrapper.coroutine));
 
         while (true)
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
             swordWeaponParent1.transform.position += moveDirection;
-            swordWeaponParent1.transform.rotation = Quaternion.Euler
+            swordWeaponParent1.transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards
             (
-                Vector3.RotateTowards(swordWeaponParent1.transform.forward, target.transform.position, rotateSpeedPerDeltaTime, 0f
+                swordWeaponParent1.transform.forward
+                , target.transform.position - swordWeaponParent1.transform.position, rotateSpeedPerDeltaTime, 0f
             ));
         }
     }
 
-    public IEnumerator StopThousandSword(SwordWeapon swordWeapon, Transform swordWeaponParent1, int coroutineIndex)
+    public IEnumerator StopThousandSword(SwordWeapon swordWeapon, Transform swordWeaponParent1, Coroutine thousandSwordCoroutine)
     {
         yield return new WaitForSeconds(2);
 
         swordWeapon.Animator.SetBool("ThousandSword", false);
-        StopCoroutine(thousandSwordCoroutines[coroutineIndex]);
+        StopCoroutine(thousandSwordCoroutine);
         swordWeaponParent1.rotation = Quaternion.Euler(0, 0, 0);
         swordWeapon.transform.localPosition = Vector3.zero;
+        swordWeapon.FlyingTrail.enabled = false;
         swordWeaponParent1.gameObject.SetActive(false);
     }
 }
