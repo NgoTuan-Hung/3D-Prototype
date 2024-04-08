@@ -60,7 +60,7 @@ public class TargetableObject : MonoBehaviour
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            targetHandler_direction = targetChecker.nearestTarget.transform.position - bodyRotationSourceObject.transform.position;
+            targetHandler_direction = targetChecker.NearestTarget.transform.position - bodyRotationSourceObject.transform.position;
             targetHandler_angle =  Quaternion.LookRotation(targetHandler_direction, 
             Vector3.Cross(targetHandler_direction,
              bodyAimSourceObjectOriginalBodyPoint.transform.TransformPoint(Vector3.forward))).eulerAngles;

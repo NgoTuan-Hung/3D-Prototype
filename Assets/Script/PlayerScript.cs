@@ -78,8 +78,8 @@ public class PlayerScript : CustomMonoBehavior
 
             if (skillableObject.CanAttack)
             {
-                Vector3 rotateDirection = targetableObject.TargetChecker.nearestTarget.transform.position - transform.position;
-                skillableObject.PerformAttack(targetableObject.TargetChecker.nearestTarget.transform, rotateDirection);
+                Vector3 rotateDirection = targetableObject.TargetChecker.NearestTarget.transform.position - transform.position;
+                skillableObject.PerformAttack(targetableObject.TargetChecker.NearestTarget.transform, rotateDirection);
                 if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
                 else animator.SetBool("Attack_Mirror", false);
                 if (!targetableObject.IsTarget)
@@ -119,6 +119,9 @@ public class PlayerScript : CustomMonoBehavior
     }
 
     [SerializeField] private bool canMove = true;
+
+    public TargetableObject TargetableObject { get => targetableObject; set => targetableObject = value; }
+
     public void Move()
     {
         // var moveVector = move.ReadValue<Vector2>();

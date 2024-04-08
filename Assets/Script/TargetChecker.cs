@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class TargetChecker : MonoBehaviour
 {
-    public GameObject nearestTarget;
-    public float shortestDistance = int.MaxValue;
-    public float tempDistance;
+    private GameObject nearestTarget;
+    private float shortestDistance = int.MaxValue;
+    private float tempDistance;
+
+    public GameObject NearestTarget { get => nearestTarget; set => nearestTarget = value; }
+    public float ShortestDistance { get => shortestDistance; set => shortestDistance = value; }
+    public float TempDistance { get => tempDistance; set => tempDistance = value; }
+
     private void OnTriggerEnter(Collider other) 
     {
         GetNearestTarget(other);
