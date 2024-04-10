@@ -19,7 +19,7 @@ public class Weapon : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         particleSystem = transform.GetChild(1).GetComponent<ParticleSystem>();
-        //rigidbody = GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();
         parentRigidBody = transform.parent.gameObject.GetComponent<Rigidbody>();
     }
 
