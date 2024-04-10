@@ -36,7 +36,7 @@ public class GlobalObject : Singleton<GlobalObject>
     public void UpdateCombatEntityHealth(float value, GameObject gameObject)
     {
         utilObject.CombatEntityInfoBinarySearch(combatEntityInfos, gameObject.GetInstanceID())
-        .CombatEntity.UpdateHealth(10);
+        .CombatEntity.UpdateHealth(value);
         
         // var searched = utilObject.CombatEntityInfoBinarySearch(combatEntityInfos, gameObject.GetInstanceID()).CombatEntity;
         // Debug.Log(searched.CurentHealth + "-" + searched.gameObject.name);

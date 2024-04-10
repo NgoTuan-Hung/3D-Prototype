@@ -15,13 +15,15 @@ public class SkillableObject : MonoBehaviour
     private GameObject skillCastOriginPoint;
     private UtilObject utilObject = new UtilObject();
     private AnimationClip castSkillBlownDown;
-
+    private int animatorIsUsingSkill = 0;
+    public enum SkillID {SummonBigSword = 1, ThousandSword = 2}
     public bool IsAttack { get => isAttack; set => isAttack = value; }
     public bool CanAttack { get => canAttack; set => canAttack = value; }
     public PlayerScript PlayerScript { get => playerScript; set => playerScript = value; }
     public GameObject SkillCastOriginPoint { get => skillCastOriginPoint; set => skillCastOriginPoint = value; }
     public UtilObject UtilObject { get => utilObject; set => utilObject = value; }
     public AnimationClip CastSkillBlownDown { get => castSkillBlownDown; set => castSkillBlownDown = value; }
+    public int AnimatorIsUsingSkill { get => animatorIsUsingSkill; set => animatorIsUsingSkill = value; }
 
     private void Start() 
     {
@@ -57,8 +59,7 @@ public class SkillableObject : MonoBehaviour
         playerSkillDatas.ForEach(playerSkillData => 
         {
             Type classType = Type.GetType(playerSkillData.skillName);
-            gameObject.AddComponent(classType);
-            WeaponSkill weaponSkill = (WeaponSkill)GetComponent(playerSkillData.skillName);
+            WeaponSkill weaponSkill = (WeaponSkill)gameObject.AddComponent(classType);
             weaponSkills.Add(weaponSkill);
 
             utilObject.BindKey(playerScript.playerInputSystem, playerSkillData.keybind, playerSkillData.functionName, classType, weaponSkill);

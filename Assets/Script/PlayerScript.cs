@@ -87,7 +87,7 @@ public class PlayerScript : CustomMonoBehavior
                     targetableObject.Target();
                 }
                 animator.SetBool("Attack", true);
-                animator.Play("UpperBody.Attack", 1, 0);
+                if (skillableObject.AnimatorIsUsingSkill == 0) animator.Play("UpperBody.Attack", 1, 0);
                 StopCoroutine(attackCoroutine);
                 attackCoroutine = StartCoroutine(StopAttack());
             }

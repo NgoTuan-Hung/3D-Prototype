@@ -8,9 +8,20 @@ public abstract class WeaponSkill : MonoBehaviour
     private bool canAttack = true;
     private float attackCooldown = 1f;
     private float attackDamage = 10f;
+    private SkillableObject skillableObject;
     public float AttackCooldown { get => attackCooldown; set => attackCooldown = value; }
     public bool CanAttack { get => canAttack; set => canAttack = value; }
     public float AttackDamage { get => attackDamage; set => attackDamage = value; }
+    public SkillableObject SkillableObject { get => skillableObject; set => skillableObject = value; }
 
     public abstract void Attack(Transform location, Vector3 rotateDirection);
+    public void UseSkillAnimator(int skillID)
+    {
+        SkillableObject.AnimatorIsUsingSkill |= (1 << skillID);
+    }
+
+    public void StopSkillAnimator(int skillID)
+    {
+        SkillableObject.AnimatorIsUsingSkill &= ~(1 << skillID);
+    }
 }
