@@ -118,6 +118,7 @@ public class SwordSkill : WeaponSkill
         SwordWeapon swordWeapon;
         Transform swordWeaponParent1;
         GameObject target = SkillableObject.PlayerScript.TargetableObject.TargetChecker.NearestTarget;
+        SkillableObject.PlayerScript.animator.SetBool("Hand", true);
         UseSkillAnimator((int)SkillableObject.SkillID.ThousandSword);
         for (int i=0;i<thousandSwordOriginalRotation.Length;i++)
         {
