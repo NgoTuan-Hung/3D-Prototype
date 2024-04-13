@@ -22,7 +22,7 @@ public class GlobalObject : Singleton<GlobalObject>
     public List<CombatEntityInfo> combatEntityInfos = new List<CombatEntityInfo>();
     CombatEntityInfoComparer combatEntityInfoComparer = new CombatEntityInfoComparer();
     UtilObject utilObject = new UtilObject();
-
+    public Coroutine nullCoroutine;
     private void Awake() 
     {
         playerInputSystem = new PlayerInputSystem();
@@ -31,6 +31,7 @@ public class GlobalObject : Singleton<GlobalObject>
         string json = File.ReadAllText(GlobalObject.Instance.entityDataPath);
         entityDatas = FromJson<EntityData>(json);
         playerSkillDataPath = Application.dataPath + "/JsonData/PlayerSkillData.json";
+        nullCoroutine = StartCoroutine(Null());
     }
 
     public void UpdateCombatEntityHealth(float value, GameObject gameObject)
@@ -85,6 +86,12 @@ public class GlobalObject : Singleton<GlobalObject>
         Wrapper<T> wrapper = JsonObject.Deserialize<Wrapper<T>>();
         JsonObject.Deserialize<Wrapper<T>>();
         return wrapper.items;
+    }
+
+
+    public IEnumerator Null()
+    {
+        yield return new WaitForSeconds(0);
     }
 
     void OnEnable()

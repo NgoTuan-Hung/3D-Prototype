@@ -77,7 +77,7 @@ public class SwordSkill : WeaponSkill
         }
 
         skillCast.SetActive(false);
-        UseSkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
+        SkillableObject.UseOnlySkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
         ObjectPoolClass<Weapon> objectPoolClass = weaponPool.PickOne();
         SwordWeapon swordWeapon = (SwordWeapon)objectPoolClass.Component;
         // we won't use swordWeaponParent variable because it will affect attack logic
@@ -88,6 +88,7 @@ public class SwordSkill : WeaponSkill
         swordWeaponParent1.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle - 90, 0));
         swordWeapon.Animator.SetBool("BigSword", true);
         SkillableObject.PlayerScript.animator.SetBool("CastSkillBlownDown", true);
+        SkillableObject.PlayerScript.animator.Play("UpperBody.CastSkillBlowDown", 1, 0);
         StartCoroutine(StopSummon());
         StartCoroutine(StopSword(swordWeapon));
     }
@@ -96,7 +97,7 @@ public class SwordSkill : WeaponSkill
     {
         yield return new WaitForSeconds(swordWeapon.BigSwordClip.length);
         swordWeapon.Animator.SetBool("BigSword", false);
-        StopSkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
+        SkillableObject.StopSkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
         
         yield return new WaitForSeconds(1);
         swordWeapon.transform.parent.gameObject.SetActive(false);
@@ -118,8 +119,9 @@ public class SwordSkill : WeaponSkill
         SwordWeapon swordWeapon;
         Transform swordWeaponParent1;
         GameObject target = SkillableObject.PlayerScript.TargetableObject.TargetChecker.NearestTarget;
-        SkillableObject.PlayerScript.animator.SetBool("Hand", true);
-        UseSkillAnimator((int)SkillableObject.SkillID.ThousandSword);
+        SkillableObject.PlayerScript.animator.SetBool("HandUpCast", true);
+        SkillableObject.PlayerScript.animator.Play("UpperBody.HandUpCast", 1, 0);
+        SkillableObject.UseOnlySkillAnimator((int)SkillableObject.SkillID.ThousandSword);
         for (int i=0;i<thousandSwordOriginalRotation.Length;i++)
         {
             swordWeapon = (SwordWeapon)objectPoolClasses[i].Component;
@@ -167,7 +169,8 @@ public class SwordSkill : WeaponSkill
         yield return new WaitForSeconds(2);
 
         swordWeapon.Animator.SetBool("ThousandSword", false);
-        StopSkillAnimator((int)SkillableObject.SkillID.ThousandSword);
+        SkillableObject.PlayerScript.animator.SetBool("HandUpCast", false);
+        SkillableObject.StopSkillAnimator((int)SkillableObject.SkillID.ThousandSword);
         StopCoroutine(thousandSwordCoroutine);
         swordWeaponParent1.rotation = Quaternion.Euler(0, 0, 0);
         swordWeapon.transform.localPosition = Vector3.zero;

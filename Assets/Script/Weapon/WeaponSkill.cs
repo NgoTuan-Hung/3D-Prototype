@@ -15,13 +15,4 @@ public abstract class WeaponSkill : MonoBehaviour
     public SkillableObject SkillableObject { get => skillableObject; set => skillableObject = value; }
 
     public abstract void Attack(Transform location, Vector3 rotateDirection);
-    public void UseSkillAnimator(int skillID)
-    {
-        SkillableObject.AnimatorIsUsingSkill |= (1 << skillID);
-    }
-
-    public void StopSkillAnimator(int skillID)
-    {
-        SkillableObject.AnimatorIsUsingSkill &= ~(1 << skillID);
-    }
 }

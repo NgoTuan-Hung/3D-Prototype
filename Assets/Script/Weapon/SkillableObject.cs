@@ -81,4 +81,19 @@ public class SkillableObject : MonoBehaviour
             weaponSkills[0].Attack(location, rotateDirection);
         }
     }
+
+    public void UseSkillAnimator(int skillID)
+    {
+        AnimatorIsUsingSkill |= (1 << skillID);
+    }
+
+    public void UseOnlySkillAnimator(int skillID)
+    {
+        AnimatorIsUsingSkill = 1 << skillID;
+    }
+
+    public void StopSkillAnimator(int skillID)
+    {
+        AnimatorIsUsingSkill &= ~(1 << skillID);
+    }
 }
