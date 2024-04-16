@@ -9,16 +9,17 @@ public class SwordWeapon : Weapon
     public AnimationClip BigSwordClip { get => bigSwordClip; set => bigSwordClip = value; }
     public TrailRenderer FlyingTrail { get => flyingTrail; set => flyingTrail = value; }
 
-    private void Awake() 
+    new private void Awake() 
     {
-        StartParent();
+        base.Awake();
         bigSwordClip = animator.runtimeAnimatorController.animationClips.FirstOrDefault((animatorClip) => animatorClip.name.Equals("BigSword"));
         flyingTrail = GetComponentInChildren<TrailRenderer>();
+        flyingTrail.enabled = false;
     }
 
-    private void OnCollisionEnter(Collision other) 
+    new private void OnCollisionEnter(Collision other) 
     {
-        OnCollisionEnterParent(other);
+        base.OnCollisionEnter(other);
         Debug.Log("collide " + other.gameObject.name);
     }
 }

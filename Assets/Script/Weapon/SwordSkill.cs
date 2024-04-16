@@ -22,7 +22,6 @@ public class SwordSkill : WeaponSkill
         skillCast.SetActive(false);
     }
 
-
     public override void Attack(Transform target, Vector3 rotationDirection)
     {
         if (CanAttack)
@@ -34,9 +33,10 @@ public class SwordSkill : WeaponSkill
 
             swordWeapon.PlayAttackParticleSystem();
             swordWeapon.ColliderDamage = 10f;
-            swordWeaponParent.position = target.position;
+            swordWeaponParent.position = target.position + new Vector3(0, 0.5f, 0);
             swordWeaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, rotationDirection);
-            swordWeaponParent.position = swordWeaponParent.transform.TransformPoint(0, 0, -2);
+            swordWeaponParent.position = swordWeaponParent.transform.TransformPoint(0, 0, -1);
+            swordWeaponParent.Rotate(0, 0, Random.Range(0, 360));
             swordWeapon.Attack();
             StartCoroutine(ResetAttack());
         }
