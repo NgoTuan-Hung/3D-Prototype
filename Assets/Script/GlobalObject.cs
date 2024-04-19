@@ -19,8 +19,8 @@ public class GlobalObject : Singleton<GlobalObject>
     public String entityDataPath;
     public List<EntityData> entityDatas;
     public String playerSkillDataPath;
-    public List<CombatEntityInfo> combatEntityInfos = new List<CombatEntityInfo>();
-    CombatEntityInfoComparer combatEntityInfoComparer = new CombatEntityInfoComparer();
+    public List<CustomMonoBehavior> customMonoBehaviors = new List<CustomMonoBehavior>();
+    CustomMonoBehaviorComparer customMonoBehaviorComparer = new CustomMonoBehaviorComparer();
     UtilObject utilObject = new UtilObject();
     public Coroutine nullCoroutine;
     private void Awake() 
@@ -36,8 +36,8 @@ public class GlobalObject : Singleton<GlobalObject>
 
     public void UpdateCombatEntityHealth(float value, GameObject gameObject)
     {
-        utilObject.CombatEntityInfoBinarySearch(combatEntityInfos, gameObject.GetInstanceID())
-        .CombatEntity.UpdateHealth(value);
+        utilObject.CustomMonoBehaviorBinarySearch(customMonoBehaviors, gameObject.GetInstanceID())
+        .UpdateHealth(value);
         
         // var searched = utilObject.CombatEntityInfoBinarySearch(combatEntityInfos, gameObject.GetInstanceID()).CombatEntity;
         // Debug.Log(searched.CurentHealth + "-" + searched.gameObject.name);
@@ -50,8 +50,7 @@ public class GlobalObject : Singleton<GlobalObject>
         screenResolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
         
         #region search all combat entities
-        List<CombatEntity> combatEntities = FindObjectsByType<CombatEntity>(FindObjectsSortMode.InstanceID).ToList();
-        combatEntities.ForEach(combatEntity => {combatEntityInfos.Add(new CombatEntityInfo(combatEntity.gameObject, combatEntity));});
+        customMonoBehaviors = FindObjectsByType<CustomMonoBehavior>(FindObjectsSortMode.InstanceID).ToList();
 
         // sort the list by object instance id
         // combatEntityInfos.Sort(combatEntityInfoComparer);
@@ -110,32 +109,32 @@ public class Wrapper<T>
     public List<T> items;
 }
 
-public class CombatEntityInfo
+// public class CustomMonoBehaviorInfo
+// {
+//     private GameObject gameObject;
+//     private CustomMonoBehavior customMonoBehavior;
+
+//     public CustomMonoBehaviorInfo(GameObject gameObject, CustomMonoBehavior customMonoBehavior)
+//     {
+//         this.gameObject = gameObject;
+//         this.customMonoBehavior = customMonoBehavior;
+//     }
+
+//     public GameObject GameObject { get => gameObject; set => gameObject = value; }
+//     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
+// }
+
+
+
+public class CustomMonoBehaviorComparer : IComparer<CustomMonoBehavior>
 {
-    private GameObject gameObject;
-    private CombatEntity combatEntity;
-
-    public CombatEntityInfo(GameObject gameObject, CombatEntity combatEntity)
-    {
-        this.gameObject = gameObject;
-        this.combatEntity = combatEntity;
-    }
-
-    public GameObject GameObject { get => gameObject; set => gameObject = value; }
-    public CombatEntity CombatEntity { get => combatEntity; set => combatEntity = value; }
-}
-
-
-
-public class CombatEntityInfoComparer : IComparer<CombatEntityInfo>
-{
-    public int Compare(CombatEntityInfo x, CombatEntityInfo y)
+    public int Compare(CustomMonoBehavior x, CustomMonoBehavior y)
     {
         if (x == null || y == null) 
         {
             return 0;
         }
-        return x.GameObject.GetInstanceID().CompareTo(y.GameObject.GetInstanceID());
+        return x.gameObject.GetInstanceID().CompareTo(y.gameObject.GetInstanceID());
     }
 }
 

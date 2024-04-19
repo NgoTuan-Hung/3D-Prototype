@@ -33,7 +33,7 @@ public class SkillableObject : MonoBehaviour
         // });
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
 
-        if (customMonoBehavior.entityType.Equals("Player"))
+        if (customMonoBehavior.EntityType.Equals("Player"))
         {
             playerScript = GetComponent<PlayerScript>();
             LoadPlayerSkillData();
@@ -42,11 +42,11 @@ public class SkillableObject : MonoBehaviour
         }
         else
         {
-            weaponSkillNames.ForEach(weaponSkillName => 
-            {
-                gameObject.AddComponent(Type.GetType(weaponSkillName));
-                weaponSkills.Add((WeaponSkill)GetComponent(weaponSkillName));
-            });
+            // weaponSkillNames.ForEach(weaponSkillName => 
+            // {
+            //     gameObject.AddComponent(Type.GetType(weaponSkillName));
+            //     weaponSkills.Add((WeaponSkill)GetComponent(weaponSkillName));
+            // });
         }
 
         skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject;

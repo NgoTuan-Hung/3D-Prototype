@@ -13,7 +13,7 @@ public class SwordSkill : WeaponSkill
 
     private void Start() 
     {
-        swordPrefab = Instantiate(Resources.Load("LongSword")).GameObject();
+        swordPrefab = Instantiate(Resources.Load("LongSword")) as GameObject;
         swordPrefab.SetActive(false);
         weaponPool ??= new ObjectPool<Weapon>(swordPrefab, 20);
 

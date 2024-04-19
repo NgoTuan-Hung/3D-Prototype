@@ -8,7 +8,6 @@ using UnityEngine.InputSystem;
 using UnityRandom = UnityEngine.Random;
 
 [RequireComponent(typeof(SkillableObject), typeof(RotatableObject), typeof(TargetableObject))]
-[RequireComponent(typeof(CombatEntity))]
 public class PlayerScript : CustomMonoBehavior
 {
     [Header("General")]
@@ -35,7 +34,7 @@ public class PlayerScript : CustomMonoBehavior
     void Awake()
     {
         //playerInput = gameObject.GetComponent<PlayerInput>();
-        entityType = "Player";
+        EntityType = "Player";
         playerInputSystem = new PlayerInputSystem();
 
         utilObject.BindKey(playerInputSystem, "Attack", "Attack", GetType(), this);
