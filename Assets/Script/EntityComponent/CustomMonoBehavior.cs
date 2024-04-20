@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CustomMonoBehavior : MonoBehaviour
 {
-    private String entityType;
+    [SerializeField] private String entityType;
     [SerializeField] private float maxHealth = 100;
     [SerializeField] private float curentHealth;
 

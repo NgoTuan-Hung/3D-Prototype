@@ -34,7 +34,7 @@ public class GlobalObject : Singleton<GlobalObject>
         nullCoroutine = StartCoroutine(Null());
     }
 
-    public void UpdateCombatEntityHealth(float value, GameObject gameObject)
+    public void UpdateCustomonoBehaviorHealth(float value, GameObject gameObject)
     {
         utilObject.CustomMonoBehaviorBinarySearch(customMonoBehaviors, gameObject.GetInstanceID())
         .UpdateHealth(value);

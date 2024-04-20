@@ -11,11 +11,11 @@ public class SwordSkill : WeaponSkill
     [SerializeField] private GameObject swordPrefab;
     private Transform swordWeaponParent;
 
-    private void Start() 
+    private void Awake() 
     {
         swordPrefab = Instantiate(Resources.Load("LongSword")) as GameObject;
         swordPrefab.SetActive(false);
-        weaponPool ??= new ObjectPool<Weapon>(swordPrefab, 20);
+        weaponPool ??= new ObjectPool<Weapon>(swordPrefab, 20, ObjectPool<Weapon>.WhereComponent.Child);
 
         SkillableObject = GetComponent<SkillableObject>();
         skillCast = Instantiate(Resources.Load("BigSwordSkillCast")).GameObject();

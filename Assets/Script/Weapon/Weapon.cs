@@ -53,6 +53,6 @@ public class Weapon : MonoBehaviour
 
     public virtual void OnCollisionEnter(Collision collision)
     {
-        GlobalObject.Instance.UpdateCombatEntityHealth(colliderDamage, collision.gameObject);
+        GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, collision.gameObject);
     }
 }

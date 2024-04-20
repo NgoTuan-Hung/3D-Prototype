@@ -16,6 +16,7 @@ public class MoveToTarget : MonoBehaviour
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value * 0.03f; }
     public float DistanceToTarget { get => distanceToTarget; set => distanceToTarget = value; }
     public float DistanceToStopMove { get => distanceToStopMove; set => distanceToStopMove = value; }
+    public Transform Target { get => target; set => target = value; }
 
     // Start is called before the first frame update
     void Start()

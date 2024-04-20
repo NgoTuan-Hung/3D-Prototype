@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityRandom = UnityEngine.Random;
 
 public class UtilObject
 {

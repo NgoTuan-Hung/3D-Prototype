@@ -7,7 +7,7 @@ using UnityEngine;
 public class SkillableObject : MonoBehaviour
 {
     public List<WeaponSkill> weaponSkills = new List<WeaponSkill>();
-    public List<String> weaponSkillNames = new List<string>();
+    [SerializeField] private List<String> weaponSkillNames = new List<string>();
     [SerializeField] private bool isAttack = false;
     [SerializeField] private bool canAttack = true;
     CustomMonoBehavior customMonoBehavior;
@@ -39,17 +39,18 @@ public class SkillableObject : MonoBehaviour
             LoadPlayerSkillData();
 
             castSkillBlownDown = playerScript.animator.runtimeAnimatorController.animationClips.FirstOrDefault((animatorClip) => animatorClip.name.Equals("CastSkillBlowDown"));
+            skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject;
         }
         else
         {
-            // weaponSkillNames.ForEach(weaponSkillName => 
-            // {
-            //     gameObject.AddComponent(Type.GetType(weaponSkillName));
-            //     weaponSkills.Add((WeaponSkill)GetComponent(weaponSkillName));
-            // });
+            weaponSkillNames.ForEach(weaponSkillName => 
+            {
+                gameObject.AddComponent(Type.GetType(weaponSkillName));
+                weaponSkills.Add((WeaponSkill)GetComponent(weaponSkillName));
+            });
         }
 
-        skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject;
+        
     }
 
     public void LoadPlayerSkillData()
@@ -68,7 +69,7 @@ public class SkillableObject : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (weaponSkills.Count != 0 && weaponSkills[0].CanAttack)
+        if (weaponSkills[0].CanAttack)
         {
             CanAttack = true;
         } else CanAttack = false;

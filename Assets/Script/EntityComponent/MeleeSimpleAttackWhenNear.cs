@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(MoveToTarget))]
+[RequireComponent(typeof(MoveToTarget), typeof(CustomMonoBehavior), typeof(SkillableObject))]
 public class MeleeSimpleAttackWhenNear : MonoBehaviour
 {
-    Animator animator;
-    MoveToTarget moveToTarget;
+    private Animator animator;
+    private MoveToTarget moveToTarget;
+    private CustomMonoBehavior customMonoBehavior;
+    private SkillableObject skillableObject;
     [SerializeField] private float distanceToAttack;
     [SerializeField] private float attackCooldown;
     [SerializeField] private bool canAttack;
@@ -21,9 +23,10 @@ public class MeleeSimpleAttackWhenNear : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         moveToTarget = GetComponent<MoveToTarget>();
-        distanceToAttack = 1.5f;
-        attackCooldown = 0.5f;
+        distanceToAttack = 3f;
         canAttack = true;
+        customMonoBehavior = GetComponent<CustomMonoBehavior>();
+        skillableObject = GetComponent<SkillableObject>();
     }
 
     private void FixedUpdate()
@@ -33,10 +36,10 @@ public class MeleeSimpleAttackWhenNear : MonoBehaviour
 
     public void CheckAttack()
     {
-        if (canAttack && moveToTarget.DistanceToTarget < distanceToAttack)
+        if (skillableObject.CanAttack && moveToTarget.DistanceToTarget < distanceToAttack)
         {
-            canAttack = false;
             animator.SetBool("Attack", true);
+            skillableObject.PerformAttack(moveToTarget.Target, moveToTarget.Target.position - transform.position);
             moveToTarget.CanMove = false;
         }
     }

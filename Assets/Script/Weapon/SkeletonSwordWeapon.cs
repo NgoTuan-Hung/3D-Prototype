@@ -6,10 +6,13 @@ public class SkeletonSwordWeapon : Weapon
 {
     private GameObject stabParticleSystemObject;
     private GameObject stabParticleSystem;
+    [SerializeField] private static ObjectPool<ParticleSystem> stabParticleSystemPool {get; set;}
+    ObjectPoolClass<ParticleSystem> stabParticleSystemObjectPoolClass;
     // Start is called before the first frame update
     void Start()
     {
         stabParticleSystemObject = Resources.Load("Effect/StabEffect") as GameObject;
+        stabParticleSystemPool = new ObjectPool<ParticleSystem>(stabParticleSystemObject, 20, ObjectPool<ParticleSystem>.WhereComponent.Self);
     }
 
     // Update is called once per frame
@@ -26,7 +29,10 @@ public class SkeletonSwordWeapon : Weapon
     public override void StopAttack()
     {
         base.StopAttack();
-        stabParticleSystem = Instantiate(stabParticleSystemObject, transform.position, transform.parent.rotation);
+        stabParticleSystemObjectPoolClass = stabParticleSystemPool.PickOne();
+        stabParticleSystemObjectPoolClass.GameObject.transform.position = transform.position;
+        stabParticleSystemObjectPoolClass.GameObject.transform.rotation = transform.parent.rotation;
+        stabParticleSystemObjectPoolClass.Component.Play();
     }
 
     public override void OnCollisionEnter(Collision other) 

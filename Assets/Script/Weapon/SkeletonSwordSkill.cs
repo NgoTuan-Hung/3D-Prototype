@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityRandom = UnityEngine.Random;
 
 public class SkeletonSwordSkill : WeaponSkill
 {
@@ -11,31 +13,37 @@ public class SkeletonSwordSkill : WeaponSkill
 
     public override void Attack(Transform location, Vector3 rotateDirection)
     {
-        
-    }
-
-    public bool testAttack = false;
-    public void TestAttack()
-    {
-        if (testAttack)
+        if (CanAttack)
         {
-            testAttack = false;
+            CanAttack = false;
             ObjectPoolClass<Weapon> objectPoolClass = weaponPool.PickOne();
             SkeletonSwordWeapon skeletonSwordWeapon = (SkeletonSwordWeapon)objectPoolClass.Component;
             weaponParent = skeletonSwordWeapon.transform.parent;
-            skeletonSwordWeapon.ColliderDamage = 10f;
 
             weaponParent.transform.position = transform.position;
+            weaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, location.position - skeletonSwordWeapon.transform.position + new Vector3(0, 1f, 0));
+            skeletonSwordWeapon.ColliderDamage = 10f;
+            
             skeletonSwordWeapon.Attack();
+            StartCoroutine(ResetAttack());
         }
     }
 
+    IEnumerator ResetAttack()
+    {
+        yield return new WaitForSeconds(AttackCooldown);
+
+        CanAttack = true;
+    }
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         prefab = Instantiate(Resources.Load("SkeletonSword")) as GameObject;
         prefab.SetActive(false);
-        weaponPool ??= new ObjectPool<Weapon>(prefab, 20);
+        weaponPool ??= new ObjectPool<Weapon>(prefab, 20, ObjectPool<Weapon>.WhereComponent.Child);
+        Debug.Log("count: " + weaponPool.pool.Count);
+        
 
         SkillableObject = GetComponent<SkillableObject>();
     }
@@ -48,6 +56,6 @@ public class SkeletonSwordSkill : WeaponSkill
 
     private void FixedUpdate() 
     {
-        TestAttack();
+    
     }
 }
