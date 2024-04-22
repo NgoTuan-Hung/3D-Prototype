@@ -59,7 +59,8 @@ public class Weapon : MonoBehaviour
     {
         if (!collideExcludeTags.Contains(collision.gameObject.tag))
         {
-            Debug.Log("collide with" + collision.gameObject.name);
+            Debug.Log("collide with: " + collision.gameObject.name + "- with tag: " + collision.gameObject.tag);
+            collideExcludeTags.ForEach((tag) => Debug.Log("exclude tag: " + tag));
             GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, collision.gameObject);
         }
     }

@@ -65,6 +65,19 @@ public class ObjectPool<T>
         return null;
     }
 
+    public ObjectPoolClass<T> PickOneWithoutActive()
+    {
+        for (int i=0;i<pool.Count;i++)
+        {
+            if (!pool[i].GameObject.activeSelf)
+            {
+                return pool[i];
+            }
+        }
+
+        return null;
+    }
+
     public List<ObjectPoolClass<T>> Pick(int n)
     {
         int count = 0;

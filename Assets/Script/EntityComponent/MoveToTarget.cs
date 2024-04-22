@@ -14,7 +14,7 @@ public class MoveToTarget : MonoBehaviour
     new private Rigidbody rigidbody;
     private RotatableObject rotatableObject;
     public bool CanMove { get => canMove; set => canMove = value; }
-    public float MoveSpeed { get => moveSpeed; set => moveSpeed = value * 0.03f; }
+    public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
     public float DistanceToTarget { get => distanceToTarget; set => distanceToTarget = value; }
     public float DistanceToStopMove { get => distanceToStopMove; set => distanceToStopMove = value; }
     public Transform Target { get => target; set => target = value; }
@@ -58,7 +58,7 @@ public class MoveToTarget : MonoBehaviour
         {
             if (distanceToTarget > distanceToStopMove)
             {
-                rigidbody.MovePosition(funcMove_DistanceVector * moveSpeed);
+                rigidbody.velocity = funcMove_DistanceVector.normalized * moveSpeed;
 
                 animator.SetBool("Move", true);
             }
