@@ -23,7 +23,7 @@ public class MeleeSimpleAttackWhenNear : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         moveToTarget = GetComponent<MoveToTarget>();
-        distanceToAttack = 3f;
+        distanceToAttack = 1.5f;
         canAttack = true;
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
         skillableObject = GetComponent<SkillableObject>();
@@ -38,7 +38,7 @@ public class MeleeSimpleAttackWhenNear : MonoBehaviour
     {
         if (skillableObject.CanAttack && moveToTarget.DistanceToTarget < distanceToAttack)
         {
-            animator.SetBool("Attack", true);
+            animator.Play("Base.Attack", 0, 0);
             skillableObject.PerformAttack(moveToTarget.Target, moveToTarget.Target.position - transform.position);
             moveToTarget.CanMove = false;
         }
@@ -46,7 +46,6 @@ public class MeleeSimpleAttackWhenNear : MonoBehaviour
 
     public void StopAttack()
     {
-        animator.SetBool("Attack", false);
         moveToTarget.CanMove = true;
         StartCoroutine(ResetAttack());
     }

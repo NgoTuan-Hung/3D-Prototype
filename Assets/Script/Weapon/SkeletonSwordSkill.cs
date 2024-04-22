@@ -21,7 +21,8 @@ public class SkeletonSwordSkill : WeaponSkill
             weaponParent = skeletonSwordWeapon.transform.parent;
 
             weaponParent.transform.position = transform.position;
-            weaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, location.position - skeletonSwordWeapon.transform.position + new Vector3(0, 1f, 0));
+            weaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, location.position - weaponParent.transform.position + new Vector3(0, 1f, 0));
+            skeletonSwordWeapon.CollideExcludeTags = SkillableObject.CustomMonoBehavior.AllyTags;
             skeletonSwordWeapon.ColliderDamage = 10f;
             
             skeletonSwordWeapon.Attack();

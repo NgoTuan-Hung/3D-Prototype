@@ -7,16 +7,20 @@ public class Weapon : MonoBehaviour
     protected Animator animator;
     protected ParticleSystem attackParticleSystem;
     protected float colliderDamage = 0f;
-    private float baseColliderDamage = 0f;
+    protected float baseColliderDamage = 0f;
     new protected Rigidbody rigidbody;
     protected Rigidbody parentRigidBody;
     protected TrailRenderer attackTrail;
+    protected List<Collider> colliders = new List<Collider>();
+    protected List<string> collideExcludeTags = new List<string>();
     public float ColliderDamage { get => colliderDamage; set => colliderDamage = value; }
     public Animator Animator { get => animator; set => animator = value; }
     public ParticleSystem AttackParticleSystem { get => attackParticleSystem; set => attackParticleSystem = value; }
     public Rigidbody Rigidbody { get => rigidbody; set => rigidbody = value; }
     public Rigidbody ParentRigidBody { get => parentRigidBody; set => parentRigidBody = value; }
-    protected float BaseColliderDamage { get => baseColliderDamage; set => baseColliderDamage = value; }
+    public float BaseColliderDamage { get => baseColliderDamage; set => baseColliderDamage = value; }
+    public List<Collider> Colliders { get => colliders; set => colliders = value; }
+    public List<string> CollideExcludeTags { get => collideExcludeTags; set => collideExcludeTags = value; }
 
     public void Awake() 
     {
@@ -53,6 +57,10 @@ public class Weapon : MonoBehaviour
 
     public virtual void OnCollisionEnter(Collision collision)
     {
-        GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, collision.gameObject);
+        if (!collideExcludeTags.Contains(collision.gameObject.tag))
+        {
+            Debug.Log("collide with" + collision.gameObject.name);
+            GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, collision.gameObject);
+        }
     }
 }

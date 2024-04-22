@@ -10,7 +10,7 @@ public class SkillableObject : MonoBehaviour
     [SerializeField] private List<String> weaponSkillNames = new List<string>();
     [SerializeField] private bool isAttack = false;
     [SerializeField] private bool canAttack = true;
-    CustomMonoBehavior customMonoBehavior;
+    private CustomMonoBehavior customMonoBehavior;
     private PlayerScript playerScript;
     private GameObject skillCastOriginPoint;
     private UtilObject utilObject = new UtilObject();
@@ -24,6 +24,7 @@ public class SkillableObject : MonoBehaviour
     public UtilObject UtilObject { get => utilObject; set => utilObject = value; }
     public AnimationClip CastSkillBlownDown { get => castSkillBlownDown; set => castSkillBlownDown = value; }
     public int AnimatorIsUsingSkill { get => animatorIsUsingSkill; set => animatorIsUsingSkill = value; }
+    public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
 
     private void Start() 
     {

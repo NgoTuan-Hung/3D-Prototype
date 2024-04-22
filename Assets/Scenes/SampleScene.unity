@@ -10298,7 +10298,7 @@ GameObject:
   - component: {fileID: 282835355}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10452,6 +10452,7 @@ MonoBehaviour:
   entityType: 
   maxHealth: 100
   curentHealth: 0
+  allyTags: []
   moveSpeed: 0.1
   jumpVelocity: 1
   cameraOfPlayer: {fileID: 0}
@@ -10597,6 +10598,7 @@ MonoBehaviour:
   entityType: 
   maxHealth: 1000
   curentHealth: 0
+  allyTags: []
 --- !u!114 &282835355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26643,6 +26645,7 @@ MonoBehaviour:
   entityType: Enemy
   maxHealth: 1000
   curentHealth: 0
+  allyTags: []
 --- !u!54 &735095017
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -26666,9 +26669,9 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!114 &735095020
 MonoBehaviour:
@@ -42518,6 +42521,10 @@ PrefabInstance:
     - target: {fileID: 165424, guid: 9f4313a771e05c64d8da7ae6bd19a19f, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 165424, guid: 9f4313a771e05c64d8da7ae6bd19a19f, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 400368, guid: 9f4313a771e05c64d8da7ae6bd19a19f, type: 3}
       propertyPath: m_LocalPosition.x

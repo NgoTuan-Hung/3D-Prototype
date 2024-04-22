@@ -38,6 +38,5 @@ public class SkeletonSwordWeapon : Weapon
     public override void OnCollisionEnter(Collision other) 
     {
         base.OnCollisionEnter(other);
-            
     }
 }
