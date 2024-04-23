@@ -89,6 +89,24 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""1"",
+                    ""type"": ""Button"",
+                    ""id"": ""c73ebe06-7ce0-493b-aab9-e26ba41346e1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""2"",
+                    ""type"": ""Button"",
+                    ""id"": ""419e1287-ce35-46a9-b34f-96657f996ac6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -146,6 +164,17 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ac2f237-9adb-43d9-96f7-a3dd91e03c7c"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
@@ -212,6 +241,28 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c9f94761-e45a-4711-bd8a-e6551b543109"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c9259c23-aab8-4f61-9171-cc491e0efe33"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -227,6 +278,8 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_Control_ViewDirection = m_Control.FindAction("ViewDirection", throwIfNotFound: true);
         m_Control_Target = m_Control.FindAction("Target", throwIfNotFound: true);
         m_Control_Attack = m_Control.FindAction("Attack", throwIfNotFound: true);
+        m_Control__1 = m_Control.FindAction("1", throwIfNotFound: true);
+        m_Control__2 = m_Control.FindAction("2", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -295,6 +348,8 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Control_ViewDirection;
     private readonly InputAction m_Control_Target;
     private readonly InputAction m_Control_Attack;
+    private readonly InputAction m_Control__1;
+    private readonly InputAction m_Control__2;
     public struct ControlActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -306,6 +361,8 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @ViewDirection => m_Wrapper.m_Control_ViewDirection;
         public InputAction @Target => m_Wrapper.m_Control_Target;
         public InputAction @Attack => m_Wrapper.m_Control_Attack;
+        public InputAction @_1 => m_Wrapper.m_Control__1;
+        public InputAction @_2 => m_Wrapper.m_Control__2;
         public InputActionMap Get() { return m_Wrapper.m_Control; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -336,6 +393,12 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
+            @_1.started += instance.On_1;
+            @_1.performed += instance.On_1;
+            @_1.canceled += instance.On_1;
+            @_2.started += instance.On_2;
+            @_2.performed += instance.On_2;
+            @_2.canceled += instance.On_2;
         }
 
         private void UnregisterCallbacks(IControlActions instance)
@@ -361,6 +424,12 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
+            @_1.started -= instance.On_1;
+            @_1.performed -= instance.On_1;
+            @_1.canceled -= instance.On_1;
+            @_2.started -= instance.On_2;
+            @_2.performed -= instance.On_2;
+            @_2.canceled -= instance.On_2;
         }
 
         public void RemoveCallbacks(IControlActions instance)
@@ -387,5 +456,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnViewDirection(InputAction.CallbackContext context);
         void OnTarget(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void On_1(InputAction.CallbackContext context);
+        void On_2(InputAction.CallbackContext context);
     }
 }

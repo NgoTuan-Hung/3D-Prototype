@@ -1,25 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
+using UnityRandom = UnityEngine.Random;
 
-[RequireComponent(typeof(SkillableObject))]
-public class PlayerScript : MonoBehaviour
+[RequireComponent(typeof(SkillableObject), typeof(RotatableObject), typeof(TargetableObject))]
+public class PlayerScript : CustomMonoBehavior
 {
     [Header("General")]
     [SerializeField] private float moveSpeed = 0.1f;
     [SerializeField] private float jumpVelocity = 1f;
     private new Rigidbody rigidbody;
     [SerializeField] private GameObject cameraOfPlayer;
-    PlayerInputSystem playerInputSystem;
-    private Animator animator;
+    public PlayerInputSystem playerInputSystem;
+    public Animator animator;
     [SerializeField] private Vector3 directionVector;
     [SerializeField] private Vector2 moveVector;
-    [SerializeField] private RotatableObject rotatableObject;
-    [SerializeField] private GameObject viewRotationPoint;
-    [SerializeField] private bool strafeHorizontal;
-    private GlobalObject globalObject;
+    private RotatableObject rotatableObject;
+    // [SerializeField] private GameObject viewRotationPoint;
     private TargetableObject targetableObject;
     MultiAimConstraint multiAimConstraint;
     public MultiAimConstraintData multiAimConstraintData;
@@ -28,45 +29,82 @@ public class PlayerScript : MonoBehaviour
     public static CameraDelegate cameraDelegate;
     [SerializeField] private Transform attackPosition;
     public SkillableObject skillableObject;
+    UtilObject utilObject = new UtilObject();
     // Start is called before the first frame update
     void Awake()
     {
-        cameraOfPlayer = GameObject.Find("Main Camera");
         //playerInput = gameObject.GetComponent<PlayerInput>();
+        EntityType = "Player";
         playerInputSystem = new PlayerInputSystem();
-        playerInputSystem.Control.Jump.performed += Jump;
-        playerInputSystem.Control.ViewDirection.performed += ViewDirection;
-        playerInputSystem.Control.Target.performed += Target;
-        playerInputSystem.Control.Attack.performed += Attack;
+
+        utilObject.BindKey(playerInputSystem, "Attack", "Attack", GetType(), this);
+        //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
+    }
+
+    private void Start() 
+    {
+        cameraOfPlayer = GameObject.Find("Main Camera");
+        rotatableObject = GetComponent<RotatableObject>();
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        rotatableObject = new RotatableObject(transform);
-        globalObject = GlobalObject.Instance;
-        targetableObject = GetComponentInChildren<TargetableObject>();
+        targetableObject = GetComponent<TargetableObject>();
         multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();
         multiAimConstraintData = multiAimConstraint.data;
         rigBuilder = GetComponentInChildren<RigBuilder>();
         skillableObject = GetComponent<SkillableObject>();
-        //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
+        attackPosition = GameObject.Find("AttackPosition").transform;
+        attackCoroutine = StartCoroutine(NullCoroutine());
+        //instantiate movementByCamera and set parent to this
+        movementByCamera = Instantiate(new GameObject(), transform);
+        
     }
-    void Attack(InputAction.CallbackContext callbackContext)
+
+    private Coroutine attackCoroutine;
+    private IEnumerator NullCoroutine() {yield return new WaitForSeconds(0);}
+    [SerializeField] private bool isAttack = false;
+    public void Attack(InputAction.CallbackContext callbackContext)
     {
-        skillableObject.PerformAttack(attackPosition);
-        canMove = false;
-        StartCoroutine(ResetMoveAfterAttack());
-        if (Random.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
-        else animator.SetBool("Attack_Mirror", false);
-        animator.SetBool("Attack", true);
+        if (!isAttack)
+        {
+            isAttack = true;
+            StartCoroutine(AttackHandler());
+        }
+        else isAttack = false;
     }
 
-    public IEnumerator ResetMoveAfterAttack()
+    IEnumerator AttackHandler()
     {
-        yield return new WaitForSeconds(0.27f);
+        while (isAttack)
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-        canMove = true;
+            if (skillableObject.CanAttack)
+            {
+                Vector3 rotateDirection = targetableObject.TargetChecker.NearestTarget.transform.position - transform.position;
+                skillableObject.PerformAttack(targetableObject.TargetChecker.NearestTarget.transform, rotateDirection);
+                if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
+                else animator.SetBool("Attack_Mirror", false);
+                if (!targetableObject.IsTarget)
+                {
+                    targetableObject.Target();
+                }
+                animator.SetBool("Attack", true);
+                if (skillableObject.AnimatorIsUsingSkill == 0) animator.Play("UpperBody.Attack", 1, 0);
+                StopCoroutine(attackCoroutine);
+                attackCoroutine = StartCoroutine(StopAttack());
+            }
+        }
     }
 
-    public void StopAttack()
+
+    IEnumerator StopAttack()
+    {
+        yield return new WaitForSeconds(3);
+
+        targetableObject.Reset();
+    }
+
+    public void StopAttackAnimation()
     {
         animator.SetBool("Attack", false);
     }
@@ -83,6 +121,11 @@ public class PlayerScript : MonoBehaviour
     }
 
     [SerializeField] private bool canMove = true;
+
+    public TargetableObject TargetableObject { get => targetableObject; set => targetableObject = value; }
+    public GameObject movementByCamera;
+    Vector3 movementByCameraDirectionVector;
+
     public void Move()
     {
         // var moveVector = move.ReadValue<Vector2>();
@@ -91,18 +134,17 @@ public class PlayerScript : MonoBehaviour
         animator.SetFloat("MoveVectorX", moveVector.x);
         animator.SetFloat("MoveVectorY", moveVector.y);
 
+        movementByCameraDirectionVector = new Vector3(transform.position.x, 0, transform.position.z)
+         -  new Vector3(cameraOfPlayer.transform.position.x, 0, cameraOfPlayer.transform.position.z);
+        movementByCamera.transform.rotation = Quaternion.LookRotation(movementByCameraDirectionVector);
+        movementByCameraDirectionVector = movementByCamera.transform.TransformPoint(new Vector3(moveVector.x, 0, moveVector.y));
+        movementByCameraDirectionVector -= new Vector3(transform.position.x, 0, transform.position.z); movementByCameraDirectionVector.Normalize();
+
         if (moveVector != Vector2.zero && canMove)
         {
-            if (isTarget)
-            {
-                if (moveVector == Vector2.up) moveVector = new Vector2(currentTarget.transform.position.x - transform.position.x, 
-                currentTarget.transform.position.z - transform.position.z).normalized;
-            }
-            directionVector = new Vector3(moveVector.x, 0, moveVector.y);
+            transform.position +=  movementByCameraDirectionVector * moveSpeed;
             
-            transform.position +=  directionVector * moveSpeed;
-            
-            if (!isViewDirection) rotatableObject.RotateToDirectionAxisXZ(directionVector);
+            rotatableObject.RotateToDirectionAxisXZ(movementByCameraDirectionVector);
         }
     }
 
@@ -112,55 +154,6 @@ public class PlayerScript : MonoBehaviour
         rigidbody.velocity += new Vector3(0, jumpVelocity);
     }
 
-    [SerializeField] private bool isTarget = false;
-    [SerializeField] private GameObject currentTarget;
-    public void Target(InputAction.CallbackContext callbackContext)
-    {
-        if (!isTarget)
-        {
-            isTarget = true;
-            //animator.SetBool("Target", true);
-            currentTarget = targetableObject.nearestTarget;
-            cameraDelegate?.Invoke(currentTarget);
-            
-            var weightedTransformArray = multiAimConstraintData.sourceObjects;
-            weightedTransformArray.SetTransform(0, currentTarget.transform);
-            multiAimConstraintData.sourceObjects = weightedTransformArray;
-            multiAimConstraint.data = multiAimConstraintData;
-            rigBuilder.Build();
-        }
-        else
-        {
-            isTarget = false;
-            cameraDelegate?.Invoke(null);
-            //animator.SetBool("Target", false);
-        }
-    }
-
-    public void ViewDirection(InputAction.CallbackContext callbackContext)
-    {
-        StartCoroutine(ViewDirectionHandler(callbackContext.action));
-    }
-
-    public bool isViewDirection = false;
-    public Vector3 viewDirection;
-    public IEnumerator ViewDirectionHandler(InputAction viewDirection)
-    {
-        isViewDirection = true;
-        animator.SetBool("ViewDirection", isViewDirection);
-        while (viewDirection.IsPressed())
-        {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-
-            var rawPose = Camera.main.WorldToScreenPoint(viewRotationPoint.transform.position);
-            rawPose.Scale(new Vector3(1 / GlobalObject.Instance.screenResolution.x, 1 / GlobalObject.Instance.screenResolution.y, 1f));
-            this.viewDirection = new Vector3(GlobalObject.Instance.mouse.x - rawPose.x, 0, GlobalObject.Instance.mouse.y - rawPose.y);
-            
-            rotatableObject.RotateToDirectionAxisXZ(this.viewDirection);
-        }
-        isViewDirection = false;
-        animator.SetBool("ViewDirection", isViewDirection);
-    }
 
     public IEnumerator test(object value)
     {
@@ -178,3 +171,23 @@ public class PlayerScript : MonoBehaviour
         playerInputSystem.Control.Disable();
     }
 }
+
+// public bool isViewDirection = false;
+    // public Vector3 viewDirection;
+    // public IEnumerator ViewDirectionHandler(InputAction viewDirection)
+    // {
+    //     isViewDirection = true;
+    //     animator.SetBool("ViewDirection", isViewDirection);
+    //     while (viewDirection.IsPressed())
+    //     {
+    //         yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+    //         var rawPose = Camera.main.WorldToScreenPoint(viewRotationPoint.transform.position);
+    //         rawPose.Scale(new Vector3(1 / GlobalObject.Instance.screenResolution.x, 1 / GlobalObject.Instance.screenResolution.y, 1f));
+    //         this.viewDirection = new Vector3(GlobalObject.Instance.mouse.x - rawPose.x, 0, GlobalObject.Instance.mouse.y - rawPose.y);
+            
+    //         rotatableObject.RotateToDirectionAxisXZ(this.viewDirection);
+    //     }
+    //     isViewDirection = false;
+    //     animator.SetBool("ViewDirection", isViewDirection);
+    // }

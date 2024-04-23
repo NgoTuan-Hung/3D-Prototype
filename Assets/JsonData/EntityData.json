@@ -1,0 +1,17 @@
+{
+	"items" : 
+	[
+		{
+			"entityName": "Player",
+			"entityComponents": ["SkillableObject", "RotatableObject", "PlayerScript"]
+		},
+		{
+			"entityName" : "Skeleton",
+			"entityComponents": ["RotatableObject","MoveToTarget", "MeleeSimpleAttackWhenNear"]
+		},
+		{
+			"entityName" : "Skeleton-Archer",
+			"entityComponents": ["MoveToTarget"]
+		}
+	]
+}

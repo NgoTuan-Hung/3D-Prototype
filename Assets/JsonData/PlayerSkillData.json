@@ -1,0 +1,15 @@
+{
+    "items":
+    [
+        {
+            "skillName": "SwordSkill",
+            "functionName": "SummonBigSword",
+            "keybind":"1"
+        },
+        {
+            "skillName": "SwordSkill",
+            "functionName": "ThousandSword",
+            "keybind":"2"
+        }
+    ]
+}
