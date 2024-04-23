@@ -54,6 +54,9 @@ public class PlayerScript : CustomMonoBehavior
         skillableObject = GetComponent<SkillableObject>();
         attackPosition = GameObject.Find("AttackPosition").transform;
         attackCoroutine = StartCoroutine(NullCoroutine());
+        //instantiate movementByCamera and set parent to this
+        movementByCamera = Instantiate(new GameObject(), transform);
+        
     }
 
     private Coroutine attackCoroutine;
@@ -120,6 +123,8 @@ public class PlayerScript : CustomMonoBehavior
     [SerializeField] private bool canMove = true;
 
     public TargetableObject TargetableObject { get => targetableObject; set => targetableObject = value; }
+    public GameObject movementByCamera;
+    Vector3 movementByCameraDirectionVector;
 
     public void Move()
     {
@@ -129,13 +134,17 @@ public class PlayerScript : CustomMonoBehavior
         animator.SetFloat("MoveVectorX", moveVector.x);
         animator.SetFloat("MoveVectorY", moveVector.y);
 
+        movementByCameraDirectionVector = new Vector3(transform.position.x, 0, transform.position.z)
+         -  new Vector3(cameraOfPlayer.transform.position.x, 0, cameraOfPlayer.transform.position.z);
+        movementByCamera.transform.rotation = Quaternion.LookRotation(movementByCameraDirectionVector);
+        movementByCameraDirectionVector = movementByCamera.transform.TransformPoint(new Vector3(moveVector.x, 0, moveVector.y));
+        movementByCameraDirectionVector -= new Vector3(transform.position.x, 0, transform.position.z); movementByCameraDirectionVector.Normalize();
+
         if (moveVector != Vector2.zero && canMove)
         {
-            directionVector = new Vector3(moveVector.x, 0, moveVector.y);
+            transform.position +=  movementByCameraDirectionVector * moveSpeed;
             
-            transform.position +=  directionVector * moveSpeed;
-            
-            rotatableObject.RotateToDirectionAxisXZ(directionVector);
+            rotatableObject.RotateToDirectionAxisXZ(movementByCameraDirectionVector);
         }
     }
 
