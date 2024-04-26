@@ -83,6 +83,7 @@ public class SwordSkill : WeaponSkill
 
         SwordWeapon swordWeapon = (SwordWeapon)objectPoolClass.Component;
         swordWeapon.CollideExcludeTags = SkillableObject.CustomMonoBehavior.AllyTags;
+        Debug.Log("ally tag: " + SkillableObject.CustomMonoBehavior.AllyTags[0]);
         objectPoolClass.GameObject.SetActive(true);
         // we won't use swordWeaponParent variable because it will affect attack logic
         Transform swordWeaponParent1 = swordWeapon.transform.parent;

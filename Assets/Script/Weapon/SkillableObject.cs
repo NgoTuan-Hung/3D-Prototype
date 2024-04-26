@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -26,13 +27,14 @@ public class SkillableObject : MonoBehaviour
     public int AnimatorIsUsingSkill { get => animatorIsUsingSkill; set => animatorIsUsingSkill = value; }
     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
 
-    private void Start() 
+    private void Awake() 
     {
         // weaponSkills.ForEach(weaponSkill => 
         // {
         //     gameObject.AddComponent(weaponSkill.GetType());
         // });
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
+        customMonoBehavior.AllyTags.Add("will this show up hmm");
 
         if (customMonoBehavior.EntityType.Equals("Player"))
         {
@@ -56,6 +58,7 @@ public class SkillableObject : MonoBehaviour
 
     public void LoadPlayerSkillData()
     {
+        Debug.Log("in here");
         List<PlayerSkillData> playerSkillDatas = GlobalObject.Instance.FromJson<PlayerSkillData>(GlobalObject.Instance.playerSkillDataPath, true);
 
         playerSkillDatas.ForEach(playerSkillData => 
