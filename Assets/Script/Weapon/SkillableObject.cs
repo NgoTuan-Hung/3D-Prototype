@@ -27,15 +27,15 @@ public class SkillableObject : MonoBehaviour
     public int AnimatorIsUsingSkill { get => animatorIsUsingSkill; set => animatorIsUsingSkill = value; }
     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
 
-    private void Awake() 
+    private void Start() 
     {
         // weaponSkills.ForEach(weaponSkill => 
         // {
         //     gameObject.AddComponent(weaponSkill.GetType());
         // });
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-        customMonoBehavior.AllyTags.Add("will this show up hmm");
-
+        Debug.Log(customMonoBehavior.AllyTags[0]);
+        
         if (customMonoBehavior.EntityType.Equals("Player"))
         {
             playerScript = GetComponent<PlayerScript>();
@@ -58,7 +58,6 @@ public class SkillableObject : MonoBehaviour
 
     public void LoadPlayerSkillData()
     {
-        Debug.Log("in here");
         List<PlayerSkillData> playerSkillDatas = GlobalObject.Instance.FromJson<PlayerSkillData>(GlobalObject.Instance.playerSkillDataPath, true);
 
         playerSkillDatas.ForEach(playerSkillData => 

@@ -31,9 +31,10 @@ public class PlayerScript : CustomMonoBehavior
     public SkillableObject skillableObject;
     UtilObject utilObject = new UtilObject();
     // Start is called before the first frame update
-    void Awake()
+    new void Awake()
     {
         //playerInput = gameObject.GetComponent<PlayerInput>();
+        base.Awake();
         EntityType = "Player";
         playerInputSystem = new PlayerInputSystem();
 

@@ -8,7 +8,7 @@ public class CustomMonoBehavior : MonoBehaviour
     [SerializeField] private String entityType;
     [SerializeField] private float maxHealth = 100;
     [SerializeField] private float curentHealth;
-    [SerializeField] public List<String> allyTags = new List<string>();
+    [SerializeField] private List<String> allyTags = new List<string>();
 
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurentHealth { get => curentHealth; set => curentHealth = value; }
@@ -16,13 +16,10 @@ public class CustomMonoBehavior : MonoBehaviour
     public List<string> AllyTags { get => allyTags; set => allyTags = value; }
 
     // Start is called before the first frame update
-    void Awake()
+    public void Awake()
     {
         curentHealth = maxHealth;
         allyTags.Add(gameObject.tag);
-        allyTags.Add("1");
-        allyTags.Add("2");
-        allyTags.Add("3");
     }
 
     // Update is called once per frame
