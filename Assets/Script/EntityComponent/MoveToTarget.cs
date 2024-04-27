@@ -20,7 +20,7 @@ public class MoveToTarget : MonoBehaviour
     public Transform Target { get => target; set => target = value; }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         MoveSpeed = 1f;
         distanceToStopMove = 1f;

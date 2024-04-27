@@ -13,7 +13,6 @@ public class PlayerScript : CustomMonoBehavior
     [Header("General")]
     [SerializeField] private float moveSpeed = 0.1f;
     [SerializeField] private float jumpVelocity = 1f;
-    private new Rigidbody rigidbody;
     [SerializeField] private GameObject cameraOfPlayer;
     public PlayerInputSystem playerInputSystem;
     public Animator animator;
@@ -46,7 +45,6 @@ public class PlayerScript : CustomMonoBehavior
     {
         cameraOfPlayer = GameObject.Find("Main Camera");
         rotatableObject = GetComponent<RotatableObject>();
-        rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         targetableObject = GetComponent<TargetableObject>();
         multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();

@@ -19,7 +19,7 @@ public class MeleeSimpleAttackWhenNear : MonoBehaviour
     public bool CanAttack { get => canAttack; set => canAttack = value; }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         animator = GetComponent<Animator>();
         moveToTarget = GetComponent<MoveToTarget>();

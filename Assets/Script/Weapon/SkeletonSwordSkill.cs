@@ -1,13 +1,25 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.ComponentModel;
 using UnityEngine;
-using UnityRandom = UnityEngine.Random;
 
 public class SkeletonSwordSkill : WeaponSkill
 {
     [SerializeField] private static ObjectPool<Weapon> weaponPool {get; set;}
+    public float ChargeDistance 
+    {
+        get {return chargeDistance; }
+        set 
+        {
+            chargeDistance = value; 
+            chargeRecommendedAIBehavior.DistanceToTarget = value;
+        } 
+    }
+    public float ChargedDistance { get => chargedDistance; set => chargedDistance = value; }
+    public float ChargeDistanceOverTime { get => chargeDistanceOverTime; set => chargeDistanceOverTime = value; }
+    public Vector3 ChargeTemp { get => chargeTemp; set => chargeTemp = value; }
+    public Vector3 ChargeVelocity { get => chargeVelocity; set => chargeVelocity = value; }
+    internal RecommendedAIBehavior ChargeRecommendedAIBehavior { get => chargeRecommendedAIBehavior; set => chargeRecommendedAIBehavior = value; }
+
     [SerializeField] private GameObject prefab;
     private Transform weaponParent;
 
@@ -37,13 +49,57 @@ public class SkeletonSwordSkill : WeaponSkill
         CanAttack = true;
     }
 
+    private float chargeCooldown = 3f;
+    private bool canCharge = true;
+    private float chargeSpeed = 2f;
+    public void Charge(Transform target)
+    {
+        if (canCharge)
+        {
+            canCharge = false;
+
+            StartCoroutine(HandleCharge(target));
+        }
+    }
+
+    float chargeDistance = 10;
+    float chargedDistance;
+    float chargeDistanceOverTime;
+    Vector3 chargeTemp;
+    Vector3 chargeVelocity;
+    RecommendedAIBehavior chargeRecommendedAIBehavior = new RecommendedAIBehavior();
+
+    IEnumerator HandleCharge(Transform target)
+    {
+        chargeTemp = target.position - transform.position;
+        chargeVelocity = chargeTemp.normalized * chargeSpeed;
+        chargeDistanceOverTime = chargeSpeed;
+        chargedDistance = 0;
+
+        while(chargedDistance < chargeDistance)
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+            SkillableObject.CustomMonoBehavior.Rigidbody.velocity = chargeVelocity;
+            chargedDistance += chargeDistanceOverTime;
+        }
+
+        StartCoroutine(ChargeCooldown());
+    }
+
+    IEnumerator ChargeCooldown()
+    {
+        yield return new WaitForSeconds(chargeCooldown);
+
+        canCharge = true;
+    }
+
     // Start is called before the first frame update
     void Awake()
     {
         prefab = Instantiate(Resources.Load("SkeletonSword")) as GameObject;
         prefab.SetActive(false);
         weaponPool ??= new ObjectPool<Weapon>(prefab, 20, ObjectPool<Weapon>.WhereComponent.Child);
-        Debug.Log("count: " + weaponPool.pool.Count);
         
 
         SkillableObject = GetComponent<SkillableObject>();

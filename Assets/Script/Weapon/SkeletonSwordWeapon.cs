@@ -5,7 +5,6 @@ using UnityEngine;
 public class SkeletonSwordWeapon : Weapon
 {
     private GameObject stabParticleSystemObject;
-    private GameObject stabParticleSystem;
     [SerializeField] private static ObjectPool<ParticleSystem> stabParticleSystemPool {get; set;}
     ObjectPoolClass<ParticleSystem> stabParticleSystemObjectPoolClass;
     // Start is called before the first frame update
@@ -35,8 +34,8 @@ public class SkeletonSwordWeapon : Weapon
         stabParticleSystemObjectPoolClass.Component.Play();
     }
 
-    public override void OnCollisionEnter(Collision other) 
+    public override void OnTriggerEnter(Collider other)
     {
-        base.OnCollisionEnter(other);
+        base.OnTriggerEnter(other);
     }
 }

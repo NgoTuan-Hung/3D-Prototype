@@ -117,6 +117,7 @@
     <Compile Include="Assets\TotalJSON\Scripts\Settings\SerializeSettings.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\JNumber.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\JString.cs" />
+    <Compile Include="Assets\Script\Other\RecommendedAIBehavior.cs" />
     <Compile Include="Assets\Script\EntityComponent\MoveToTarget.cs" />
     <Compile Include="Assets\TotalJSON\Internal\StringPointer.cs" />
     <Compile Include="Assets\Script\EntityComponent\EntityData.cs" />

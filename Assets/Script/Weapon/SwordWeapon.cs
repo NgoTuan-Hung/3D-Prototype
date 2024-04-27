@@ -17,10 +17,9 @@ public class SwordWeapon : Weapon
         flyingTrail.enabled = false;
     }
 
-    public override void OnCollisionEnter(Collision other) 
+    public override void OnTriggerEnter(Collider other)
     {
-        base.OnCollisionEnter(other);
-        Debug.Log("collide " + other.gameObject.name);
+        base.OnTriggerEnter(other);
     }
 
     public override void Attack()

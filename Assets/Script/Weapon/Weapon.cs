@@ -55,12 +55,12 @@ public class Weapon : MonoBehaviour
         transform.parent.gameObject.SetActive(false);
     }
 
-    public virtual void OnCollisionEnter(Collision collision)
+    public virtual void OnTriggerEnter(Collider other)
     {
-        if (!collideExcludeTags.Contains(collision.gameObject.tag))
+        if (!collideExcludeTags.Contains(other.gameObject.tag))
         {
             Debug.Log("exclude tag: " + collideExcludeTags[0]);
-            GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, collision.gameObject);
+            GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
         }
     }
 }
