@@ -1,0 +1,15 @@
+[
+    {
+        "Name" : "MeleeSkeleton",
+        "Skills": 
+        [
+            {
+                "Name": "SkeletonSwordSkill",
+                "SubSkills": 
+                [
+                    "Charge"
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,13 @@
+[
+    {
+        "name": "SkeletonSwordSkill",
+        "subSkills": 
+        [
+            {
+                "name": "Charge",
+                "usableProperty": "canCharge",
+                "recommendedAIBehavior": "chargeRecommendedAIBehavior"
+            }
+        ]
+    }
+]
