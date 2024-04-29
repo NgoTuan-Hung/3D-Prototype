@@ -5,15 +5,6 @@ using UnityEngine;
 public class SkeletonSwordSkill : WeaponSkill
 {
     [SerializeField] private static ObjectPool<Weapon> weaponPool {get; set;}
-    // public float ChargeDistance 
-    // {
-    //     get {return chargeDistance; }
-    //     set 
-    //     {
-    //         chargeDistance = value; 
-    //         chargeRecommendedAIBehavior.DistanceToTarget = value;
-    //     } 
-    // }
 
     [SerializeField] private GameObject prefab;
     private Transform weaponParent;
@@ -29,7 +20,7 @@ public class SkeletonSwordSkill : WeaponSkill
 
             weaponParent.transform.position = transform.position;
             weaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, location.position - weaponParent.transform.position + new Vector3(0, 1f, 0));
-            skeletonSwordWeapon.CollideExcludeTags = SkillableObject.CustomMonoBehavior.AllyTags;
+            skeletonSwordWeapon.CollideExcludeTags = CustomMonoBehavior.AllyTags;
             skeletonSwordWeapon.ColliderDamage = 10f;
             
             skeletonSwordWeapon.Attack();
@@ -45,15 +36,13 @@ public class SkeletonSwordSkill : WeaponSkill
     }
 
     // Start is called before the first frame update
-    void Awake()
+    public override void Awake()
     {
+        base.Awake();
         prefab = Instantiate(Resources.Load("SkeletonSword")) as GameObject;
         prefab.SetActive(false);
         weaponPool ??= new ObjectPool<Weapon>(prefab, 20, ObjectPool<Weapon>.WhereComponent.Child);
         WeaponSubSkills.Add(gameObject.AddComponent<SkeletonSwordSkillCharge>()); WeaponSubSkills[0].WeaponPool = weaponPool;
-        
-
-        SkillableObject = GetComponent<SkillableObject>();
     }
 
     // Update is called once per frame

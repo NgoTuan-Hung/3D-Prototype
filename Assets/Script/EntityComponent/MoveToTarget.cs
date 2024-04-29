@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(RotatableObject))]
-public class MoveToTarget : MonoBehaviour
+public class MoveToTarget : EntityAction
 {
     [SerializeField] private Transform target;
-    [SerializeField] private Animator animator;
+    private CustomMonoBehavior customMonoBehavior;
     [SerializeField] private bool canMove = true;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float distanceToTarget;
     [SerializeField] private float distanceToStopMove;
-    new private Rigidbody rigidbody;
-    private RotatableObject rotatableObject;
     public bool CanMove { get => canMove; set => canMove = value; }
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
     public float DistanceToTarget { get => distanceToTarget; set => distanceToTarget = value; }
@@ -24,48 +21,60 @@ public class MoveToTarget : MonoBehaviour
     {
         MoveSpeed = 1f;
         distanceToStopMove = 1f;
-        animator = GetComponent<Animator>();
         target = GameObject.Find("Player").transform;
-        rotatableObject = GetComponent<RotatableObject>();
-        rigidbody = GetComponent<Rigidbody>();
+    }
+
+    void Start()
+    {
+        IfDo(customMonoBehavior.RotatableObjectBool, RotateToTarget());
+        IfDo(customMonoBehavior.AnimatorBool && customMonoBehavior.RigidbodyBool, Move());
+        // one thing to note about this is that the order of execution is hard to control
+        // so if we want to have an order of execution in some case, we can always use update or fixedupdate
     }
 
     private void FixedUpdate() 
     {
         CalculateDistanceVector();
-        RotateToTarget();
-        Move();
     }
 
-    private Vector3 funcMove_DistanceVector;
+    private Vector3 funcMove_DistanceVector = Vector3.zero;
 
     public void CalculateDistanceVector()
     {
         funcMove_DistanceVector = new Vector3(target.transform.position.x - transform.position.x, 0, target.transform.position.z - transform.position.z);
     }
 
-    public void RotateToTarget()
+    public IEnumerator RotateToTarget()
     {
-        rotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
-        Debug.DrawRay(transform.position, funcMove_DistanceVector, Color.red);
+        while (true)
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+            customMonoBehavior.RotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
+            Debug.DrawRay(transform.position, funcMove_DistanceVector, Color.red);
+        }
     }
 
-    public void Move()
+    public IEnumerator Move()
     {
-        
-        distanceToTarget = funcMove_DistanceVector.magnitude;
-        if (canMove)
+        while (true)
         {
-            if (distanceToTarget > distanceToStopMove)
-            {
-                rigidbody.velocity = funcMove_DistanceVector.normalized * moveSpeed;
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-                animator.SetBool("Move", true);
+            distanceToTarget = funcMove_DistanceVector.magnitude;
+            if (canMove)
+            {
+                if (distanceToTarget > distanceToStopMove)
+                {
+                    customMonoBehavior.Rigidbody.velocity = funcMove_DistanceVector.normalized * moveSpeed;
+
+                    customMonoBehavior.Animator.SetBool("Move", true);
+                }
             }
-        }
-        else
-        {
-            animator.SetBool("Move", false);
+            else
+            {
+                customMonoBehavior.Animator.SetBool("Move", false);
+            }
         }
     }
 }

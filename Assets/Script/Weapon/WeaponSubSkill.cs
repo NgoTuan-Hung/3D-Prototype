@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.Composites;
-using UnityEngine.Video;
+using UnityEngine.Rendering;
 
 class WeaponSubSkill : MonoBehaviour
 {
@@ -10,14 +9,14 @@ class WeaponSubSkill : MonoBehaviour
     private SubSkillRequiredParameter subSkillRequiredParameter;
     private RecommendedAIBehavior recommendedAIBehavior;
     private bool canUse = true;
-    private List<ISubSkillChangableAttribute> subSkillChangableAttributes = new List<ISubSkillChangableAttribute>();
+    private List<SubSkillChangableAttribute> subSkillChangableAttributes = new List<SubSkillChangableAttribute>();
     private CustomMonoBehavior customMonoBehavior;
 
     public ObjectPool<Weapon> WeaponPool { get => weaponPool; set => weaponPool = value; }
     public SubSkillRequiredParameter SubSkillRequiredParameter { get => subSkillRequiredParameter; set => subSkillRequiredParameter = value; }
     public RecommendedAIBehavior RecommendedAIBehavior { get => recommendedAIBehavior; set => recommendedAIBehavior = value; }
     public bool CanUse { get => canUse; set => canUse = value; }
-    public List<ISubSkillChangableAttribute> SubSkillChangableAttributes { get => subSkillChangableAttributes; set => subSkillChangableAttributes = value; }
+    public List<SubSkillChangableAttribute> SubSkillChangableAttributes { get => subSkillChangableAttributes; set => subSkillChangableAttributes = value; }
     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
 
     public virtual void Trigger(SubSkillParameter subSkillParameter)
@@ -45,20 +44,32 @@ public class SubSkillParameter
     public Transform Target { get => target; set => target = value; }
 }
 
-interface ISubSkillChangableAttribute{}
 
-public class SubSkillChangableAttribute<T> : ISubSkillChangableAttribute
+public class SubSkillChangableAttribute
 {
-    private T value;
+    private int intValue;
+    private float floatValue;
     public enum SubSkillAttributeType {Cooldown, Speed, Distance}
+    public enum SubSkillAttributeValueType {Int, Float}
     private SubSkillAttributeType subSkillAttributeType;
+    private SubSkillAttributeValueType subSkillAttributeValueType;
 
-    public SubSkillChangableAttribute(T value, SubSkillAttributeType subSkillAttributeType)
+    public SubSkillChangableAttribute(SubSkillAttributeValueType type, object value, SubSkillAttributeType subSkillAttributeType)
     {
-        this.value = value;
+        this.subSkillAttributeValueType = type;
+        switch (subSkillAttributeValueType)
+        {
+            case SubSkillAttributeValueType.Int:
+                intValue = (int)value;
+                break;
+            case SubSkillAttributeValueType.Float:
+                floatValue = (float)value;
+                break;
+            default: break;
+        }
         this.subSkillAttributeType = subSkillAttributeType;
     }
-
-    public T Value { get => value; set => this.value = value; }
     private SubSkillAttributeType SubSkillAttributeType1 { get => subSkillAttributeType; set => subSkillAttributeType = value; }
+    public int IntValue { get => intValue; set => intValue = value; }
+    public float FloatValue { get => floatValue; set => floatValue = value; }
 }

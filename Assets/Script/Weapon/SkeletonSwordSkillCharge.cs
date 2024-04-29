@@ -3,34 +3,34 @@ using UnityEngine;
 
 class SkeletonSwordSkillCharge : WeaponSubSkill
 {
-    SubSkillChangableAttribute<float> chargeCooldown = new SubSkillChangableAttribute<float>(3f, SubSkillChangableAttribute<float>.SubSkillAttributeType.Cooldown);
-    SubSkillChangableAttribute<float> chargeSpeed = new SubSkillChangableAttribute<float>(2f, SubSkillChangableAttribute<float>.SubSkillAttributeType.Speed);
+    SubSkillChangableAttribute chargeCooldown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 3f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
+    SubSkillChangableAttribute chargeSpeed = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 2f, SubSkillChangableAttribute.SubSkillAttributeType.Speed);
 
     public override void Start()
     {
         base.Start();
-        SubSkillChangableAttributes.AddRange(new ISubSkillChangableAttribute[] {ChargeCooldown1, ChargeSpeed, ChargeDistance});
+        SubSkillChangableAttributes.AddRange(new SubSkillChangableAttribute[] {ChargeCooldown1, ChargeSpeed, ChargeDistance});
 
         SubSkillRequiredParameter = new SubSkillRequiredParameter
         {
             Target = true
         };
     }
-    SubSkillChangableAttribute<float> chargeDistance = new SubSkillChangableAttribute<float>(10f, SubSkillChangableAttribute<float>.SubSkillAttributeType.Distance);
+    SubSkillChangableAttribute chargeDistance = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 10f, SubSkillChangableAttribute.SubSkillAttributeType.Distance);
     float chargedDistance;
     float chargeDistanceOverTime;
     Vector3 chargeTemp;
     Vector3 chargeVelocity;
 
-    public SubSkillChangableAttribute<float> ChargeCooldown1 { get => chargeCooldown; set => chargeCooldown = value; }
-    public SubSkillChangableAttribute<float> ChargeSpeed { get => chargeSpeed; set => chargeSpeed = value; }
-    public SubSkillChangableAttribute<float> ChargeDistance 
+    public SubSkillChangableAttribute ChargeCooldown1 { get => chargeCooldown; set => chargeCooldown = value; }
+    public SubSkillChangableAttribute ChargeSpeed { get => chargeSpeed; set => chargeSpeed = value; }
+    public SubSkillChangableAttribute ChargeDistance 
     { 
         get  {return chargeDistance;}
         set
         {
             chargeDistance = value; 
-            RecommendedAIBehavior.DistanceToTarget = value.Value;
+            RecommendedAIBehavior.DistanceToTarget = value.FloatValue;
         } 
     }
     public float ChargedDistance { get => chargedDistance; set => chargedDistance = value; }
@@ -41,11 +41,11 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
     IEnumerator HandleCharge(Transform target)
     {
         chargeTemp = target.position - transform.position;
-        chargeVelocity = chargeTemp.normalized * chargeSpeed.Value;
-        chargeDistanceOverTime = chargeSpeed.Value;
+        chargeVelocity = chargeTemp.normalized * chargeSpeed.FloatValue;
+        chargeDistanceOverTime = chargeSpeed.FloatValue;
         chargedDistance = 0;
 
-        while(chargedDistance < chargeDistance.Value)
+        while(chargedDistance < chargeDistance.FloatValue)
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
@@ -58,7 +58,7 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
 
     IEnumerator ChargeCooldown()
     {
-        yield return new WaitForSeconds(chargeCooldown.Value);
+        yield return new WaitForSeconds(chargeCooldown.FloatValue);
 
         CanUse = true;
     }

@@ -3,13 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(MoveToTarget), typeof(CustomMonoBehavior), typeof(SkillableObject))]
 public class MeleeSimpleAttackWhenNear : MonoBehaviour
 {
-    private Animator animator;
-    private MoveToTarget moveToTarget;
     private CustomMonoBehavior customMonoBehavior;
-    private SkillableObject skillableObject;
     [SerializeField] private float distanceToAttack;
     [SerializeField] private float attackCooldown;
     [SerializeField] private bool canAttack;
@@ -21,12 +17,9 @@ public class MeleeSimpleAttackWhenNear : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        animator = GetComponent<Animator>();
-        moveToTarget = GetComponent<MoveToTarget>();
         distanceToAttack = 1.5f;
         canAttack = true;
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-        skillableObject = GetComponent<SkillableObject>();
     }
 
     private void FixedUpdate()
@@ -36,17 +29,20 @@ public class MeleeSimpleAttackWhenNear : MonoBehaviour
 
     public void CheckAttack()
     {
-        if (skillableObject.CanAttack && moveToTarget.DistanceToTarget < distanceToAttack)
+        if (customMonoBehavior.SkillableObjectBool && customMonoBehavior.MoveToTargetBool)
         {
-            animator.Play("Base.Attack", 0, 0);
-            skillableObject.PerformAttack(moveToTarget.Target, moveToTarget.Target.position - transform.position);
-            moveToTarget.CanMove = false;
+            if (customMonoBehavior.SkillableObject.CanAttack && customMonoBehavior.MoveToTarget.DistanceToTarget < distanceToAttack)
+            {
+                customMonoBehavior.Animator.Play("Base.Attack", 0, 0);
+                customMonoBehavior.SkillableObject.PerformAttack(customMonoBehavior.MoveToTarget.Target, customMonoBehavior.MoveToTarget.Target.position - transform.position);
+                customMonoBehavior.MoveToTarget.CanMove = false;
+            }
         }
     }
 
     public void StopAttack()
     {
-        moveToTarget.CanMove = true;
+        customMonoBehavior.MoveToTarget.CanMove = true;
         StartCoroutine(ResetAttack());
     }
 
