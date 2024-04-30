@@ -14,11 +14,13 @@ public class CustomMonoBehavior : MonoBehaviour
     private RotatableObject rotatableObject;
     private Animator animator;
     private MoveToTarget moveToTarget;
+    private MeleeSimpleAttackWhenNear meleeSimpleAttackWhenNear;
     bool rigidbodyBool = false;
     bool skillableObjectBool = false;
     bool animatorBool = false;
     bool rotatableObjectBool = false;
     bool moveToTargetBool = false;
+    bool meleeSimpleAttackWhenNearBool = false;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurentHealth { get => curentHealth; set => curentHealth = value; }
     public string EntityType { get => entityType; set => entityType = value; }
@@ -33,6 +35,8 @@ public class CustomMonoBehavior : MonoBehaviour
     public bool RotatableObjectBool { get => rotatableObjectBool; set => rotatableObjectBool = value; }
     public MoveToTarget MoveToTarget { get => moveToTarget; set => moveToTarget = value; }
     public bool MoveToTargetBool { get => moveToTargetBool; set => moveToTargetBool = value; }
+    public MeleeSimpleAttackWhenNear MeleeSimpleAttackWhenNear { get => meleeSimpleAttackWhenNear; set => meleeSimpleAttackWhenNear = value; }
+    public bool MeleeSimpleAttackWhenNearBool { get => meleeSimpleAttackWhenNearBool; set => meleeSimpleAttackWhenNearBool = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -45,6 +49,7 @@ public class CustomMonoBehavior : MonoBehaviour
         if (TryGetComponent<Animator>(out animator)) animatorBool = true;
         if (TryGetComponent<RotatableObject>(out rotatableObject)) rotatableObjectBool = true;
         if (TryGetComponent<MoveToTarget>(out moveToTarget)) moveToTargetBool = true;
+        if (TryGetComponent<MeleeSimpleAttackWhenNear>(out meleeSimpleAttackWhenNear)) meleeSimpleAttackWhenNearBool = true;
     }
 
     // Update is called once per frame

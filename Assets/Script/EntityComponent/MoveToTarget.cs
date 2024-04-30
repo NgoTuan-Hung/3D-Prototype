@@ -5,7 +5,6 @@ using UnityEngine;
 public class MoveToTarget : EntityAction
 {
     [SerializeField] private Transform target;
-    private CustomMonoBehavior customMonoBehavior;
     [SerializeField] private bool canMove = true;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float distanceToTarget;
@@ -17,8 +16,9 @@ public class MoveToTarget : EntityAction
     public Transform Target { get => target; set => target = value; }
 
     // Start is called before the first frame update
-    void Awake()
+    public override void Awake()
     {
+        base.Awake();
         MoveSpeed = 1f;
         distanceToStopMove = 1f;
         target = GameObject.Find("Player").transform;
@@ -26,8 +26,8 @@ public class MoveToTarget : EntityAction
 
     void Start()
     {
-        IfDo(customMonoBehavior.RotatableObjectBool, RotateToTarget());
-        IfDo(customMonoBehavior.AnimatorBool && customMonoBehavior.RigidbodyBool, Move());
+        IfDo(CustomMonoBehavior.RotatableObjectBool, RotateToTarget());
+        IfDo(CustomMonoBehavior.AnimatorBool && CustomMonoBehavior.RigidbodyBool, Move());
         // one thing to note about this is that the order of execution is hard to control
         // so if we want to have an order of execution in some case, we can always use update or fixedupdate
     }
@@ -37,7 +37,7 @@ public class MoveToTarget : EntityAction
         CalculateDistanceVector();
     }
 
-    private Vector3 funcMove_DistanceVector = Vector3.zero;
+    [SerializeField] private Vector3 funcMove_DistanceVector = Vector3.zero;
 
     public void CalculateDistanceVector()
     {
@@ -50,7 +50,7 @@ public class MoveToTarget : EntityAction
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            customMonoBehavior.RotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
+            CustomMonoBehavior.RotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
             Debug.DrawRay(transform.position, funcMove_DistanceVector, Color.red);
         }
     }
@@ -66,14 +66,14 @@ public class MoveToTarget : EntityAction
             {
                 if (distanceToTarget > distanceToStopMove)
                 {
-                    customMonoBehavior.Rigidbody.velocity = funcMove_DistanceVector.normalized * moveSpeed;
+                    CustomMonoBehavior.Rigidbody.velocity = funcMove_DistanceVector.normalized * moveSpeed;
 
-                    customMonoBehavior.Animator.SetBool("Move", true);
+                    CustomMonoBehavior.Animator.SetBool("Move", true);
                 }
             }
             else
             {
-                customMonoBehavior.Animator.SetBool("Move", false);
+                CustomMonoBehavior.Animator.SetBool("Move", false);
             }
         }
     }

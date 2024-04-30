@@ -1,6 +1,6 @@
 class RecommendedAIBehavior
 {
-    private float distanceToTarget;
+    private float distanceToTarget = 0f;
 
     public float DistanceToTarget { get => distanceToTarget; set => distanceToTarget = value; }
 }

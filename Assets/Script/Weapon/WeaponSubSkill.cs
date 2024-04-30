@@ -7,7 +7,7 @@ class WeaponSubSkill : MonoBehaviour
 {
     private ObjectPool<Weapon> weaponPool;
     private SubSkillRequiredParameter subSkillRequiredParameter;
-    private RecommendedAIBehavior recommendedAIBehavior;
+    private RecommendedAIBehavior recommendedAIBehavior = new RecommendedAIBehavior();
     private bool canUse = true;
     private List<SubSkillChangableAttribute> subSkillChangableAttributes = new List<SubSkillChangableAttribute>();
     private CustomMonoBehavior customMonoBehavior;
@@ -39,7 +39,7 @@ public class SubSkillRequiredParameter
 
 public class SubSkillParameter
 {
-    Transform target;
+    Transform target = null;
 
     public Transform Target { get => target; set => target = value; }
 }

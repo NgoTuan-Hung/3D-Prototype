@@ -125,6 +125,7 @@
     <Compile Include="Assets\Script\EntityComponent\EntityData.cs" />
     <Compile Include="Assets\TotalJSON\Internal\InternalTools.cs" />
     <Compile Include="Assets\Script\Weapon\WeaponSubSkill.cs" />
+    <Compile Include="Assets\Script\EntityComponent\UseSkillWheneverPossible.cs" />
     <Compile Include="Assets\Script\PlayerScript.cs" />
     <Compile Include="Assets\Script\ObjectPool.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Settings\DeserializeSettings.cs" />

@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(CustomMonoBehavior))]
 public class SkillableObject : MonoBehaviour
 {
-    public List<WeaponSkill> weaponSkills = new List<WeaponSkill>();
+    private List<WeaponSkill> weaponSkills = new List<WeaponSkill>();
     [SerializeField] private List<String> weaponSkillNames = new List<string>();
     [SerializeField] private bool isAttack = false;
     [SerializeField] private bool canAttack = true;
@@ -26,6 +26,7 @@ public class SkillableObject : MonoBehaviour
     public AnimationClip CastSkillBlownDown { get => castSkillBlownDown; set => castSkillBlownDown = value; }
     public int AnimatorIsUsingSkill { get => animatorIsUsingSkill; set => animatorIsUsingSkill = value; }
     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
+    public List<WeaponSkill> WeaponSkills { get => weaponSkills; set => weaponSkills = value; }
 
     private void Start() 
     {
@@ -41,7 +42,7 @@ public class SkillableObject : MonoBehaviour
             playerScript = GetComponent<PlayerScript>();
             LoadPlayerSkillData();
 
-            castSkillBlownDown = playerScript.animator.runtimeAnimatorController.animationClips.FirstOrDefault((animatorClip) => animatorClip.name.Equals("CastSkillBlowDown"));
+            castSkillBlownDown = CustomMonoBehavior.Animator.runtimeAnimatorController.animationClips.FirstOrDefault((animatorClip) => animatorClip.name.Equals("CastSkillBlowDown"));
             skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject;
         }
         else

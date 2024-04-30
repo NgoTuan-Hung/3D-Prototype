@@ -5892,6 +5892,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SkeletonSword (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6700881854900126502, guid: 2646ad57467ad944a9384842f72a3a07,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10706,7 +10711,6 @@ MonoBehaviour:
   moveSpeed: 0.1
   jumpVelocity: 1
   cameraOfPlayer: {fileID: 0}
-  animator: {fileID: 0}
   directionVector: {x: 0, y: 0, z: 0}
   moveVector: {x: 0, y: 0}
   multiAimConstraintData:
@@ -10752,7 +10756,6 @@ MonoBehaviour:
       z: 0
   rigBuilder: {fileID: 0}
   attackPosition: {fileID: 0}
-  skillableObject: {fileID: 0}
   isAttack: 0
   canMove: 1
   movementByCamera: {fileID: 0}
@@ -10788,7 +10791,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96dc7e437f042dc48a42638f8ae5d763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponSkills: []
   weaponSkillNames: []
   isAttack: 0
   canAttack: 1
@@ -18242,7 +18244,7 @@ PrefabInstance:
     - target: {fileID: 566512858958054295, guid: 79cb9be8305bf9a45bf800a2c96e45bd,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8674216493423110625, guid: 79cb9be8305bf9a45bf800a2c96e45bd,
         type: 3}
@@ -52807,7 +52809,7 @@ PrefabInstance:
     - target: {fileID: 566512858958054295, guid: 79cb9be8305bf9a45bf800a2c96e45bd,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8674216493423110625, guid: 79cb9be8305bf9a45bf800a2c96e45bd,
         type: 3}
@@ -76637,6 +76639,11 @@ PrefabInstance:
     - target: {fileID: 566512858958054295, guid: 79cb9be8305bf9a45bf800a2c96e45bd,
         type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2272206394348138196, guid: 79cb9be8305bf9a45bf800a2c96e45bd,
+        type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8674216493423110625, guid: 79cb9be8305bf9a45bf800a2c96e45bd,

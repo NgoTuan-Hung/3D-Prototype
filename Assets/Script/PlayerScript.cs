@@ -15,10 +15,8 @@ public class PlayerScript : CustomMonoBehavior
     [SerializeField] private float jumpVelocity = 1f;
     [SerializeField] private GameObject cameraOfPlayer;
     public PlayerInputSystem playerInputSystem;
-    public Animator animator;
     [SerializeField] private Vector3 directionVector;
     [SerializeField] private Vector2 moveVector;
-    private RotatableObject rotatableObject;
     // [SerializeField] private GameObject viewRotationPoint;
     private TargetableObject targetableObject;
     MultiAimConstraint multiAimConstraint;
@@ -27,7 +25,6 @@ public class PlayerScript : CustomMonoBehavior
     public delegate void CameraDelegate(GameObject target);
     public static CameraDelegate cameraDelegate;
     [SerializeField] private Transform attackPosition;
-    public SkillableObject skillableObject;
     UtilObject utilObject = new UtilObject();
     // Start is called before the first frame update
     new void Awake()
@@ -44,13 +41,13 @@ public class PlayerScript : CustomMonoBehavior
     private void Start() 
     {
         cameraOfPlayer = GameObject.Find("Main Camera");
-        rotatableObject = GetComponent<RotatableObject>();
-        animator = GetComponent<Animator>();
+        RotatableObject = GetComponent<RotatableObject>();
+        Animator = GetComponent<Animator>();
         targetableObject = GetComponent<TargetableObject>();
         multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();
         multiAimConstraintData = multiAimConstraint.data;
         rigBuilder = GetComponentInChildren<RigBuilder>();
-        skillableObject = GetComponent<SkillableObject>();
+        SkillableObject = GetComponent<SkillableObject>();
         attackPosition = GameObject.Find("AttackPosition").transform;
         attackCoroutine = StartCoroutine(NullCoroutine());
         //instantiate movementByCamera and set parent to this
@@ -77,18 +74,18 @@ public class PlayerScript : CustomMonoBehavior
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            if (skillableObject.CanAttack)
+            if (SkillableObject.CanAttack)
             {
                 Vector3 rotateDirection = targetableObject.TargetChecker.NearestTarget.transform.position - transform.position;
-                skillableObject.PerformAttack(targetableObject.TargetChecker.NearestTarget.transform, rotateDirection);
-                if (UnityRandom.Range(0, 2) == 0) animator.SetBool("Attack_Mirror", true);
-                else animator.SetBool("Attack_Mirror", false);
+                SkillableObject.PerformAttack(targetableObject.TargetChecker.NearestTarget.transform, rotateDirection);
+                if (UnityRandom.Range(0, 2) == 0) Animator.SetBool("Attack_Mirror", true);
+                else Animator.SetBool("Attack_Mirror", false);
                 if (!targetableObject.IsTarget)
                 {
                     targetableObject.Target();
                 }
-                animator.SetBool("Attack", true);
-                if (skillableObject.AnimatorIsUsingSkill == 0) animator.Play("UpperBody.Attack", 1, 0);
+                Animator.SetBool("Attack", true);
+                if (SkillableObject.AnimatorIsUsingSkill == 0) Animator.Play("UpperBody.Attack", 1, 0);
                 StopCoroutine(attackCoroutine);
                 attackCoroutine = StartCoroutine(StopAttack());
             }
@@ -105,7 +102,7 @@ public class PlayerScript : CustomMonoBehavior
 
     public void StopAttackAnimation()
     {
-        animator.SetBool("Attack", false);
+        Animator.SetBool("Attack", false);
     }
 
     // Update is called once per frame
@@ -129,9 +126,9 @@ public class PlayerScript : CustomMonoBehavior
     {
         // var moveVector = move.ReadValue<Vector2>();
         moveVector = playerInputSystem.Control.Move.ReadValue<Vector2>();
-        animator.SetFloat("Speed", moveVector.magnitude);
-        animator.SetFloat("MoveVectorX", moveVector.x);
-        animator.SetFloat("MoveVectorY", moveVector.y);
+        Animator.SetFloat("Speed", moveVector.magnitude);
+        Animator.SetFloat("MoveVectorX", moveVector.x);
+        Animator.SetFloat("MoveVectorY", moveVector.y);
 
         movementByCameraDirectionVector = new Vector3(transform.position.x, 0, transform.position.z)
          -  new Vector3(cameraOfPlayer.transform.position.x, 0, cameraOfPlayer.transform.position.z);
@@ -143,7 +140,7 @@ public class PlayerScript : CustomMonoBehavior
         {
             transform.position +=  movementByCameraDirectionVector * moveSpeed;
             
-            rotatableObject.RotateToDirectionAxisXZ(movementByCameraDirectionVector);
+            RotatableObject.RotateToDirectionAxisXZ(movementByCameraDirectionVector);
         }
     }
 
@@ -176,7 +173,7 @@ public class PlayerScript : CustomMonoBehavior
     // public IEnumerator ViewDirectionHandler(InputAction viewDirection)
     // {
     //     isViewDirection = true;
-    //     animator.SetBool("ViewDirection", isViewDirection);
+    //     Animator.SetBool("ViewDirection", isViewDirection);
     //     while (viewDirection.IsPressed())
     //     {
     //         yield return new WaitForSeconds(Time.fixedDeltaTime);
@@ -185,8 +182,8 @@ public class PlayerScript : CustomMonoBehavior
     //         rawPose.Scale(new Vector3(1 / GlobalObject.Instance.screenResolution.x, 1 / GlobalObject.Instance.screenResolution.y, 1f));
     //         this.viewDirection = new Vector3(GlobalObject.Instance.mouse.x - rawPose.x, 0, GlobalObject.Instance.mouse.y - rawPose.y);
             
-    //         rotatableObject.RotateToDirectionAxisXZ(this.viewDirection);
+    //         RotatableObject.RotateToDirectionAxisXZ(this.viewDirection);
     //     }
     //     isViewDirection = false;
-    //     animator.SetBool("ViewDirection", isViewDirection);
+    //     Animator.SetBool("ViewDirection", isViewDirection);
     // }

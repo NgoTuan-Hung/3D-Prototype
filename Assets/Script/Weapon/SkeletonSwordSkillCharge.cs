@@ -15,6 +15,8 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         {
             Target = true
         };
+
+        RecommendedAIBehavior.DistanceToTarget = ChargeDistance.FloatValue;
     }
     SubSkillChangableAttribute chargeDistance = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 10f, SubSkillChangableAttribute.SubSkillAttributeType.Distance);
     float chargedDistance;
