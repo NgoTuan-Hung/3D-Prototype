@@ -10,4 +10,9 @@ public class EntityAction : MonoBehaviour
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
     }
+
+    public virtual void Start()
+    {
+        
+    }
 }

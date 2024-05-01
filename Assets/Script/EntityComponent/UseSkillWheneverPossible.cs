@@ -3,6 +3,8 @@ using UnityEngine;
 class UseSkillWheneverPossible : EntityAction
 {
     private float useSkillChanceRequired = 50f;
+    private delegate void UseAnySkillDelegate();
+    private UseAnySkillDelegate useAnySkillDelegate;
     public float UseSkillChanceRequired { get => useSkillChanceRequired; set => useSkillChanceRequired = value; }
 
     public override void Awake()
@@ -10,46 +12,46 @@ class UseSkillWheneverPossible : EntityAction
         base.Awake();
     }
 
+    public override void Start()
+    {
+        base.Start();
+        if (CustomMonoBehavior.SkillableObjectBool && CustomMonoBehavior.MoveToTargetBool) useAnySkillDelegate += UseAnySkill;
+    }
+
     void FixedUpdate()
     {
-        UseAnySkill();
+        useAnySkillDelegate?.Invoke();
     }
 
     void UseAnySkill()
     {
-        if (CustomMonoBehavior.SkillableObjectBool)
+        CustomMonoBehavior.SkillableObject.WeaponSkills.ForEach(weaponSkill => 
         {
-            CustomMonoBehavior.SkillableObject.WeaponSkills.ForEach(weaponSkill => 
+            weaponSkill.WeaponSubSkills.ForEach(weaponSubSkill =>
             {
-                weaponSkill.WeaponSubSkills.ForEach(weaponSubSkill =>
+                if (weaponSubSkill.CanUse)
                 {
-                    if (weaponSubSkill.CanUse)
+                    if (UseSkillChance(weaponSubSkill.RecommendedAIBehavior) >= UseSkillChanceRequired)
                     {
-                        if (CheckIfWeShouldUseSkill(weaponSubSkill.RecommendedAIBehavior) >= UseSkillChanceRequired)
-                        {
-                            HandleSubSkillCondition(weaponSubSkill);
-                            weaponSubSkill.Trigger(GetSubSkillRequiredParameter(weaponSubSkill.SubSkillRequiredParameter));
-                        }
+                        HandleSubSkillCondition(weaponSubSkill);
+                        weaponSubSkill.Trigger(GetSubSkillRequiredParameter(weaponSubSkill.SubSkillRequiredParameter));
                     }
-                });
+                }
             });
-        }
+        });
     }
 
-    float CheckIfWeShouldUseSkill(RecommendedAIBehavior recommendedAIBehavior)
+    float UseSkillChance(RecommendedAIBehavior recommendedAIBehavior)
     {
         float chance = 0f;
 
-        if (CustomMonoBehavior.MoveToTarget)
+        if (recommendedAIBehavior.DistanceToTarget != 0)
         {
-            if (recommendedAIBehavior.DistanceToTarget != 0)
+            if (CustomMonoBehavior.MoveToTarget.DistanceToTarget < recommendedAIBehavior.DistanceToTarget)
             {
-                if (CustomMonoBehavior.MoveToTarget.DistanceToTarget < recommendedAIBehavior.DistanceToTarget)
-                {
-                    chance += Random.Range(50, 60);
-                }
+                chance += Random.Range(50, 60);
             }
-        }        
+        }  
 
         return chance;
     }

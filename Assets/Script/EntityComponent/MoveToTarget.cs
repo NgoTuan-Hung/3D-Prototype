@@ -24,8 +24,9 @@ public class MoveToTarget : EntityAction
         target = GameObject.Find("Player").transform;
     }
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         if (CustomMonoBehavior.RotatableObjectBool) StartCoroutine(RotateToTarget());
         // one thing to note about this is that the order of execution is hard to control
         // so if we want to have an order of execution in some case, we can always use update or fixedupdate

@@ -41,21 +41,21 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
     public Vector3 ChargeTemp { get => chargeTemp; set => chargeTemp = value; }
     public Vector3 ChargeVelocity { get => chargeVelocity; set => chargeVelocity = value; }
 
-    IEnumerator HandleCharge(Transform target)
+    IEnumerator HandleCharge(Transform target, CustomMonoBehavior customMonoBehavior)
     {
         chargeTemp = target.position - transform.position;
-        chargeVelocity = chargeTemp.normalized * chargeSpeed.FloatValue;
-        chargeDistanceOverTime = chargeSpeed.FloatValue;
+        chargeVelocity = new Vector3(chargeTemp.x, 0, chargeTemp.z).normalized * chargeSpeed.FloatValue;
+        chargeDistanceOverTime = chargeSpeed.FloatValue * Time.fixedDeltaTime;
         chargedDistance = 0;
 
         while(chargedDistance < chargeDistance.FloatValue)
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            CustomMonoBehavior.Rigidbody.velocity = chargeVelocity;
+            customMonoBehavior.Rigidbody.velocity = chargeVelocity;
             chargedDistance += chargeDistanceOverTime;
         }
-
+        
         finishSkillDelegate?.Invoke();
         finishSkillDelegate = null;
         StartCoroutine(ChargeCooldown());
@@ -73,7 +73,12 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         {
             CanUse = false;
 
-            StartCoroutine(HandleCharge(subSkillParameter.Target));
+            StartCoroutine(HandleCharge(subSkillParameter.Target, CustomMonoBehavior));
         }
+    }
+
+    private void FixedUpdate() 
+    {
+    
     }
 }
