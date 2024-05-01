@@ -27,6 +27,7 @@ class UseSkillWheneverPossible : EntityAction
                     {
                         if (CheckIfWeShouldUseSkill(weaponSubSkill.RecommendedAIBehavior) >= UseSkillChanceRequired)
                         {
+                            HandleSubSkillCondition(weaponSubSkill);
                             weaponSubSkill.Trigger(GetSubSkillRequiredParameter(weaponSubSkill.SubSkillRequiredParameter));
                         }
                     }
@@ -63,5 +64,14 @@ class UseSkillWheneverPossible : EntityAction
         }
 
         return subSkillParameter;
+    }
+
+    public void HandleSubSkillCondition(WeaponSubSkill weaponSubSkill)
+    {
+        if (weaponSubSkill.SubSkillCondition.StopMoving)
+        {
+            CustomMonoBehavior.MoveToTarget.CanMove = false;
+            weaponSubSkill.finishSkillDelegate += () => CustomMonoBehavior.MoveToTarget.CanMove = true;
+        }
     }
 }

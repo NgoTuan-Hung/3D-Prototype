@@ -10,12 +10,4 @@ public class EntityAction : MonoBehaviour
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
     }
-
-    public void IfDo(bool condition, IEnumerator iEnumerator)
-    {
-        if (condition)
-        {
-            StartCoroutine(iEnumerator);
-        }
-    }
 }

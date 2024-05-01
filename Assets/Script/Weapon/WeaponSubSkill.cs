@@ -5,11 +5,14 @@ using UnityEngine.Rendering;
 
 class WeaponSubSkill : MonoBehaviour
 {
+    public delegate void FinishSkillDelegate();
+    public FinishSkillDelegate finishSkillDelegate;
     private ObjectPool<Weapon> weaponPool;
     private SubSkillRequiredParameter subSkillRequiredParameter;
     private RecommendedAIBehavior recommendedAIBehavior = new RecommendedAIBehavior();
     private bool canUse = true;
     private List<SubSkillChangableAttribute> subSkillChangableAttributes = new List<SubSkillChangableAttribute>();
+    private SubSkillCondition subSkillCondition = new SubSkillCondition();
     private CustomMonoBehavior customMonoBehavior;
 
     public ObjectPool<Weapon> WeaponPool { get => weaponPool; set => weaponPool = value; }
@@ -18,6 +21,7 @@ class WeaponSubSkill : MonoBehaviour
     public bool CanUse { get => canUse; set => canUse = value; }
     public List<SubSkillChangableAttribute> SubSkillChangableAttributes { get => subSkillChangableAttributes; set => subSkillChangableAttributes = value; }
     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
+    public SubSkillCondition SubSkillCondition { get => subSkillCondition; set => subSkillCondition = value; }
 
     public virtual void Trigger(SubSkillParameter subSkillParameter)
     {
@@ -42,6 +46,12 @@ public class SubSkillParameter
     Transform target = null;
 
     public Transform Target { get => target; set => target = value; }
+}
+
+public class SubSkillCondition
+{
+    bool stopMoving = false;
+    public bool StopMoving { get => stopMoving; set => stopMoving = value; }
 }
 
 

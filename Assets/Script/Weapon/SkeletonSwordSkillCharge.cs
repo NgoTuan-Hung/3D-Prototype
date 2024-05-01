@@ -17,6 +17,7 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         };
 
         RecommendedAIBehavior.DistanceToTarget = ChargeDistance.FloatValue;
+        SubSkillCondition.StopMoving = true;
     }
     SubSkillChangableAttribute chargeDistance = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 10f, SubSkillChangableAttribute.SubSkillAttributeType.Distance);
     float chargedDistance;
@@ -55,6 +56,8 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
             chargedDistance += chargeDistanceOverTime;
         }
 
+        finishSkillDelegate?.Invoke();
+        finishSkillDelegate = null;
         StartCoroutine(ChargeCooldown());
     }
 
