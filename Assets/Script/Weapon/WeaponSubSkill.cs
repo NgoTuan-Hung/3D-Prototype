@@ -51,7 +51,9 @@ public class SubSkillParameter
 public class SubSkillCondition
 {
     bool stopMoving = false;
+    bool stopRotating = false;
     public bool StopMoving { get => stopMoving; set => stopMoving = value; }
+    public bool StopRotating { get => stopRotating; set => stopRotating = value; }
 }
 
 

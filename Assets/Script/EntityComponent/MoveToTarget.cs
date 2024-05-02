@@ -6,6 +6,7 @@ public class MoveToTarget : EntityAction
 {
     [SerializeField] private Transform target;
     [SerializeField] private bool canMove = true;
+    [SerializeField] private bool canRotate = true;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float distanceToTarget;
     [SerializeField] private float distanceToStopMove;
@@ -14,6 +15,7 @@ public class MoveToTarget : EntityAction
     public float DistanceToTarget { get => distanceToTarget; set => distanceToTarget = value; }
     public float DistanceToStopMove { get => distanceToStopMove; set => distanceToStopMove = value; }
     public Transform Target { get => target; set => target = value; }
+    public bool CanRotate { get => canRotate; set => canRotate = value; }
 
     // Start is called before the first frame update
     public override void Awake()
@@ -51,8 +53,7 @@ public class MoveToTarget : EntityAction
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            CustomMonoBehavior.RotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
-            Debug.DrawRay(transform.position, funcMove_DistanceVector, Color.red);
+            if (canRotate) CustomMonoBehavior.RotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
         }
     }
 

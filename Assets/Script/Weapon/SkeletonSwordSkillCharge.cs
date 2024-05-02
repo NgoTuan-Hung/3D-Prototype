@@ -4,7 +4,7 @@ using UnityEngine;
 class SkeletonSwordSkillCharge : WeaponSubSkill
 {
     SubSkillChangableAttribute chargeCooldown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 3f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
-    SubSkillChangableAttribute chargeSpeed = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 2f, SubSkillChangableAttribute.SubSkillAttributeType.Speed);
+    SubSkillChangableAttribute chargeSpeed = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 20f, SubSkillChangableAttribute.SubSkillAttributeType.Speed);
 
     public override void Start()
     {
@@ -18,6 +18,7 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
 
         RecommendedAIBehavior.DistanceToTarget = ChargeDistance.FloatValue;
         SubSkillCondition.StopMoving = true;
+        SubSkillCondition.StopRotating = true;
     }
     SubSkillChangableAttribute chargeDistance = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 10f, SubSkillChangableAttribute.SubSkillAttributeType.Distance);
     float chargedDistance;
@@ -41,19 +42,19 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
     public Vector3 ChargeTemp { get => chargeTemp; set => chargeTemp = value; }
     public Vector3 ChargeVelocity { get => chargeVelocity; set => chargeVelocity = value; }
 
-    IEnumerator HandleCharge(Transform target, CustomMonoBehavior customMonoBehavior)
+    IEnumerator HandleCharge(Transform target)
     {
         chargeTemp = target.position - transform.position;
-        chargeVelocity = new Vector3(chargeTemp.x, 0, chargeTemp.z).normalized * chargeSpeed.FloatValue;
+        chargeVelocity = new Vector3(chargeTemp.x, 0, chargeTemp.z).normalized * chargeSpeed.FloatValue * Time.fixedDeltaTime;
         chargeDistanceOverTime = chargeSpeed.FloatValue * Time.fixedDeltaTime;
         chargedDistance = 0;
 
         while(chargedDistance < chargeDistance.FloatValue)
         {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-
-            customMonoBehavior.Rigidbody.velocity = chargeVelocity;
+            CustomMonoBehavior.Rigidbody.position += chargeVelocity;
             chargedDistance += chargeDistanceOverTime;
+
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
         
         finishSkillDelegate?.Invoke();
@@ -73,7 +74,7 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         {
             CanUse = false;
 
-            StartCoroutine(HandleCharge(subSkillParameter.Target, CustomMonoBehavior));
+            StartCoroutine(HandleCharge(subSkillParameter.Target));
         }
     }
 

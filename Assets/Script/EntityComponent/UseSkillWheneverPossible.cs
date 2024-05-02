@@ -75,5 +75,10 @@ class UseSkillWheneverPossible : EntityAction
             CustomMonoBehavior.MoveToTarget.CanMove = false;
             weaponSubSkill.finishSkillDelegate += () => CustomMonoBehavior.MoveToTarget.CanMove = true;
         }
+        if (weaponSubSkill.SubSkillCondition.StopRotating)
+        {
+            CustomMonoBehavior.MoveToTarget.CanRotate = false;
+            weaponSubSkill.finishSkillDelegate += () => CustomMonoBehavior.MoveToTarget.CanRotate = true;
+        }
     }
 }

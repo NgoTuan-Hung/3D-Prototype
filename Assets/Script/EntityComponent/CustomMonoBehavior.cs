@@ -53,12 +53,6 @@ public class CustomMonoBehavior : MonoBehaviour
         if (TryGetComponent<MeleeSimpleAttackWhenNear>(out meleeSimpleAttackWhenNear)) meleeSimpleAttackWhenNearBool = true;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void UpdateHealth(float value)
     {
         curentHealth -= value;

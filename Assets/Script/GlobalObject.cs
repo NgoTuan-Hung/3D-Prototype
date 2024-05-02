@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Leguar.TotalJSON;
-using UnityEditor.ShaderGraph.Serialization;
 using UnityEngine;
 
 public class GlobalObject : Singleton<GlobalObject>
