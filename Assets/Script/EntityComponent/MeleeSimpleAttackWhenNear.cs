@@ -19,23 +19,28 @@ public class MeleeSimpleAttackWhenNear : EntityAction
         canAttack = true;
     }
 
-    private void FixedUpdate()
+    public override void Start()
     {
-        CheckAttack();
+        base.Start();
+        if (CustomMonoBehavior.SkillableObjectBool && CustomMonoBehavior.MoveToTargetBool) attackDelegate += CheckAttack;
     }
 
+    private void FixedUpdate()
+    {
+        attackDelegate?.Invoke();
+    }
+
+    private delegate void AttackDelegate();
+    private AttackDelegate attackDelegate;
     public void CheckAttack()
     {
-        if (CustomMonoBehavior.SkillableObjectBool && CustomMonoBehavior.MoveToTargetBool)
-        {
-            if (canAttack)
-                if (CustomMonoBehavior.SkillableObject.CanAttack && CustomMonoBehavior.MoveToTarget.DistanceToTarget < distanceToAttack)
-                {
-                    CustomMonoBehavior.Animator.Play("Base.Attack", 0, 0);
-                    CustomMonoBehavior.SkillableObject.PerformAttack(CustomMonoBehavior.MoveToTarget.Target, CustomMonoBehavior.MoveToTarget.Target.position - transform.position);
-                    CustomMonoBehavior.MoveToTarget.CanMove = false;
-                }
-        }
+        if (canAttack)
+            if (CustomMonoBehavior.SkillableObject.CanAttack && CustomMonoBehavior.MoveToTarget.DistanceToTarget < distanceToAttack)
+            {
+                CustomMonoBehavior.Animator.Play("Base.Attack", 0, 0);
+                CustomMonoBehavior.SkillableObject.PerformAttack(CustomMonoBehavior.MoveToTarget.Target, CustomMonoBehavior.MoveToTarget.Target.position - transform.position);
+                CustomMonoBehavior.MoveToTarget.CanMove = false;
+            }
     }
 
     public void StopAttack()

@@ -4,7 +4,7 @@ using UnityEngine;
 class SkeletonSwordSkillCharge : WeaponSubSkill
 {
     SubSkillChangableAttribute chargeCooldown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 3f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
-    SubSkillChangableAttribute chargeSpeed = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 20f, SubSkillChangableAttribute.SubSkillAttributeType.Speed);
+    SubSkillChangableAttribute chargeSpeed = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 40f, SubSkillChangableAttribute.SubSkillAttributeType.Speed);
 
     public override void Start()
     {
@@ -49,14 +49,26 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         chargeDistanceOverTime = chargeSpeed.FloatValue * Time.fixedDeltaTime;
         chargedDistance = 0;
 
+        ObjectPoolClass<Weapon> objectPoolClass = WeaponPool.PickOne();
+        SkeletonSwordWeapon skeletonSwordWeapon = (SkeletonSwordWeapon)objectPoolClass.Component;
+        skeletonSwordWeapon.CollideExcludeTags = CustomMonoBehavior.AllyTags;
+        Transform skeletonSwordWeaponParent = skeletonSwordWeapon.transform.parent;
+
+        skeletonSwordWeapon.ColliderDamage = 20f;
+        skeletonSwordWeaponParent.transform.position = transform.position + transform.TransformPoint(new Vector3(0, 1f, 0.5f));
+        skeletonSwordWeaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, target.position - skeletonSwordWeaponParent.transform.position + new Vector3(0, 1f, 0));
+        skeletonSwordWeapon.ChargeAttack();
+
         while(chargedDistance < chargeDistance.FloatValue)
         {
+            skeletonSwordWeaponParent.transform.position = transform.position + transform.TransformPoint(new Vector3(0, 1f, 0.5f));
             CustomMonoBehavior.Rigidbody.position += chargeVelocity;
             chargedDistance += chargeDistanceOverTime;
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
         
+        skeletonSwordWeapon.StopChargeAttack();
         finishSkillDelegate?.Invoke();
         finishSkillDelegate = null;
         StartCoroutine(ChargeCooldown());

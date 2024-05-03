@@ -30,6 +30,7 @@ public class MoveToTarget : EntityAction
     {
         base.Start();
         if (CustomMonoBehavior.RotatableObjectBool) StartCoroutine(RotateToTarget());
+        if (CustomMonoBehavior.AnimatorBool && CustomMonoBehavior.RigidbodyBool)  moveDelegate += Move;
         // one thing to note about this is that the order of execution is hard to control
         // so if we want to have an order of execution in some case, we can always use update or fixedupdate
     }
@@ -37,7 +38,7 @@ public class MoveToTarget : EntityAction
     private void FixedUpdate() 
     {
         CalculateDistanceVector();
-        Move();
+        moveDelegate?.Invoke();
     }
 
     [SerializeField] private Vector3 funcMove_DistanceVector = Vector3.zero;
@@ -57,24 +58,23 @@ public class MoveToTarget : EntityAction
         }
     }
 
+    private delegate void MoveDelegate();
+    private MoveDelegate moveDelegate;
     public void Move()
     {
         distanceToTarget = funcMove_DistanceVector.magnitude;
-        if (CustomMonoBehavior.AnimatorBool && CustomMonoBehavior.RigidbodyBool)
+        if (canMove)
         {
-            if (canMove)
+            if (distanceToTarget > distanceToStopMove)
             {
-                if (distanceToTarget > distanceToStopMove)
-                {
-                    CustomMonoBehavior.Rigidbody.velocity = funcMove_DistanceVector.normalized * moveSpeed;
+                CustomMonoBehavior.Rigidbody.velocity = funcMove_DistanceVector.normalized * moveSpeed;
 
-                    CustomMonoBehavior.Animator.SetBool("Move", true);
-                }
+                CustomMonoBehavior.Animator.SetBool("Move", true);
             }
-            else
-            {
-                CustomMonoBehavior.Animator.SetBool("Move", false);
-            }
+        }
+        else
+        {
+            CustomMonoBehavior.Animator.SetBool("Move", false);
         }
     }
 }
