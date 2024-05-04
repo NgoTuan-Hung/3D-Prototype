@@ -55,14 +55,14 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         Transform skeletonSwordWeaponParent = skeletonSwordWeapon.transform.parent;
 
         skeletonSwordWeapon.ColliderDamage = 20f;
-        skeletonSwordWeaponParent.transform.position = transform.position + transform.TransformPoint(new Vector3(0, 1f, 0.5f));
+        skeletonSwordWeaponParent.transform.position = transform.position;
         skeletonSwordWeaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, target.position - skeletonSwordWeaponParent.transform.position + new Vector3(0, 1f, 0));
         skeletonSwordWeapon.ChargeAttack();
 
         while(chargedDistance < chargeDistance.FloatValue)
         {
-            skeletonSwordWeaponParent.transform.position = transform.position + transform.TransformPoint(new Vector3(0, 1f, 0.5f));
             CustomMonoBehavior.Rigidbody.position += chargeVelocity;
+            skeletonSwordWeaponParent.transform.position = transform.position;
             chargedDistance += chargeDistanceOverTime;
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);

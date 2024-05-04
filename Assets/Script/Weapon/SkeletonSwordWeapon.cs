@@ -10,7 +10,7 @@ public class SkeletonSwordWeapon : Weapon
     void Start()
     {
         stabParticleSystemObject = Resources.Load("Effect/StabEffect") as GameObject;
-        stabParticleSystemPool = new ObjectPool<ParticleSystem>(stabParticleSystemObject, 20, ObjectPool<ParticleSystem>.WhereComponent.Self);
+        if (stabParticleSystemPool == null) stabParticleSystemPool = new ObjectPool<ParticleSystem>(stabParticleSystemObject, 20, ObjectPool<ParticleSystem>.WhereComponent.Self);
     }
 
     // Update is called once per frame
@@ -40,7 +40,8 @@ public class SkeletonSwordWeapon : Weapon
         main.startSizeXMultiplier = 2f; main.startSizeYMultiplier = 2f; main.startSizeZMultiplier = 3f;
         main.startLifetime = 1f;
         stabParticleSystemObjectPoolClass.Component.transform.parent = transform.parent;
-        stabParticleSystemObjectPoolClass.Component.transform.position = new Vector3(0, 0, 1.86f);
+        stabParticleSystemObjectPoolClass.Component.transform.localPosition = new Vector3(0, 0, 1.86f);
+        stabParticleSystemObjectPoolClass.Component.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
         animator.SetBool("ChargeAttack", true);
         stabParticleSystemObjectPoolClass.Component.Play();
@@ -50,7 +51,7 @@ public class SkeletonSwordWeapon : Weapon
     IEnumerator ResetStabParticleSystem(ParticleSystem particleSystem, ParticleSystem.MainModule mainModule)
     {
         yield return new WaitForSeconds(mainModule.startLifetime.constantMax);
-
+        
         mainModule.startLifetime = 0.5f;
         mainModule.startSizeXMultiplier = 1f; mainModule.startSizeYMultiplier = 1f; mainModule.startSizeZMultiplier = 1f;
         particleSystem.transform.parent = null;
