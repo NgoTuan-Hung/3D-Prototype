@@ -94,6 +94,7 @@
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JNumberOverflowException.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JArgumentNullException.cs" />
     <Compile Include="Assets\TotalJSON\Internal\DebugLogger.cs" />
+    <Compile Include="Assets\Script\EntityComponent\GameEffect.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JValueNullException.cs" />
     <Compile Include="Assets\Script\Weapon\SkeletonSwordSkill.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Attributes\IncludeToJSONSerializeAttribute.cs" />

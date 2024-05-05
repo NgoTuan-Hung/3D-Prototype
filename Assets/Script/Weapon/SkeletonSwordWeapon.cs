@@ -5,12 +5,12 @@ using UnityEngine;
 public class SkeletonSwordWeapon : Weapon
 {
     private GameObject stabParticleSystemObject;
-    [SerializeField] private static ObjectPool<ParticleSystem> stabParticleSystemPool {get; set;}
+    [SerializeField] private static ObjectPool<GameEffect> stabParticleSystemPool {get; set;}
     // Start is called before the first frame update
     void Start()
     {
         stabParticleSystemObject = Resources.Load("Effect/StabEffect") as GameObject;
-        if (stabParticleSystemPool == null) stabParticleSystemPool = new ObjectPool<ParticleSystem>(stabParticleSystemObject, 20, ObjectPool<ParticleSystem>.WhereComponent.Self);
+        if (stabParticleSystemPool == null) stabParticleSystemPool = new ObjectPool<GameEffect>(stabParticleSystemObject, 20, ObjectPool<GameEffect>.WhereComponent.Self);
     }
 
     // Update is called once per frame
@@ -27,35 +27,25 @@ public class SkeletonSwordWeapon : Weapon
     public override void StopAttack()
     {
         base.StopAttack();
-        ObjectPoolClass<ParticleSystem> stabParticleSystemObjectPoolClass = stabParticleSystemPool.PickOne();
+        ObjectPoolClass<GameEffect> stabParticleSystemObjectPoolClass = stabParticleSystemPool.PickOne();
         stabParticleSystemObjectPoolClass.GameObject.transform.position = transform.position;
         stabParticleSystemObjectPoolClass.GameObject.transform.rotation = transform.parent.rotation;
-        stabParticleSystemObjectPoolClass.Component.Play();
+        stabParticleSystemObjectPoolClass.Component.ParticleSystem.Play();
     }
 
     public void ChargeAttack()
     {
-        ObjectPoolClass<ParticleSystem> stabParticleSystemObjectPoolClass = stabParticleSystemPool.PickOne();
-        var main = stabParticleSystemObjectPoolClass.Component.main;
-        main.startSizeXMultiplier = 2f; main.startSizeYMultiplier = 2f; main.startSizeZMultiplier = 3f;
+        ObjectPoolClass<GameEffect> stabParticleSystemObjectPoolClass = stabParticleSystemPool.PickOneWithoutActive();
+        var main = stabParticleSystemObjectPoolClass.Component.ParticleSystem.main;
+        main.startSizeXMultiplier = 120f; main.startSizeYMultiplier = 120f; main.startSizeZMultiplier = 180f;
         main.startLifetime = 1f;
-        stabParticleSystemObjectPoolClass.Component.transform.parent = transform.parent;
-        stabParticleSystemObjectPoolClass.Component.transform.localPosition = new Vector3(0, 0, 1.86f);
-        stabParticleSystemObjectPoolClass.Component.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        stabParticleSystemObjectPoolClass.Component.transform.rotation = Quaternion.Euler(0, 0, 0);
+        stabParticleSystemObjectPoolClass.Component.gameObject.SetActive(true);
+        stabParticleSystemObjectPoolClass.Component.Follow(transform.parent, new Vector3(0, 0, 1.86f), true, true);
 
         animator.SetBool("ChargeAttack", true);
-        stabParticleSystemObjectPoolClass.Component.Play();
-        StartCoroutine(ResetStabParticleSystem(stabParticleSystemObjectPoolClass.Component, main));
-    }
-
-    IEnumerator ResetStabParticleSystem(ParticleSystem particleSystem, ParticleSystem.MainModule mainModule)
-    {
-        yield return new WaitForSeconds(mainModule.startLifetime.constantMax);
-        
-        mainModule.startLifetime = 0.5f;
-        mainModule.startSizeXMultiplier = 1f; mainModule.startSizeYMultiplier = 1f; mainModule.startSizeZMultiplier = 1f;
-        particleSystem.transform.parent = null;
-        particleSystem.transform.position = new Vector3(0, 0, 0);
+        //stabParticleSystemObjectPoolClass.Component.ParticleSystem.Play();
+        stabParticleSystemObjectPoolClass.Component.onDisableDelegate += () => stabParticleSystemObjectPoolClass.Component.SetParticleSystemOriginalValue();
     }
 
     public void StopChargeAttack()

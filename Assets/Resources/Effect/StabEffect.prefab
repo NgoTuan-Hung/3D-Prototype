@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2595890854110794180}
   - component: {fileID: 2786967279543310488}
   - component: {fileID: 2314330403889677730}
+  - component: {fileID: -9207140874172932397}
   m_Layer: 0
   m_Name: StabEffect
   m_TagString: Untagged
@@ -190,7 +191,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.5
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -4888,3 +4889,15 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &-9207140874172932397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4243406487061417424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 929a7dae32a09a1429a0c539a3f5114e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
