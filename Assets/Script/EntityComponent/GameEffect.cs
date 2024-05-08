@@ -3,12 +3,11 @@ using UnityEngine;
 
 public class GameEffect : MonoBehaviour
 {
-    new private ParticleSystem particleSystem;
+    [SerializeField] new private ParticleSystem particleSystem;
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
     
     void Awake()
     {
-        particleSystem = GetComponent<ParticleSystem>();
         if (!alreadySetOriginal)
         {
             alreadySetOriginal = true;

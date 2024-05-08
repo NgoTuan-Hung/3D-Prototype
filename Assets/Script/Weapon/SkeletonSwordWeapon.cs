@@ -53,9 +53,4 @@ public class SkeletonSwordWeapon : Weapon
         animator.SetBool("ChargeAttack", false);
         transform.parent.gameObject.SetActive(false);
     }
-
-    public override void OnTriggerEnter(Collider other)
-    {
-        base.OnTriggerEnter(other);
-    }
 }

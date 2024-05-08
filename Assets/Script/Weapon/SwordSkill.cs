@@ -32,12 +32,12 @@ public class SwordSkill : WeaponSkill
             swordWeaponParent = swordWeapon.transform.parent;
 
             swordWeapon.PlayAttackParticleSystem();
-            swordWeapon.ColliderDamage = 10f;
+            swordWeapon.CollideAndDamage.ColliderDamage = 10f;
             swordWeaponParent.position = target.position + new Vector3(0, 0.5f, 0);
             swordWeaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, rotationDirection);
             swordWeaponParent.position = swordWeaponParent.transform.TransformPoint(0, 0, -1);
             swordWeaponParent.Rotate(0, 0, Random.Range(0, 360));
-            swordWeapon.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
+            swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
             swordWeapon.Attack();
             StartCoroutine(ResetAttack());
         }
@@ -83,12 +83,12 @@ public class SwordSkill : WeaponSkill
         ObjectPoolClass<Weapon> objectPoolClass = weaponPool.PickOneWithoutActive();
 
         SwordWeapon swordWeapon = (SwordWeapon)objectPoolClass.Component;
-        swordWeapon.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
+        swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
         objectPoolClass.GameObject.SetActive(true);
         // we won't use swordWeaponParent variable because it will affect attack logic
         Transform swordWeaponParent1 = swordWeapon.transform.parent;
 
-        swordWeapon.ColliderDamage = 90f;
+        swordWeapon.CollideAndDamage.ColliderDamage = 90f;
         swordWeaponParent1.position = CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position;
         swordWeaponParent1.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle - 90, 0));
         swordWeapon.Animator.SetBool("BigSword", true);
@@ -130,12 +130,12 @@ public class SwordSkill : WeaponSkill
         for (int i=0;i<thousandSwordOriginalRotation.Length;i++)
         {
             swordWeapon = (SwordWeapon)objectPoolClasses[i].Component;
-            swordWeapon.ColliderDamage = 20f;
+            swordWeapon.CollideAndDamage.ColliderDamage = 20f;
             swordWeaponParent1 = swordWeapon.transform.parent;
             swordWeaponParent1.transform.rotation = Quaternion.Euler(thousandSwordOriginalRotation[i]);
             swordWeaponParent1.position = CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position;
             swordWeapon.FlyingTrail.enabled = true;
-            swordWeapon.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
+            swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
             swordWeapon.Animator.SetBool("ThousandSword", true);
             swordWeapon.ParentRigidBody.AddForce(swordWeaponParent1.transform.forward * startFlyingForce, ForceMode.Impulse);
             CoroutineWrapper coroutineWrapper = new CoroutineWrapper();

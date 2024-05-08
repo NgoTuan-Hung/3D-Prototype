@@ -19874,6 +19874,7 @@ GameObject:
   - component: {fileID: 8703246894103279769}
   - component: {fileID: 2867684249917106718}
   - component: {fileID: 944902440192200201}
+  - component: {fileID: 372978671827461151}
   m_Layer: 0
   m_Name: LongSwordComponent
   m_TagString: Untagged
@@ -19960,3 +19961,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &372978671827461151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7108651038309098740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92d220b13f6ceb1409255e803b591793, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

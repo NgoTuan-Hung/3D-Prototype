@@ -51,10 +51,10 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
 
         ObjectPoolClass<Weapon> objectPoolClass = WeaponPool.PickOne();
         SkeletonSwordWeapon skeletonSwordWeapon = (SkeletonSwordWeapon)objectPoolClass.Component;
-        skeletonSwordWeapon.CollideExcludeTags = CustomMonoBehavior.AllyTags;
+        skeletonSwordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
         Transform skeletonSwordWeaponParent = skeletonSwordWeapon.transform.parent;
 
-        skeletonSwordWeapon.ColliderDamage = 20f;
+        skeletonSwordWeapon.CollideAndDamage.ColliderDamage = 20f;
         skeletonSwordWeaponParent.transform.position = transform.position;
         skeletonSwordWeaponParent.rotation = Quaternion.FromToRotation(Vector3.forward, target.position - skeletonSwordWeaponParent.transform.position + new Vector3(0, 1f, 0));
         skeletonSwordWeapon.ChargeAttack();
