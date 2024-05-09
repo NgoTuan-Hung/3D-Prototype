@@ -16,12 +16,14 @@ public class CustomMonoBehavior : MonoBehaviour
     private Animator animator;
     private MoveToTarget moveToTarget;
     private MeleeSimpleAttackWhenNear meleeSimpleAttackWhenNear;
+    private PlayerInputSystem playerInputSystem;
     bool rigidbodyBool = false;
     bool skillableObjectBool = false;
     bool animatorBool = false;
     bool rotatableObjectBool = false;
     bool moveToTargetBool = false;
     bool meleeSimpleAttackWhenNearBool = false;
+    bool playerInputSystemBool = false;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurentHealth { get => curentHealth; set => curentHealth = value; }
     public string EntityType { get => entityType; set => entityType = value; }
@@ -38,12 +40,15 @@ public class CustomMonoBehavior : MonoBehaviour
     public bool MoveToTargetBool { get => moveToTargetBool; set => moveToTargetBool = value; }
     public MeleeSimpleAttackWhenNear MeleeSimpleAttackWhenNear { get => meleeSimpleAttackWhenNear; set => meleeSimpleAttackWhenNear = value; }
     public bool MeleeSimpleAttackWhenNearBool { get => meleeSimpleAttackWhenNearBool; set => meleeSimpleAttackWhenNearBool = value; }
+    public PlayerInputSystem PlayerInputSystem { get => playerInputSystem; set => playerInputSystem = value; }
 
     // Start is called before the first frame update
     public void Awake()
     {
         curentHealth = maxHealth;
         allyTags.Add(gameObject.tag);
+
+        if (entityType.Equals("Player")) if (TryGetComponent<PlayerInputSystem>(out playerInputSystem)) playerInputSystemBool = true;
 
         if (TryGetComponent<Rigidbody>(out rigidbody)) rigidbodyBool = true;
         if (TryGetComponent<SkillableObject>(out skillableObject)) skillableObjectBool = true;

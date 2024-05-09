@@ -2,7 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CustomMonoBehavior))]
 public class SkillableObject : MonoBehaviour
@@ -64,10 +67,21 @@ public class SkillableObject : MonoBehaviour
         playerSkillDatas.ForEach(playerSkillData => 
         {
             Type classType = Type.GetType(playerSkillData.skillName);
-            WeaponSkill weaponSkill = (WeaponSkill)gameObject.AddComponent(classType);
-            weaponSkills.Add(weaponSkill);
+            Component weaponSkill;
+            if (TryGetComponent(classType, out weaponSkill)) weaponSkills.Add((WeaponSkill)weaponSkill);
+            Type subSkill = Type.GetType(playerSkillData.subSkillName);
+            WeaponSubSkill weaponSubSkill = (WeaponSubSkill)gameObject.AddComponent(subSkill);
 
-            utilObject.BindKey(playerScript.playerInputSystem, playerSkillData.keybind, playerSkillData.functionName, classType, weaponSkill);
+            InputAction inputAction = customMonoBehavior.PlayerInputSystem.Control.Get().asset.FindAction(playerSkillData.keybind);
+            MethodInfo[] methodInfos = classType.GetMethods(BindingFlags.Public);
+            MethodInfo methodInfo = Array.Find
+            (
+                methodInfos, 
+                (methodInfo) => methodInfo.Name.Equals(playerSkillData.functionName) && methodInfo.GetParameters()[0].ParameterType == typeof(InputAction.CallbackContext)
+            );
+
+            inputAction.performed += (Action<InputAction.CallbackContext>)
+            Delegate.CreateDelegate(typeof(Action<InputAction.CallbackContext>), weaponSubSkill, methodInfo);
         });
     }
 
