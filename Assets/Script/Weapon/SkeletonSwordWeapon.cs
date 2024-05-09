@@ -6,11 +6,17 @@ public class SkeletonSwordWeapon : Weapon
 {
     private GameObject stabParticleSystemObject;
     [SerializeField] private static ObjectPool<GameEffect> stabParticleSystemPool {get; set;}
+
+    public override void Awake()
+    {
+        base.Awake();
+        stabParticleSystemObject = Resources.Load("Effect/StabEffect") as GameObject;
+        stabParticleSystemPool ??= new ObjectPool<GameEffect>(stabParticleSystemObject, 20, ObjectPool<GameEffect>.WhereComponent.Self);
+    }
     // Start is called before the first frame update
     void Start()
     {
-        stabParticleSystemObject = Resources.Load("Effect/StabEffect") as GameObject;
-        if (stabParticleSystemPool == null) stabParticleSystemPool = new ObjectPool<GameEffect>(stabParticleSystemObject, 20, ObjectPool<GameEffect>.WhereComponent.Self);
+
     }
 
     // Update is called once per frame

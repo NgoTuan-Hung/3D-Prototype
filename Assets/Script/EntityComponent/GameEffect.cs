@@ -4,8 +4,11 @@ using UnityEngine;
 public class GameEffect : MonoBehaviour
 {
     [SerializeField] new private ParticleSystem particleSystem;
+    private ParticleSystemEvent particleSystemEvent;
+    private bool particleSystemEventBool = false;
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
-    
+    internal ParticleSystemEvent ParticleSystemEvent { get => particleSystemEvent; set => particleSystemEvent = value; }
+
     void Awake()
     {
         if (!alreadySetOriginal)
@@ -17,6 +20,8 @@ public class GameEffect : MonoBehaviour
             particleSystemStartSizeZMultiplierOriginal = main.startSizeZMultiplier;
             particleSystemStartLifetimeOriginal = main.startLifetime.constantMax;
         }
+
+        if ((particleSystemEvent = GetComponentInChildren<ParticleSystemEvent>()) != null) particleSystemEventBool = true;
     }
 
     void OnEnable()

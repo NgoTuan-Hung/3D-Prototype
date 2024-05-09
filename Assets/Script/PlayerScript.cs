@@ -14,7 +14,6 @@ public class PlayerScript : CustomMonoBehavior
     [SerializeField] private float moveSpeed = 0.1f;
     [SerializeField] private float jumpVelocity = 1f;
     [SerializeField] private GameObject cameraOfPlayer;
-    public PlayerInputSystem playerInputSystem;
     [SerializeField] private Vector3 directionVector;
     [SerializeField] private Vector2 moveVector;
     // [SerializeField] private GameObject viewRotationPoint;
@@ -32,9 +31,10 @@ public class PlayerScript : CustomMonoBehavior
         //playerInput = gameObject.GetComponent<PlayerInput>();
         base.Awake();
         EntityType = "Player";
-        playerInputSystem = new PlayerInputSystem();
+        PlayerInputSystem = new PlayerInputSystem();
+        PlayerInputSystemBool = true;
 
-        utilObject.BindKey(playerInputSystem, "Attack", "Attack", GetType(), this);
+        utilObject.BindKey(PlayerInputSystem, "Attack", "Attack", GetType(), this);
         //MultiAimConstraintData multiAimConstraint = GetComponentInChildren<MultiAimConstraintData>();
     }
 
@@ -125,7 +125,7 @@ public class PlayerScript : CustomMonoBehavior
     public void Move()
     {
         // var moveVector = move.ReadValue<Vector2>();
-        moveVector = playerInputSystem.Control.Move.ReadValue<Vector2>();
+        moveVector = PlayerInputSystem.Control.Move.ReadValue<Vector2>();
         Animator.SetFloat("Speed", moveVector.magnitude);
         Animator.SetFloat("MoveVectorX", moveVector.x);
         Animator.SetFloat("MoveVectorY", moveVector.y);
@@ -159,12 +159,12 @@ public class PlayerScript : CustomMonoBehavior
 
     void OnEnable()
     {
-        playerInputSystem.Control.Enable();
+        PlayerInputSystem.Control.Enable();
     }
 
     void OnDisable()
     {
-        playerInputSystem.Control.Disable();
+        PlayerInputSystem.Control.Disable();
     }
 }
 

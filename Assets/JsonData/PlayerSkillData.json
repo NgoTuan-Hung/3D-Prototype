@@ -4,14 +4,8 @@
         {
             "skillName": "SwordSkill",
             "subSkillName": "SwordSkillSummonBigSword",
-            "functionName": "SummonBigSword",
+            "functionName": "Trigger",
             "keybind":"1"
-        },
-        {
-            "skillName": "SwordSkill",
-            "subSkillName": "SwordSkillThousandSword",
-            "functionName": "ThousandSword",
-            "keybind":"2"
         }
     ]
 }

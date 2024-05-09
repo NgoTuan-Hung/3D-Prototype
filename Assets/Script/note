@@ -6,3 +6,12 @@
 
 --Some mistake:
 + Be careful of pass by reference in coroutine
+
+
+,
+        {
+            "skillName": "SwordSkill",
+            "subSkillName": "SwordSkillThousandSword",
+            "functionName": "Trigger",
+            "keybind":"2"
+        }

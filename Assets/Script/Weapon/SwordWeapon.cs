@@ -9,7 +9,7 @@ public class SwordWeapon : Weapon
     public AnimationClip BigSwordClip { get => bigSwordClip; set => bigSwordClip = value; }
     public TrailRenderer FlyingTrail { get => flyingTrail; set => flyingTrail = value; }
 
-    new private void Awake() 
+    public override void Awake() 
     {
         base.Awake();
         bigSwordClip = animator.runtimeAnimatorController.animationClips.FirstOrDefault((animatorClip) => animatorClip.name.Equals("BigSword"));

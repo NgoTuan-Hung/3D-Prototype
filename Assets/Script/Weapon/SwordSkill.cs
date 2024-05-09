@@ -18,8 +18,9 @@ public class SwordSkill : WeaponSkill
         swordPrefab.SetActive(false);
         weaponPool ??= new ObjectPool<Weapon>(swordPrefab, 20, ObjectPool<Weapon>.WhereComponent.Child);
 
-        skillCast = Instantiate(Resources.Load("BigSwordSkillCast")).GameObject();
-        skillCast.SetActive(false);
+        {
+            WeaponSubSkills.Add(gameObject.AddComponent<SwordSkillSummonBigSword>()); WeaponSubSkills[0].WeaponPool = weaponPool;
+        }
     }
 
     public override void Attack(Transform target, Vector3 rotationDirection)
@@ -70,7 +71,7 @@ public class SwordSkill : WeaponSkill
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            skillCastVector = (CustomMonoBehavior.SkillableObject.PlayerScript.playerInputSystem.Control.View.ReadValue<Vector2>() 
+            skillCastVector = (CustomMonoBehavior.PlayerInputSystem.Control.View.ReadValue<Vector2>() 
             - (Vector2)Camera.main.WorldToScreenPoint(CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position)).normalized;
             skillCast.transform.position = transform.position;
             skillCast.SetActive(true);

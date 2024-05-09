@@ -42,7 +42,10 @@ public class SkeletonSwordSkill : WeaponSkill
         prefab = Instantiate(Resources.Load("SkeletonSword")) as GameObject;
         prefab.SetActive(false);
         weaponPool ??= new ObjectPool<Weapon>(prefab, 20, ObjectPool<Weapon>.WhereComponent.Child);
-        WeaponSubSkills.Add(gameObject.AddComponent<SkeletonSwordSkillCharge>()); WeaponSubSkills[0].WeaponPool = weaponPool;
+
+        {
+            WeaponSubSkills.Add(gameObject.AddComponent<SkeletonSwordSkillCharge>()); WeaponSubSkills[0].WeaponPool = weaponPool;
+        }
     }
 
     // Update is called once per frame

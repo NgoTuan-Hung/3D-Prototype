@@ -28,9 +28,14 @@ class WeaponSubSkill : MonoBehaviour
 
     }
 
-    public virtual void Start()
+    public virtual void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
+    }
+
+    public virtual void Start()
+    {
+        
     }
 }
 

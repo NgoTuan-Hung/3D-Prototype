@@ -41,14 +41,13 @@ public class CustomMonoBehavior : MonoBehaviour
     public MeleeSimpleAttackWhenNear MeleeSimpleAttackWhenNear { get => meleeSimpleAttackWhenNear; set => meleeSimpleAttackWhenNear = value; }
     public bool MeleeSimpleAttackWhenNearBool { get => meleeSimpleAttackWhenNearBool; set => meleeSimpleAttackWhenNearBool = value; }
     public PlayerInputSystem PlayerInputSystem { get => playerInputSystem; set => playerInputSystem = value; }
+    public bool PlayerInputSystemBool { get => playerInputSystemBool; set => playerInputSystemBool = value; }
 
     // Start is called before the first frame update
     public void Awake()
     {
         curentHealth = maxHealth;
         allyTags.Add(gameObject.tag);
-
-        if (entityType.Equals("Player")) if (TryGetComponent<PlayerInputSystem>(out playerInputSystem)) playerInputSystemBool = true;
 
         if (TryGetComponent<Rigidbody>(out rigidbody)) rigidbodyBool = true;
         if (TryGetComponent<SkillableObject>(out skillableObject)) skillableObjectBool = true;

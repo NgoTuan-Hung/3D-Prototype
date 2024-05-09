@@ -18,13 +18,14 @@ public class Weapon : MonoBehaviour
     public List<Collider> Colliders { get => colliders; set => colliders = value; }
     public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
 
-    public void Awake() 
+    public virtual void Awake() 
     {
+        Debug.Log("Weapon Awake");
         animator = GetComponent<Animator>();
         
         rigidbody = GetComponent<Rigidbody>();
         parentRigidBody = transform.parent.gameObject.GetComponent<Rigidbody>();
-        if (TryGetComponent<CollideAndDamage>(out collideAndDamage)) {};
+        collideAndDamage = GetComponent<CollideAndDamage>();
 
         if (transform.GetChild(1).TryGetComponent<ParticleSystem>(out attackParticleSystem))
         {

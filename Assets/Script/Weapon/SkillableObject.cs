@@ -68,20 +68,27 @@ public class SkillableObject : MonoBehaviour
         {
             Type classType = Type.GetType(playerSkillData.skillName);
             Component weaponSkill;
-            if (TryGetComponent(classType, out weaponSkill)) weaponSkills.Add((WeaponSkill)weaponSkill);
+            if (!TryGetComponent(classType, out weaponSkill))
+            {
+                weaponSkill = gameObject.AddComponent(classType);
+                weaponSkills.Add((WeaponSkill)weaponSkill);
+            }
+
             Type subSkill = Type.GetType(playerSkillData.subSkillName);
-            WeaponSubSkill weaponSubSkill = (WeaponSubSkill)gameObject.AddComponent(subSkill);
+            Component weaponSubSkill;
+            if (TryGetComponent(subSkill, out weaponSubSkill))
+            {
+                InputAction inputAction = customMonoBehavior.PlayerInputSystem.Control.Get().asset.FindAction(playerSkillData.keybind);
+                MethodInfo[] methodInfos = subSkill.GetMethods();
+                MethodInfo methodInfo = Array.Find
+                (
+                    methodInfos, 
+                    (methodInfo) => methodInfo.Name.Equals(playerSkillData.functionName) && methodInfo.GetParameters()[0].ParameterType == typeof(InputAction.CallbackContext)
+                );
 
-            InputAction inputAction = customMonoBehavior.PlayerInputSystem.Control.Get().asset.FindAction(playerSkillData.keybind);
-            MethodInfo[] methodInfos = classType.GetMethods(BindingFlags.Public);
-            MethodInfo methodInfo = Array.Find
-            (
-                methodInfos, 
-                (methodInfo) => methodInfo.Name.Equals(playerSkillData.functionName) && methodInfo.GetParameters()[0].ParameterType == typeof(InputAction.CallbackContext)
-            );
-
-            inputAction.performed += (Action<InputAction.CallbackContext>)
-            Delegate.CreateDelegate(typeof(Action<InputAction.CallbackContext>), weaponSubSkill, methodInfo);
+                inputAction.performed += (Action<InputAction.CallbackContext>)
+                Delegate.CreateDelegate(typeof(Action<InputAction.CallbackContext>), weaponSubSkill, methodInfo);
+            }
         });
     }
 
