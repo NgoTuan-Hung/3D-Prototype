@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ public class CustomMonoBehavior : MonoBehaviour
     private Animator animator;
     private MoveToTarget moveToTarget;
     private MeleeSimpleAttackWhenNear meleeSimpleAttackWhenNear;
-    private PlayerInputSystem playerInputSystem;
+    private PlayerScript playerScript;
     bool rigidbodyBool = false;
     bool skillableObjectBool = false;
     bool animatorBool = false;
@@ -24,6 +23,7 @@ public class CustomMonoBehavior : MonoBehaviour
     bool moveToTargetBool = false;
     bool meleeSimpleAttackWhenNearBool = false;
     bool playerInputSystemBool = false;
+    bool playerScriptBool = false;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurentHealth { get => curentHealth; set => curentHealth = value; }
     public string EntityType { get => entityType; set => entityType = value; }
@@ -40,8 +40,9 @@ public class CustomMonoBehavior : MonoBehaviour
     public bool MoveToTargetBool { get => moveToTargetBool; set => moveToTargetBool = value; }
     public MeleeSimpleAttackWhenNear MeleeSimpleAttackWhenNear { get => meleeSimpleAttackWhenNear; set => meleeSimpleAttackWhenNear = value; }
     public bool MeleeSimpleAttackWhenNearBool { get => meleeSimpleAttackWhenNearBool; set => meleeSimpleAttackWhenNearBool = value; }
-    public PlayerInputSystem PlayerInputSystem { get => playerInputSystem; set => playerInputSystem = value; }
     public bool PlayerInputSystemBool { get => playerInputSystemBool; set => playerInputSystemBool = value; }
+    public bool PlayerScriptBool { get => playerScriptBool; set => playerScriptBool = value; }
+    public PlayerScript PlayerScript { get => playerScript; set => playerScript = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -55,6 +56,7 @@ public class CustomMonoBehavior : MonoBehaviour
         if (TryGetComponent<RotatableObject>(out rotatableObject)) rotatableObjectBool = true;
         if (TryGetComponent<MoveToTarget>(out moveToTarget)) moveToTargetBool = true;
         if (TryGetComponent<MeleeSimpleAttackWhenNear>(out meleeSimpleAttackWhenNear)) meleeSimpleAttackWhenNearBool = true;
+        if (TryGetComponent<PlayerScript>(out playerScript)) playerScriptBool = true;
     }
 
     public void UpdateHealth(float value)

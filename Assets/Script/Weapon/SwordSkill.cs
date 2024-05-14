@@ -71,8 +71,8 @@ public class SwordSkill : WeaponSkill
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            skillCastVector = (CustomMonoBehavior.PlayerInputSystem.Control.View.ReadValue<Vector2>() 
-            - (Vector2)Camera.main.WorldToScreenPoint(CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position)).normalized;
+            // skillCastVector = (CustomMonoBehavior.PlayerScript.PlayerInputSystem.Control.View.ReadValue<Vector2>() 
+            // - (Vector2)Camera.main.WorldToScreenPoint(CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position)).normalized;
             skillCast.transform.position = transform.position;
             skillCast.SetActive(true);
             skillCastAngle = -Vector2.SignedAngle(Vector2.up, skillCastVector);

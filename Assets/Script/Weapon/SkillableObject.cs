@@ -78,7 +78,7 @@ public class SkillableObject : MonoBehaviour
             Component weaponSubSkill;
             if (TryGetComponent(subSkill, out weaponSubSkill))
             {
-                InputAction inputAction = customMonoBehavior.PlayerInputSystem.Control.Get().asset.FindAction(playerSkillData.keybind);
+                InputAction inputAction = customMonoBehavior.PlayerScript.PlayerInputSystem.Control.Get().asset.FindAction(playerSkillData.keybind);
                 MethodInfo[] methodInfos = subSkill.GetMethods();
                 MethodInfo methodInfo = Array.Find
                 (

@@ -25,6 +25,7 @@ public class PlayerScript : CustomMonoBehavior
     public static CameraDelegate cameraDelegate;
     [SerializeField] private Transform attackPosition;
     UtilObject utilObject = new UtilObject();
+    private PlayerInputSystem playerInputSystem;
     // Start is called before the first frame update
     new void Awake()
     {
@@ -51,7 +52,7 @@ public class PlayerScript : CustomMonoBehavior
         attackPosition = GameObject.Find("AttackPosition").transform;
         attackCoroutine = StartCoroutine(NullCoroutine());
         //instantiate movementByCamera and set parent to this
-        movementByCamera = Instantiate(new GameObject(), transform);
+        cameraLookPoint = Instantiate(new GameObject(), transform);
         
     }
 
@@ -119,8 +120,11 @@ public class PlayerScript : CustomMonoBehavior
     [SerializeField] private bool canMove = true;
 
     public TargetableObject TargetableObject { get => targetableObject; set => targetableObject = value; }
-    public GameObject movementByCamera;
-    Vector3 movementByCameraDirectionVector;
+    public GameObject CameraLookPoint { get => cameraLookPoint; set => cameraLookPoint = value; }
+    public PlayerInputSystem PlayerInputSystem { get => playerInputSystem; set => playerInputSystem = value; }
+
+    private GameObject cameraLookPoint;
+    private Vector3 movementByCameraDirectionVector;
 
     public void Move()
     {
@@ -132,8 +136,8 @@ public class PlayerScript : CustomMonoBehavior
 
         movementByCameraDirectionVector = new Vector3(transform.position.x, 0, transform.position.z)
          -  new Vector3(cameraOfPlayer.transform.position.x, 0, cameraOfPlayer.transform.position.z);
-        movementByCamera.transform.rotation = Quaternion.LookRotation(movementByCameraDirectionVector);
-        movementByCameraDirectionVector = movementByCamera.transform.TransformPoint(new Vector3(moveVector.x, 0, moveVector.y));
+        cameraLookPoint.transform.rotation = Quaternion.LookRotation(movementByCameraDirectionVector);
+        movementByCameraDirectionVector = cameraLookPoint.transform.TransformPoint(new Vector3(moveVector.x, 0, moveVector.y));
         movementByCameraDirectionVector -= new Vector3(transform.position.x, 0, transform.position.z); movementByCameraDirectionVector.Normalize();
 
         if (moveVector != Vector2.zero && canMove)

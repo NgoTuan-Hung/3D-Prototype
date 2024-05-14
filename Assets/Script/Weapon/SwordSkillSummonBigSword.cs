@@ -1,4 +1,3 @@
-
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -40,6 +39,7 @@ class SwordSkillSummonBigSword : WeaponSubSkill
         } else isWaiting = false;
     }
 
+    Vector3 tempVec;
     public IEnumerator HandleSummonSwordPlayer()
     {
         isWaiting = true;
@@ -47,11 +47,13 @@ class SwordSkillSummonBigSword : WeaponSubSkill
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            skillCastVector = (CustomMonoBehavior.PlayerInputSystem.Control.View.ReadValue<Vector2>() 
-            - (Vector2)Camera.main.WorldToScreenPoint(CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position)).normalized;
+            // skillCastVector = (CustomMonoBehavior.PlayerInputSystem.Control.View.ReadValue<Vector2>() 
+            // - (Vector2)Camera.main.WorldToScreenPoint(CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position)).normalized;
             skillCast.transform.position = transform.position;
             skillCast.SetActive(true);
-            skillCastAngle = -Vector2.SignedAngle(Vector2.up, skillCastVector);
+            // skillCastAngle = -Vector2.SignedAngle(Vector2.up, skillCastVector);
+            // skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
+            skillCastAngle = CustomMonoBehavior.PlayerScript.CameraLookPoint.transform.eulerAngles.y;
             skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
         }
 
