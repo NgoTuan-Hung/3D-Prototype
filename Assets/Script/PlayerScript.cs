@@ -144,7 +144,7 @@ public class PlayerScript : CustomMonoBehavior
         {
             transform.position +=  movementByCameraDirectionVector * moveSpeed;
             
-            RotatableObject.RotateToDirectionAxisXZ(movementByCameraDirectionVector);
+            RotatableObject.RotateY(movementByCameraDirectionVector);
         }
     }
 

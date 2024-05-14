@@ -54,7 +54,7 @@ public class MoveToTarget : EntityAction
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            if (canRotate) CustomMonoBehavior.RotatableObject.RotateToDirectionAxisXZ(funcMove_DistanceVector);
+            if (canRotate) CustomMonoBehavior.RotatableObject.RotateY(funcMove_DistanceVector);
         }
     }
 
