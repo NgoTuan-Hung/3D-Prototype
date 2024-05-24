@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10788,10 +10788,7 @@ MonoBehaviour:
   rotateAmountAbsY: 10
   rotateAmountY: 0
   toAngleY: 0
-  prevToAngleY: 0
   moveAngleY: 0
-  movedAngleY: 0
-  finishY: 0
 --- !u!114 &282835351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12590,7 +12587,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.19557852, y: 0.80259615, z: 0.36714765, w: -0.42754072}
+  m_LocalRotation: {x: 0.19557855, y: 0.80259615, z: 0.3671476, w: -0.42754084}
   m_LocalPosition: {x: -2.0587845, y: -4.8669996, z: 4.145638}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12669,10 +12666,7 @@ MonoBehaviour:
   rotateAmountAbsY: 10
   rotateAmountY: 0
   toAngleY: 0
-  prevToAngleY: 0
   moveAngleY: 0
-  movedAngleY: 0
-  finishY: 0
 --- !u!114 &330585550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47394,7 +47388,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1304037612}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17991906, y: 0.8154031, z: 0.33775103, w: -0.434363}
+  m_LocalRotation: {x: 0.17991903, y: 0.8154031, z: 0.33775103, w: -0.43436298}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -56956,7 +56950,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1554390691}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1955785, y: 0.8025962, z: 0.36714762, w: -0.42754075}
+  m_LocalRotation: {x: 0.19557852, y: 0.80259615, z: 0.3671476, w: -0.42754078}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -81701,7 +81695,7 @@ PrefabInstance:
     - target: {fileID: 566512858958054295, guid: 79cb9be8305bf9a45bf800a2c96e45bd,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1403156397876672036, guid: 79cb9be8305bf9a45bf800a2c96e45bd,
         type: 3}

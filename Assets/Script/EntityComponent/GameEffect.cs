@@ -6,8 +6,10 @@ public class GameEffect : MonoBehaviour
     [SerializeField] new private ParticleSystem particleSystem;
     private ParticleSystemEvent particleSystemEvent;
     private bool particleSystemEventBool = false;
+    private CollideAndDamage collideAndDamage;
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
     internal ParticleSystemEvent ParticleSystemEvent { get => particleSystemEvent; set => particleSystemEvent = value; }
+    public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
 
     void Awake()
     {

@@ -11,41 +11,34 @@ public class RotatableObject : MonoBehaviour
     [SerializeField] private float rotateAmountAbsY = 10f;
     [SerializeField] private float rotateAmountY;
     [SerializeField] private float toAngleY;
-    [SerializeField] private float prevToAngleY = 0;
     public enum directionEnum {Clockwise = 1, CounterClockwise = -1}
     [SerializeField] private float moveAngleY;
-    [SerializeField] private float movedAngleY = 0;
-    [SerializeField] private bool finishY = false;
     private UtilObject utilObject = new UtilObject();
     private GetOptimalRotateDirectionAndMoveAngleClass returnValue;
 
     public float RotateAmountAbsY { get => rotateAmountAbsY; set => rotateAmountAbsY = value; }
     public float RotateAmountY { get => rotateAmountY; set => rotateAmountY = value; }
     public float ToAngleY { get => toAngleY; set => toAngleY = value; }
-    public float PrevToAngleY { get => prevToAngleY; set => prevToAngleY = value; }
     public float MoveAngleY { get => moveAngleY; set => moveAngleY = value; }
-    public float MovedAngleY { get => movedAngleY; set => movedAngleY = value; }
-    public bool FinishY { get => finishY; set => finishY = value; }
-
     public GetOptimalRotateDirectionAndMoveAngleClass GetOptimalRotateDirectionAndMoveAngleY(float toAngle)
     {
-        Debug.Log("Current Angle: " + transform.rotation.eulerAngles.y + " To Angle: " + toAngle);
         GetOptimalRotateDirectionAndMoveAngleClass gORDAMAC = new GetOptimalRotateDirectionAndMoveAngleClass
         {
             RotateDirection = toAngle >= transform.rotation.eulerAngles.y ? directionEnum.Clockwise : directionEnum.CounterClockwise,
             MoveAngle = Math.Abs(toAngle - transform.rotation.eulerAngles.y)
         };
 
-        Debug.Log("Before----MoveAngle: " + gORDAMAC.MoveAngle + " RotateDirection: " + gORDAMAC.RotateDirection);
-
         if (gORDAMAC.MoveAngle > 360 - gORDAMAC.MoveAngle)
         {
             gORDAMAC.RotateDirection = gORDAMAC.RotateDirection == directionEnum.Clockwise ? directionEnum.CounterClockwise : directionEnum.Clockwise;
         }
 
-        Debug.Log("After----MoveAngle: " + gORDAMAC.MoveAngle + " RotateDirection: " + gORDAMAC.RotateDirection);
-
         return gORDAMAC;
+    }
+
+    public void Awake()
+    {
+        epsilon = rotateAmountAbsY * 2/3;
     }
 
     public void RotateY(Vector2 directionVector)
@@ -53,33 +46,17 @@ public class RotatableObject : MonoBehaviour
         RotateY(new Vector3(directionVector.x, 0, directionVector.y));
     }
 
-    float epsilon = 1e-2f;
-    float angleDiff;
+    float epsilon;
     public void RotateY(Vector3 directionVector)
     {
         #region Handle Rotaion
         toAngleY = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
 
-        angleDiff = toAngleY - prevToAngleY;
-        if (angleDiff < -epsilon || angleDiff > epsilon)
-        {
-            returnValue = GetOptimalRotateDirectionAndMoveAngleY(toAngleY);
-            moveAngleY = returnValue.MoveAngle;
-            rotateAmountY = (int)returnValue.RotateDirection * rotateAmountAbsY;
-            movedAngleY = 0;
-        }
-        prevToAngleY = toAngleY;
+        returnValue = GetOptimalRotateDirectionAndMoveAngleY(toAngleY);
+        moveAngleY = returnValue.MoveAngle;
+        rotateAmountY = (int)returnValue.RotateDirection * rotateAmountAbsY;
 
-        if (movedAngleY < moveAngleY)
-        {
-            finishY = false;
-            transform.Rotate(new Vector3(0, rotateAmountY, 0));
-            movedAngleY += rotateAmountAbsY;
-        }
-        else
-        {
-            finishY = true;
-        }
+        if (moveAngleY > epsilon) transform.Rotate(new Vector3(0, rotateAmountY, 0));
         #endregion
 
         #region Or Simplier Approach

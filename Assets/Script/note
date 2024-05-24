@@ -3,6 +3,11 @@
 - can we give hint about skill in code ??
 - they both modify the same variable move 
 
+TODOS:
+- Fix effect collision
+- Reconstruct summon bigsword and thousand sword skill
+- Make the swordskill available for mob 
+
 
 --Some mistake:
 + Be careful of pass by reference in coroutine
@@ -15,3 +20,110 @@
             "functionName": "Trigger",
             "keybind":"2"
         }
+
+--Rotation backup
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+[Serializable]
+public class RotatableObject : MonoBehaviour
+{
+    [Header("Rotation")]
+    [SerializeField] private float rotateAmountAbsY = 10f;
+    [SerializeField] private float rotateAmountY;
+    [SerializeField] private float toAngleY;
+    [SerializeField] private float prevToAngleY = 0;
+    public enum directionEnum {Clockwise = 1, CounterClockwise = -1}
+    [SerializeField] private float moveAngleY;
+    [SerializeField] private float movedAngleY = 0;
+    [SerializeField] private bool finishY = false;
+    private UtilObject utilObject = new UtilObject();
+    private GetOptimalRotateDirectionAndMoveAngleClass returnValue;
+
+    public float RotateAmountAbsY { get => rotateAmountAbsY; set => rotateAmountAbsY = value; }
+    public float RotateAmountY { get => rotateAmountY; set => rotateAmountY = value; }
+    public float ToAngleY { get => toAngleY; set => toAngleY = value; }
+    public float PrevToAngleY { get => prevToAngleY; set => prevToAngleY = value; }
+    public float MoveAngleY { get => moveAngleY; set => moveAngleY = value; }
+    public float MovedAngleY { get => movedAngleY; set => movedAngleY = value; }
+    public bool FinishY { get => finishY; set => finishY = value; }
+
+    public GetOptimalRotateDirectionAndMoveAngleClass GetOptimalRotateDirectionAndMoveAngleY(float toAngle)
+    {
+        GetOptimalRotateDirectionAndMoveAngleClass gORDAMAC = new GetOptimalRotateDirectionAndMoveAngleClass
+        {
+            RotateDirection = toAngle >= transform.rotation.eulerAngles.y ? directionEnum.Clockwise : directionEnum.CounterClockwise,
+            MoveAngle = Math.Abs(toAngle - transform.rotation.eulerAngles.y)
+        };
+
+        if (gORDAMAC.MoveAngle > 360 - gORDAMAC.MoveAngle)
+        {
+            gORDAMAC.RotateDirection = gORDAMAC.RotateDirection == directionEnum.Clockwise ? directionEnum.CounterClockwise : directionEnum.Clockwise;
+        }
+
+        return gORDAMAC;
+    }
+
+    public void RotateY(Vector2 directionVector)
+    {
+        RotateY(new Vector3(directionVector.x, 0, directionVector.y));
+    }
+
+    float epsilon = 1e-2f;
+    float angleDiff;
+    public void RotateY(Vector3 directionVector)
+    {
+        #region Handle Rotaion
+        toAngleY = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
+
+        angleDiff = toAngleY - prevToAngleY;
+        if (angleDiff < -epsilon || angleDiff > epsilon)
+        {
+            returnValue = GetOptimalRotateDirectionAndMoveAngleY(toAngleY);
+            moveAngleY = returnValue.MoveAngle;
+            rotateAmountY = (int)returnValue.RotateDirection * rotateAmountAbsY;
+            movedAngleY = 0;
+        }
+        prevToAngleY = toAngleY;
+
+        if (movedAngleY < moveAngleY)
+        {
+            finishY = false;
+            transform.Rotate(new Vector3(0, rotateAmountY, 0));
+            movedAngleY += rotateAmountAbsY;
+        }
+        else
+        {
+            finishY = true;
+        }
+        #endregion
+
+        #region Or Simplier Approach
+        // transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(directionVector, Vector3.up), rotateAmountAbs * 100);
+        #endregion
+    }
+
+    public void RotateYImediatly(float angle)
+    {
+        transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+        toAngleY = angle;
+    }
+
+    public void RotateYImediatly(Vector3 directionVector)
+    {
+        toAngleY = utilObject.CalculateAngleBase360(Vector3.forward, directionVector, Vector3.up);
+        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+    }
+
+    public class GetOptimalRotateDirectionAndMoveAngleClass
+    {
+        private float moveAngle;
+        private directionEnum rotateDirection;
+
+        public float MoveAngle { get => moveAngle; set => moveAngle = value; }
+        public directionEnum RotateDirection { get => rotateDirection; set => rotateDirection = value; }
+    }
+}

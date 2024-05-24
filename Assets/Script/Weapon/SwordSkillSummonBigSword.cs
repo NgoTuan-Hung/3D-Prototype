@@ -47,12 +47,8 @@ class SwordSkillSummonBigSword : WeaponSubSkill
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            // skillCastVector = (CustomMonoBehavior.PlayerInputSystem.Control.View.ReadValue<Vector2>() 
-            // - (Vector2)Camera.main.WorldToScreenPoint(CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position)).normalized;
             skillCast.transform.position = transform.position;
             skillCast.SetActive(true);
-            // skillCastAngle = -Vector2.SignedAngle(Vector2.up, skillCastVector);
-            // skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
             skillCastAngle = CustomMonoBehavior.PlayerScript.CameraLookPoint.transform.eulerAngles.y;
             skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
         }
@@ -69,6 +65,7 @@ class SwordSkillSummonBigSword : WeaponSubSkill
         //swordWeapon.CollideAndDamage.ColliderDamage = 90f;
         gameEffect.transform.position = transform.position;
         gameEffect.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
+        
         CustomMonoBehavior.Animator.SetBool("CastSkillBlownDown", true);
         CustomMonoBehavior.Animator.Play("UpperBody.CastSkillBlowDown", 1, 0);
         StartCoroutine(StopSummon());
