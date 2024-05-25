@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CollideAndDamage : MonoBehaviour 
@@ -16,6 +17,15 @@ public class CollideAndDamage : MonoBehaviour
         if (!collideExcludeTags.Contains(other.gameObject.tag))
         {
             GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
+        }
+    }
+
+    public void OnParticleCollision(GameObject gameObject)
+    {
+        Debug.Log("Particle Collision Detected!");
+        if (!collideExcludeTags.Contains(gameObject.tag))
+        {
+            GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, gameObject);
         }
     }
 }

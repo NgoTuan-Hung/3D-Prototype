@@ -59,10 +59,7 @@ class SwordSkillSummonBigSword : WeaponSubSkill
         GameEffect gameEffect = objectPoolClassEffect.Component;
         gameEffect.ParticleSystemEvent.particleSystemEventDelegate += () => objectPoolClassEffect.GameObject.SetActive(false);
 
-        //swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
-        // we won't use swordWeaponParent variable because it will affect attack logic
-
-        //swordWeapon.CollideAndDamage.ColliderDamage = 90f;
+        gameEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
         gameEffect.transform.position = transform.position;
         gameEffect.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
         

@@ -7,9 +7,11 @@ public class GameEffect : MonoBehaviour
     private ParticleSystemEvent particleSystemEvent;
     private bool particleSystemEventBool = false;
     private CollideAndDamage collideAndDamage;
+    private bool collideAndDamageBool = false;
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
     internal ParticleSystemEvent ParticleSystemEvent { get => particleSystemEvent; set => particleSystemEvent = value; }
     public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
+    public bool CollideAndDamageBool { get => collideAndDamageBool; set => collideAndDamageBool = value; }
 
     void Awake()
     {
@@ -24,6 +26,7 @@ public class GameEffect : MonoBehaviour
         }
 
         if ((particleSystemEvent = GetComponentInChildren<ParticleSystemEvent>()) != null) particleSystemEventBool = true;
+        if ((collideAndDamage = GetComponentInChildren<CollideAndDamage>()) != null) collideAndDamageBool = true;
     }
 
     void OnEnable()
