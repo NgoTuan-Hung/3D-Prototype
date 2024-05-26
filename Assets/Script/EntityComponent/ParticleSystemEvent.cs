@@ -14,7 +14,6 @@ class ParticleSystemEvent : MonoBehaviour
 
     void OnParticleSystemStopped() 
     {
-        Debug.Log("OnParticleSystemStopped");
         particleSystemEventDelegate?.Invoke();
     }
 }

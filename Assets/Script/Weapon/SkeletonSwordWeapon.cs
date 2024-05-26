@@ -37,6 +37,7 @@ public class SkeletonSwordWeapon : Weapon
         stabParticleSystemObjectPoolClass.GameObject.transform.position = transform.position;
         stabParticleSystemObjectPoolClass.GameObject.transform.rotation = transform.parent.rotation;
         stabParticleSystemObjectPoolClass.Component.ParticleSystem.Play();
+        stabParticleSystemObjectPoolClass.Component.ParticleSystemEvent.particleSystemEventDelegate += () => stabParticleSystemObjectPoolClass.GameObject.SetActive(false);
     }
 
     public void ChargeAttack()
@@ -47,6 +48,7 @@ public class SkeletonSwordWeapon : Weapon
         main.startLifetime = 1f;
         stabParticleSystemObjectPoolClass.Component.transform.rotation = Quaternion.Euler(0, 0, 0);
         stabParticleSystemObjectPoolClass.Component.gameObject.SetActive(true);
+        stabParticleSystemObjectPoolClass.Component.ParticleSystemEvent.particleSystemEventDelegate += () => stabParticleSystemObjectPoolClass.GameObject.SetActive(false);
         stabParticleSystemObjectPoolClass.Component.Follow(transform.parent, new Vector3(0, 0, 1.86f), true, true);
 
         animator.SetBool("ChargeAttack", true);

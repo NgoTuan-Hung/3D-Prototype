@@ -14,18 +14,11 @@ public class CollideAndDamage : MonoBehaviour
 
     public virtual void OnTriggerEnter(Collider other)
     {
+        Debug.Log("CollideAndDamage OnTriggerEnter");
+        
         if (!collideExcludeTags.Contains(other.gameObject.tag))
         {
             GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
-        }
-    }
-
-    public void OnParticleCollision(GameObject gameObject)
-    {
-        Debug.Log("Particle Collision Detected!");
-        if (!collideExcludeTags.Contains(gameObject.tag))
-        {
-            GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, gameObject);
         }
     }
 }

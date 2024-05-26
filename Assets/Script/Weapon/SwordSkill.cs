@@ -119,11 +119,13 @@ public class SwordSkill : WeaponSkill
 
     [SerializeField] private Vector3[] thousandSwordOriginalRotation = {new Vector3(-45, -90, 90), new Vector3(-90, 0, 0), new Vector3(-45, 90, -90)};
     [SerializeField] private float startFlyingForce = 30f;
+    private Vector3 midPointScale = new Vector3();
     public void ThousandSword(InputAction.CallbackContext callbackContext)
     {
         List<ObjectPoolClass<Weapon>> objectPoolClasses = weaponPool.Pick(3);
         SwordWeapon swordWeapon;
         Transform swordWeaponParent1;
+        
         GameObject target = CustomMonoBehavior.SkillableObject.PlayerScript.TargetableObject.TargetChecker.NearestTarget;
         CustomMonoBehavior.Animator.SetBool("HandUpCast", true);
         CustomMonoBehavior.Animator.Play("UpperBody.HandUpCast", 1, 0);
@@ -138,6 +140,9 @@ public class SwordSkill : WeaponSkill
             swordWeapon.FlyingTrail.enabled = true;
             swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
             swordWeapon.Animator.SetBool("ThousandSword", true);
+
+
+
             swordWeapon.ParentRigidBody.AddForce(swordWeaponParent1.transform.forward * startFlyingForce, ForceMode.Impulse);
             CoroutineWrapper coroutineWrapper = new CoroutineWrapper();
             IEnumerator thousandSwordCoroutine = ThousandSwordCoroutine(swordWeapon, swordWeaponParent1, target, coroutineWrapper);

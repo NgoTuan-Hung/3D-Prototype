@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameEffect : MonoBehaviour
@@ -8,10 +9,12 @@ public class GameEffect : MonoBehaviour
     private bool particleSystemEventBool = false;
     private CollideAndDamage collideAndDamage;
     private bool collideAndDamageBool = false;
+    [SerializeField] private List<Animator> animators = new List<Animator>();
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
     internal ParticleSystemEvent ParticleSystemEvent { get => particleSystemEvent; set => particleSystemEvent = value; }
     public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
     public bool CollideAndDamageBool { get => collideAndDamageBool; set => collideAndDamageBool = value; }
+    public List<Animator> Animators { get => animators; set => animators = value; }
 
     void Awake()
     {
@@ -31,7 +34,10 @@ public class GameEffect : MonoBehaviour
 
     void OnEnable()
     {
-
+        animators.ForEach(animators => 
+        {
+            animators.Play("Effect");
+        });
     }
 
     public delegate void OnDisableDelegate();

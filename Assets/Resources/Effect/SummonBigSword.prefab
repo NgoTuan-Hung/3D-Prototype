@@ -19664,6 +19664,7 @@ GameObject:
   - component: {fileID: 6332707502304076724}
   - component: {fileID: 5510908045243443455}
   - component: {fileID: 2033643688185804786}
+  - component: {fileID: 4199238339126583241}
   m_Layer: 0
   m_Name: SummonBigSword
   m_TagString: Untagged
@@ -19701,6 +19702,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 6076140888228121551}
+  animators:
+  - {fileID: 5415746089011287515}
 --- !u!114 &2033643688185804786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19713,9 +19716,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92d220b13f6ceb1409255e803b591793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliderDamage: 0
-  baseColliderDamage: 0
+  colliderDamage: 90
+  baseColliderDamage: 90
   collideExcludeTags: []
+--- !u!54 &4199238339126583241
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3390498469929282694}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &3456769620095170873
 GameObject:
   m_ObjectHideFlags: 0
@@ -54063,14 +54093,13 @@ GameObject:
   - component: {fileID: 3351452481026734168}
   - component: {fileID: 5550655981460364149}
   - component: {fileID: 7309325056848622948}
-  - component: {fileID: 427589133062668409}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3351452481026734168
 Transform:
   m_ObjectHideFlags: 0
@@ -58989,21 +59018,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &427589133062668409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8357970830058196567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92d220b13f6ceb1409255e803b591793, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colliderDamage: 90
-  baseColliderDamage: 90
-  collideExcludeTags: []
 --- !u!1 &8430867899997745700
 GameObject:
   m_ObjectHideFlags: 0
@@ -63925,6 +63939,7 @@ GameObject:
   - component: {fileID: 8864172926002367021}
   - component: {fileID: 7819068287985563962}
   - component: {fileID: 5415746089011287515}
+  - component: {fileID: 2380659072443644394}
   m_Layer: 0
   m_Name: LongSword
   m_TagString: Untagged
@@ -64018,6 +64033,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!65 &2380659072443644394
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8660835282394564205}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 192
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 55
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.039797198, y: 0.7427932, z: 0.011692961}
+  m_Center: {x: -0.0019188976, y: 0.40084964, z: -0.00080381765}
 --- !u!1 &8995234358633605224
 GameObject:
   m_ObjectHideFlags: 0
