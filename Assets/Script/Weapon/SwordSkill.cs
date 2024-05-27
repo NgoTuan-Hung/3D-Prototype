@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class SwordSkill : WeaponSkill
 {
-    [SerializeField] private static ObjectPool<Weapon> weaponPool {get; set;}
+    [SerializeField] private static ObjectPool weaponPool {get; set;}
     [SerializeField] private GameObject swordPrefab;
     private Transform swordWeaponParent;
 
@@ -16,7 +16,7 @@ public class SwordSkill : WeaponSkill
         base.Awake();
         swordPrefab = Instantiate(Resources.Load("LongSword")) as GameObject;
         swordPrefab.SetActive(false);
-        weaponPool ??= new ObjectPool<Weapon>(swordPrefab, 20, ObjectPool<Weapon>.WhereComponent.Child);
+        weaponPool ??= new ObjectPool(swordPrefab, 20, new PoolArgument(typeof(Weapon), PoolArgument.WhereComponent.Child));
 
         {
             WeaponSubSkills.Add(gameObject.AddComponent<SwordSkillSummonBigSword>()); WeaponSubSkills[0].WeaponPool = weaponPool;
@@ -28,8 +28,8 @@ public class SwordSkill : WeaponSkill
         if (CanAttack)
         {
             CanAttack = false;
-            ObjectPoolClass<Weapon> objectPoolClass = weaponPool.PickOne();
-            SwordWeapon swordWeapon = (SwordWeapon)objectPoolClass.Component;
+            PoolObject poolObject = weaponPool.PickOne();
+            SwordWeapon swordWeapon = (SwordWeapon)poolObject.Weapon;
             swordWeaponParent = swordWeapon.transform.parent;
 
             swordWeapon.PlayAttackParticleSystem();
@@ -81,11 +81,11 @@ public class SwordSkill : WeaponSkill
 
         skillCast.SetActive(false);
         CustomMonoBehavior.SkillableObject.UseOnlySkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
-        ObjectPoolClass<Weapon> objectPoolClass = weaponPool.PickOneWithoutActive();
+        PoolObject poolObject = weaponPool.PickOneWithoutActive();
 
-        SwordWeapon swordWeapon = (SwordWeapon)objectPoolClass.Component;
+        SwordWeapon swordWeapon = (SwordWeapon)poolObject.Weapon;
         swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
-        objectPoolClass.GameObject.SetActive(true);
+        poolObject.GameObject.SetActive(true);
         // we won't use swordWeaponParent variable because it will affect attack logic
         Transform swordWeaponParent1 = swordWeapon.transform.parent;
 
@@ -122,7 +122,7 @@ public class SwordSkill : WeaponSkill
     private Vector3 midPointScale = new Vector3();
     public void ThousandSword(InputAction.CallbackContext callbackContext)
     {
-        List<ObjectPoolClass<Weapon>> objectPoolClasses = weaponPool.Pick(3);
+        List<PoolObject> poolObjects = weaponPool.Pick(3);
         SwordWeapon swordWeapon;
         Transform swordWeaponParent1;
         
@@ -132,7 +132,7 @@ public class SwordSkill : WeaponSkill
         CustomMonoBehavior.SkillableObject.UseOnlySkillAnimator((int)SkillableObject.SkillID.ThousandSword);
         for (int i=0;i<thousandSwordOriginalRotation.Length;i++)
         {
-            swordWeapon = (SwordWeapon)objectPoolClasses[i].Component;
+            swordWeapon = (SwordWeapon)poolObjects[i].Weapon;
             swordWeapon.CollideAndDamage.ColliderDamage = 20f;
             swordWeaponParent1 = swordWeapon.transform.parent;
             swordWeaponParent1.transform.rotation = Quaternion.Euler(thousandSwordOriginalRotation[i]);
@@ -140,7 +140,6 @@ public class SwordSkill : WeaponSkill
             swordWeapon.FlyingTrail.enabled = true;
             swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
             swordWeapon.Animator.SetBool("ThousandSword", true);
-
 
 
             swordWeapon.ParentRigidBody.AddForce(swordWeaponParent1.transform.forward * startFlyingForce, ForceMode.Impulse);

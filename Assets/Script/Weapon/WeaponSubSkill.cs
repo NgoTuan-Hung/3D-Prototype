@@ -7,7 +7,7 @@ class WeaponSubSkill : MonoBehaviour
 {
     public delegate void FinishSkillDelegate();
     public FinishSkillDelegate finishSkillDelegate;
-    private ObjectPool<Weapon> weaponPool;
+    private ObjectPool weaponPool;
     private SubSkillRequiredParameter subSkillRequiredParameter;
     private RecommendedAIBehavior recommendedAIBehavior = new RecommendedAIBehavior();
     private bool canUse = true;
@@ -15,7 +15,7 @@ class WeaponSubSkill : MonoBehaviour
     private SubSkillCondition subSkillCondition = new SubSkillCondition();
     private CustomMonoBehavior customMonoBehavior;
 
-    public ObjectPool<Weapon> WeaponPool { get => weaponPool; set => weaponPool = value; }
+    public ObjectPool WeaponPool { get => weaponPool; set => weaponPool = value; }
     public SubSkillRequiredParameter SubSkillRequiredParameter { get => subSkillRequiredParameter; set => subSkillRequiredParameter = value; }
     public RecommendedAIBehavior RecommendedAIBehavior { get => recommendedAIBehavior; set => recommendedAIBehavior = value; }
     public bool CanUse { get => canUse; set => canUse = value; }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SkeletonSwordSkill : WeaponSkill
 {
-    [SerializeField] private static ObjectPool<Weapon> weaponPool {get; set;}
+    [SerializeField] private static ObjectPool weaponPool {get; set;}
 
     [SerializeField] private GameObject prefab;
     private Transform weaponParent;
@@ -14,8 +14,8 @@ public class SkeletonSwordSkill : WeaponSkill
         if (CanAttack)
         {
             CanAttack = false;
-            ObjectPoolClass<Weapon> objectPoolClass = weaponPool.PickOne();
-            SkeletonSwordWeapon skeletonSwordWeapon = (SkeletonSwordWeapon)objectPoolClass.Component;
+            PoolObject poolObject = weaponPool.PickOne();
+            SkeletonSwordWeapon skeletonSwordWeapon = (SkeletonSwordWeapon)poolObject.Weapon;
             weaponParent = skeletonSwordWeapon.transform.parent;
 
             weaponParent.transform.position = transform.position;
@@ -41,7 +41,7 @@ public class SkeletonSwordSkill : WeaponSkill
         base.Awake();
         prefab = Instantiate(Resources.Load("SkeletonSword")) as GameObject;
         prefab.SetActive(false);
-        weaponPool ??= new ObjectPool<Weapon>(prefab, 20, ObjectPool<Weapon>.WhereComponent.Child);
+        weaponPool ??= new ObjectPool(prefab, 20, new PoolArgument(typeof(Weapon), PoolArgument.WhereComponent.Child));
 
         {
             WeaponSubSkills.Add(gameObject.AddComponent<SkeletonSwordSkillCharge>()); WeaponSubSkills[0].WeaponPool = weaponPool;

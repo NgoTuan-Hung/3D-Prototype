@@ -10,7 +10,7 @@ class SwordSkillSummonBigSword : WeaponSubSkill
     private Vector2 skillCastVector;
     private GameObject skillCast;
     private float skillCastAngle;
-    [SerializeField] private static ObjectPool<GameEffect> bigSwordEffectPool {get; set;}
+    [SerializeField] private static ObjectPool bigSwordEffectPool {get; set;}
 
     public bool IsWaiting { get => isWaiting; set => isWaiting = value; }
     public Coroutine SummonCoroutine { get => summonCoroutine; set => summonCoroutine = value; }
@@ -24,7 +24,7 @@ class SwordSkillSummonBigSword : WeaponSubSkill
         skillCast = Instantiate(Resources.Load("BigSwordSkillCast")).GameObject();
         skillCast.SetActive(false);
         GameObject bigSwordEffectPrefab = Resources.Load("Effect/SummonBigSword") as GameObject;
-        bigSwordEffectPool ??= new ObjectPool<GameEffect>(bigSwordEffectPrefab, 20, ObjectPool<GameEffect>.WhereComponent.Self);
+        bigSwordEffectPool ??= new ObjectPool(bigSwordEffectPrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
     }
 
     public override void Start()
@@ -55,9 +55,9 @@ class SwordSkillSummonBigSword : WeaponSubSkill
 
         skillCast.SetActive(false);
         CustomMonoBehavior.SkillableObject.UseOnlySkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
-        ObjectPoolClass<GameEffect> objectPoolClassEffect = bigSwordEffectPool.PickOne();
-        GameEffect gameEffect = objectPoolClassEffect.Component;
-        gameEffect.ParticleSystemEvent.particleSystemEventDelegate += () => objectPoolClassEffect.GameObject.SetActive(false);
+        PoolObject poolObjectEffect = bigSwordEffectPool.PickOne();
+        GameEffect gameEffect = poolObjectEffect.GameEffect;
+        gameEffect.ParticleSystemEvent.particleSystemEventDelegate += () => poolObjectEffect.GameObject.SetActive(false);
 
         gameEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
         gameEffect.transform.position = transform.position;

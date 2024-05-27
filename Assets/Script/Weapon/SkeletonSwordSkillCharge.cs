@@ -49,8 +49,8 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         chargeDistanceOverTime = chargeSpeed.FloatValue * Time.fixedDeltaTime;
         chargedDistance = 0;
 
-        ObjectPoolClass<Weapon> objectPoolClass = WeaponPool.PickOne();
-        SkeletonSwordWeapon skeletonSwordWeapon = (SkeletonSwordWeapon)objectPoolClass.Component;
+        PoolObject poolObject = WeaponPool.PickOne();
+        SkeletonSwordWeapon skeletonSwordWeapon = (SkeletonSwordWeapon)poolObject.Weapon;
         skeletonSwordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
         Transform skeletonSwordWeaponParent = skeletonSwordWeapon.transform.parent;
 

@@ -5,13 +5,13 @@ using UnityEngine;
 public class SkeletonSwordWeapon : Weapon
 {
     private GameObject stabParticleSystemObject;
-    [SerializeField] private static ObjectPool<GameEffect> stabParticleSystemPool {get; set;}
+    [SerializeField] private static ObjectPool stabParticleSystemPool {get; set;}
 
     public override void Awake()
     {
         base.Awake();
         stabParticleSystemObject = Resources.Load("Effect/StabEffect") as GameObject;
-        stabParticleSystemPool ??= new ObjectPool<GameEffect>(stabParticleSystemObject, 20, ObjectPool<GameEffect>.WhereComponent.Self);
+        stabParticleSystemPool ??= new ObjectPool(stabParticleSystemObject, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
     }
     // Start is called before the first frame update
     void Start()
@@ -33,27 +33,27 @@ public class SkeletonSwordWeapon : Weapon
     public override void StopAttack()
     {
         base.StopAttack();
-        ObjectPoolClass<GameEffect> stabParticleSystemObjectPoolClass = stabParticleSystemPool.PickOne();
-        stabParticleSystemObjectPoolClass.GameObject.transform.position = transform.position;
-        stabParticleSystemObjectPoolClass.GameObject.transform.rotation = transform.parent.rotation;
-        stabParticleSystemObjectPoolClass.Component.ParticleSystem.Play();
-        stabParticleSystemObjectPoolClass.Component.ParticleSystemEvent.particleSystemEventDelegate += () => stabParticleSystemObjectPoolClass.GameObject.SetActive(false);
+        PoolObject stabParticleSystemPoolObject = stabParticleSystemPool.PickOne();
+        stabParticleSystemPoolObject.GameObject.transform.position = transform.position;
+        stabParticleSystemPoolObject.GameObject.transform.rotation = transform.parent.rotation;
+        stabParticleSystemPoolObject.GameEffect.ParticleSystem.Play();
+        stabParticleSystemPoolObject.GameEffect.ParticleSystemEvent.particleSystemEventDelegate += () => stabParticleSystemPoolObject.GameObject.SetActive(false);
     }
 
     public void ChargeAttack()
     {
-        ObjectPoolClass<GameEffect> stabParticleSystemObjectPoolClass = stabParticleSystemPool.PickOneWithoutActive();
-        var main = stabParticleSystemObjectPoolClass.Component.ParticleSystem.main;
+        PoolObject stabParticleSystemPoolObject = stabParticleSystemPool.PickOneWithoutActive();
+        var main = stabParticleSystemPoolObject.GameEffect.ParticleSystem.main;
         main.startSizeXMultiplier = 120f; main.startSizeYMultiplier = 120f; main.startSizeZMultiplier = 180f;
         main.startLifetime = 1f;
-        stabParticleSystemObjectPoolClass.Component.transform.rotation = Quaternion.Euler(0, 0, 0);
-        stabParticleSystemObjectPoolClass.Component.gameObject.SetActive(true);
-        stabParticleSystemObjectPoolClass.Component.ParticleSystemEvent.particleSystemEventDelegate += () => stabParticleSystemObjectPoolClass.GameObject.SetActive(false);
-        stabParticleSystemObjectPoolClass.Component.Follow(transform.parent, new Vector3(0, 0, 1.86f), true, true);
+        stabParticleSystemPoolObject.GameEffect.transform.rotation = Quaternion.Euler(0, 0, 0);
+        stabParticleSystemPoolObject.GameEffect.gameObject.SetActive(true);
+        stabParticleSystemPoolObject.GameEffect.ParticleSystemEvent.particleSystemEventDelegate += () => stabParticleSystemPoolObject.GameObject.SetActive(false);
+        stabParticleSystemPoolObject.GameEffect.Follow(transform.parent, new Vector3(0, 0, 1.86f), true, true);
 
         animator.SetBool("ChargeAttack", true);
-        //stabParticleSystemObjectPoolClass.Component.ParticleSystem.Play();
-        stabParticleSystemObjectPoolClass.Component.onDisableDelegate += () => stabParticleSystemObjectPoolClass.Component.SetParticleSystemOriginalValue();
+        //stabParticleSystemPoolObject.Component.ParticleSystem.Play();
+        stabParticleSystemPoolObject.GameEffect.onDisableDelegate += () => stabParticleSystemPoolObject.GameEffect.SetParticleSystemOriginalValue();
     }
 
     public void StopChargeAttack()

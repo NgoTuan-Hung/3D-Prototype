@@ -1,57 +1,68 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 using SystemObject = System.Object;
 
-public class ObjectPool<T>
+public class ObjectPool
 {
-    public List<ObjectPoolClass<T>> pool;
-    public GameObject prefab;
+    public List<PoolObject> pool;
     public int size;
-    public enum WhereComponent {Child, Self}
 
-    public ObjectPool(GameObject prefab, int size, WhereComponent whereComponent)
+    public ObjectPool(GameObject prefab, int size, params PoolArgument[] poolArguments)
     {
-        this.prefab = prefab;
         this.size = size;
 
-        pool = new List<ObjectPoolClass<T>>(size);
-        switch (whereComponent)
+        pool = new List<PoolObject>(size);
+        for (int i=0;i<pool.Capacity;i++)
         {
-            case WhereComponent.Child:
-                for (int i=0;i<pool.Capacity;i++)
-                {
-                    ObjectPoolClass<T> objectPoolClass = new ObjectPoolClass<T>
-                    {
-                        GameObject = GameObject.Instantiate(prefab)
-                    };
-                    objectPoolClass.Component = objectPoolClass.GameObject.GetComponentInChildren<T>();
-                    
-                    pool.Add(objectPoolClass);
-                    pool[i].GameObject.SetActive(false);
-                }
-                
-                break;
-            case WhereComponent.Self:
-                for (int i=0;i<pool.Capacity;i++)
-                {
-                    ObjectPoolClass<T> objectPoolClass = new ObjectPoolClass<T>
-                    {
-                        GameObject = GameObject.Instantiate(prefab)
-                    };
-                    objectPoolClass.Component = objectPoolClass.GameObject.GetComponent<T>();
-                    
-                    pool.Add(objectPoolClass);
-                    pool[i].GameObject.SetActive(false);
-                }
-                break;
+            PoolObject poolObject = new PoolObject
+            {
+                GameObject = GameObject.Instantiate(prefab)
+            };
+
+            pool.Add(poolObject);
         }
-        
+
+        if (poolArguments.Length > 0)
+        {
+            for (int i=0;i<pool.Capacity;i++)
+            {
+                foreach (PoolArgument poolArgument in poolArguments)
+                {
+                    switch (poolArgument.whereComponent)
+                    {
+                        case PoolArgument.WhereComponent.Child:
+                            foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields())
+                            {
+                                if (fieldInfo.FieldType == poolArgument.Type)
+                                {
+                                    fieldInfo.SetValue(pool[i], pool[i].GameObject.GetComponentInChildren(poolArgument.Type));
+                                }
+                            }
+
+                            break;
+                        case PoolArgument.WhereComponent.Self:
+                            foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields())
+                            {
+                                if (fieldInfo.FieldType == poolArgument.Type)
+                                {
+                                    fieldInfo.SetValue(pool[i], pool[i].GameObject.GetComponent(poolArgument.Type));
+                                }
+                            }
+                            
+                            break;
+                    }
+                }
+
+                pool[i].GameObject.SetActive(false);
+            }
+        }
     }
 
-    public ObjectPoolClass<T> PickOne()
+    public PoolObject PickOne()
     {
         for (int i=0;i<pool.Count;i++)
         {
@@ -65,7 +76,7 @@ public class ObjectPool<T>
         return null;
     }
 
-    public ObjectPoolClass<T> PickOneWithoutActive()
+    public PoolObject PickOneWithoutActive()
     {
         for (int i=0;i<pool.Count;i++)
         {
@@ -78,18 +89,18 @@ public class ObjectPool<T>
         return null;
     }
 
-    public List<ObjectPoolClass<T>> Pick(int n)
+    public List<PoolObject> Pick(int n)
     {
         int count = 0;
-        List<ObjectPoolClass<T>> objectPoolClasses = new List<ObjectPoolClass<T>>();
+        List<PoolObject> poolObjects = new List<PoolObject>();
         for (int i=0;i<pool.Count;i++)
         {
-            if (count >= n) return objectPoolClasses;
+            if (count >= n) return poolObjects;
 
             if (!pool[i].GameObject.activeSelf)
             {
                 pool[i].GameObject.SetActive(true);
-                objectPoolClasses.Add(pool[i]);
+                poolObjects.Add(pool[i]);
                 count++;
             }
         }
@@ -98,11 +109,27 @@ public class ObjectPool<T>
     }
 }
 
-public class ObjectPoolClass<T>
+public class PoolArgument
+{
+    private Type type;
+    public enum WhereComponent {Child, Self}
+    public WhereComponent whereComponent;
+
+    public Type Type { get => type; set => type = value; }
+
+    public PoolArgument(Type type, WhereComponent whereComponent)
+    {
+        this.type = type;
+        this.whereComponent = whereComponent;
+    }
+}
+
+public class PoolObject
 {
     private GameObject gameObject;
-    private T component;
-
+    private Weapon weapon;
+    private GameEffect gameEffect;
     public GameObject GameObject { get => gameObject; set => gameObject = value; }
-    public T Component { get => component; set => component = value; }
+    public Weapon Weapon { get => weapon; set => weapon = value; }
+    public GameEffect GameEffect { get => gameEffect; set => gameEffect = value; }
 }
