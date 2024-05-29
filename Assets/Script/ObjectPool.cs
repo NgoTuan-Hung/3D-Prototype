@@ -26,8 +26,11 @@ public class ObjectPool
             pool.Add(poolObject);
         }
 
+        Debug.Log(typeof(PoolObject).GetFields(BindingFlags.Instance | BindingFlags.NonPublic).Length);
+        
+
         if (poolArguments.Length > 0)
-        {
+        {   
             for (int i=0;i<pool.Capacity;i++)
             {
                 foreach (PoolArgument poolArgument in poolArguments)
@@ -35,8 +38,8 @@ public class ObjectPool
                     switch (poolArgument.whereComponent)
                     {
                         case PoolArgument.WhereComponent.Child:
-                            foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields())
-                            {
+                            foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+                            {   
                                 if (fieldInfo.FieldType == poolArgument.Type)
                                 {
                                     fieldInfo.SetValue(pool[i], pool[i].GameObject.GetComponentInChildren(poolArgument.Type));
@@ -45,7 +48,7 @@ public class ObjectPool
 
                             break;
                         case PoolArgument.WhereComponent.Self:
-                            foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields())
+                            foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
                             {
                                 if (fieldInfo.FieldType == poolArgument.Type)
                                 {
