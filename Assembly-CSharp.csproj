@@ -115,6 +115,7 @@
     <Compile Include="Assets\Script\EntityComponent\MeleeSkeleton.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\ParseException.cs" />
     <Compile Include="Assets\TotalJSON\Internal\ParseStringRunner.cs" />
+    <Compile Include="Assets\Script\Weapon\SwordSkillThousandSword.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JArrayIndexOutOfRangeException.cs" />
     <Compile Include="Assets\Script\Weapon\Weapon.cs" />
     <Compile Include="Assets\Script\EntityComponent\Entity.cs" />

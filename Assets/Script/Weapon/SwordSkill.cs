@@ -19,7 +19,10 @@ public class SwordSkill : WeaponSkill
         weaponPool ??= new ObjectPool(swordPrefab, 20, new PoolArgument(typeof(Weapon), PoolArgument.WhereComponent.Child));
 
         {
-            WeaponSubSkills.Add(gameObject.AddComponent<SwordSkillSummonBigSword>()); WeaponSubSkills[0].WeaponPool = weaponPool;
+            WeaponSubSkills.Add(gameObject.AddComponent<SwordSkillSummonBigSword>()); 
+            WeaponSubSkills.Add(gameObject.AddComponent<SwordSkillThousandSword>());
+            WeaponSubSkills[0].WeaponPool = weaponPool;
+            WeaponSubSkills[1].WeaponPool = weaponPool;
         }
     }
 
@@ -49,72 +52,6 @@ public class SwordSkill : WeaponSkill
         yield return new WaitForSeconds(AttackCooldown);
 
         CanAttack = true;
-    }
-
-    public bool isWaiting = false;
-    public Coroutine summonCoroutine;
-    public Vector2 skillCastVector;
-    public GameObject skillCast;
-    public float skillCastAngle;
-    public void SummonBigSword(InputAction.CallbackContext callbackContext)
-    {
-        if (!isWaiting)
-        {
-            StartCoroutine(HandleSummonSword());
-        } else isWaiting = false;
-    }
-
-    public IEnumerator HandleSummonSword()
-    {
-        isWaiting = true;
-        while (isWaiting)
-        {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-
-            // skillCastVector = (CustomMonoBehavior.PlayerScript.PlayerInputSystem.Control.View.ReadValue<Vector2>() 
-            // - (Vector2)Camera.main.WorldToScreenPoint(CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position)).normalized;
-            skillCast.transform.position = transform.position;
-            skillCast.SetActive(true);
-            skillCastAngle = -Vector2.SignedAngle(Vector2.up, skillCastVector);
-            skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
-        }
-
-        skillCast.SetActive(false);
-        CustomMonoBehavior.SkillableObject.UseOnlySkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
-        PoolObject poolObject = weaponPool.PickOneWithoutActive();
-
-        SwordWeapon swordWeapon = (SwordWeapon)poolObject.Weapon;
-        swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
-        poolObject.GameObject.SetActive(true);
-        // we won't use swordWeaponParent variable because it will affect attack logic
-        Transform swordWeaponParent1 = swordWeapon.transform.parent;
-
-        swordWeapon.CollideAndDamage.ColliderDamage = 90f;
-        swordWeaponParent1.position = CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position;
-        swordWeaponParent1.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle - 90, 0));
-        swordWeapon.Animator.SetBool("BigSword", true);
-        CustomMonoBehavior.Animator.SetBool("CastSkillBlownDown", true);
-        CustomMonoBehavior.Animator.Play("UpperBody.CastSkillBlowDown", 1, 0);
-        StartCoroutine(StopSummon());
-        StartCoroutine(StopSword(swordWeapon));
-    }
-
-    public IEnumerator StopSword(SwordWeapon swordWeapon)
-    {
-        yield return new WaitForSeconds(swordWeapon.BigSwordClip.length);
-        swordWeapon.Animator.SetBool("BigSword", false);
-        CustomMonoBehavior.SkillableObject.StopSkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
-        
-        yield return new WaitForSeconds(1);
-        swordWeapon.transform.parent.gameObject.SetActive(false);
-        swordWeapon.transform.localScale = Vector3.one;
-    }
-
-    IEnumerator StopSummon()
-    {
-        yield return new WaitForSeconds(CustomMonoBehavior.SkillableObject.CastSkillBlownDown.length);
-
-        CustomMonoBehavior.Animator.SetBool("CastSkillBlownDown", false);
     }
 
     [SerializeField] private Vector3[] thousandSwordOriginalRotation = {new Vector3(-45, -90, 90), new Vector3(-90, 0, 0), new Vector3(-45, 90, -90)};

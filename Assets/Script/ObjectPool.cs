@@ -110,6 +110,24 @@ public class ObjectPool
 
         return null;
     }
+
+    public List<PoolObject> PickNWithoutActive(int n)
+    {
+        int count = 0;
+        List<PoolObject> poolObjects = new List<PoolObject>();
+        for (int i=0;i<pool.Count;i++)
+        {
+            if (count >= n) return poolObjects;
+
+            if (!pool[i].GameObject.activeSelf)
+            {
+                poolObjects.Add(pool[i]);
+                count++;
+            }
+        }
+
+        return null;
+    }
 }
 
 public class PoolArgument
@@ -132,7 +150,11 @@ public class PoolObject
     private GameObject gameObject;
     private Weapon weapon;
     private GameEffect gameEffect;
+    private SwordWeapon swordWeapon;
+    private SkeletonSwordWeapon skeletonSwordWeapon;
     public GameObject GameObject { get => gameObject; set => gameObject = value; }
     public Weapon Weapon { get => weapon; set => weapon = value; }
     public GameEffect GameEffect { get => gameEffect; set => gameEffect = value; }
+    public SkeletonSwordWeapon SkeletonSwordWeapon { get => skeletonSwordWeapon; set => skeletonSwordWeapon = value; }
+    public SwordWeapon SwordWeapon { get => swordWeapon; set => swordWeapon = value; }
 }

@@ -6,6 +6,12 @@
             "subSkillName": "SwordSkillSummonBigSword",
             "functionName": "Trigger",
             "keybind":"1"
+        },
+        {
+            "skillName": "SwordSkill",
+            "subSkillName": "SwordSkillThousandSword",
+            "functionName": "Trigger",
+            "keybind":"2"
         }
     ]
 }
