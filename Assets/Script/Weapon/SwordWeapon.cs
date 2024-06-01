@@ -25,7 +25,8 @@ public class SwordWeapon : Weapon
 
     public override void StopAttack()
     {
-        base.StopAttack();
+        attackTrail.Clear();
         attackTrail.enabled = false;
+        base.StopAttack();
     }
 }

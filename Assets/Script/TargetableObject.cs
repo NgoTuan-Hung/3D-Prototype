@@ -19,10 +19,6 @@ public class TargetableObject : MonoBehaviour
     public GameObject BodyAimSourceObjectFirstRotate { get => bodyAimSourceObjectFirstRotate; set => bodyAimSourceObjectFirstRotate = value; }
     public GameObject BodyRotationSourceObject { get => bodyRotationSourceObject; set => bodyRotationSourceObject = value; }
     public TargetChecker TargetChecker { get => targetChecker; set => targetChecker = value; }
-    public Vector3 TargetHandler_direction { get => targetHandler_direction; set => targetHandler_direction = value; }
-    public Vector3 TargetHandler_angle { get => targetHandler_angle; set => targetHandler_angle = value; }
-    public Vector3 TargetHandler_tempRotation { get => targetHandler_tempRotation; set => targetHandler_tempRotation = value; }
-
     private void Start() 
     {
         GameObject bodyAimSourceObjectRoot = transform.Find("BodyAimSourceObjectRoot").gameObject;
@@ -37,17 +33,6 @@ public class TargetableObject : MonoBehaviour
     {
         isTarget = true;
         StartCoroutine(TargetHandler());
-
-        #region old-code
-        //animator.SetBool("Target", true);
-        //cameraDelegate?.Invoke(currentTarget);
-
-        // var weightedTransformArray = multiAimConstraintData.sourceObjects;
-        // weightedTransformArray.SetTransform(0, currentTarget.transform);
-        // multiAimConstraintData.sourceObjects = weightedTransformArray;
-        // multiAimConstraint.data = multiAimConstraintData;
-        // rigBuilder.Build();
-        #endregion
     }
 
     [SerializeField] private Vector3 targetHandler_direction;

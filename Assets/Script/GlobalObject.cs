@@ -43,6 +43,11 @@ public class GlobalObject : Singleton<GlobalObject>
         // searched.UpdateHealth(10);
     }
 
+    public CustomMonoBehavior GetCustomMonoBehavior(GameObject gameObject)
+    {
+        return utilObject.CustomMonoBehaviorBinarySearch(customMonoBehaviors, gameObject.GetInstanceID());
+    }
+
     // Start is called before the first frame update
     void Start()
     {

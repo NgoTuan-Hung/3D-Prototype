@@ -16,7 +16,6 @@ public class SkillableObject : MonoBehaviour
     [SerializeField] private bool canAttack = true;
     private CustomMonoBehavior customMonoBehavior;
     private PlayerScript playerScript;
-    private GameObject skillCastOriginPoint;
     private UtilObject utilObject = new UtilObject();
     private AnimationClip castSkillBlownDown;
     private int animatorIsUsingSkill = 0;
@@ -24,7 +23,6 @@ public class SkillableObject : MonoBehaviour
     public bool IsAttack { get => isAttack; set => isAttack = value; }
     public bool CanAttack { get => canAttack; set => canAttack = value; }
     public PlayerScript PlayerScript { get => playerScript; set => playerScript = value; }
-    public GameObject SkillCastOriginPoint { get => skillCastOriginPoint; set => skillCastOriginPoint = value; }
     public UtilObject UtilObject { get => utilObject; set => utilObject = value; }
     public AnimationClip CastSkillBlownDown { get => castSkillBlownDown; set => castSkillBlownDown = value; }
     public int AnimatorIsUsingSkill { get => animatorIsUsingSkill; set => animatorIsUsingSkill = value; }
@@ -46,7 +44,6 @@ public class SkillableObject : MonoBehaviour
             LoadPlayerSkillData();
 
             castSkillBlownDown = CustomMonoBehavior.Animator.runtimeAnimatorController.animationClips.FirstOrDefault((animatorClip) => animatorClip.name.Equals("CastSkillBlowDown"));
-            skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject;
         }
         else
         {

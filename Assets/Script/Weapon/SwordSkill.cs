@@ -63,7 +63,7 @@ public class SwordSkill : WeaponSkill
         SwordWeapon swordWeapon;
         Transform swordWeaponParent1;
         
-        GameObject target = CustomMonoBehavior.SkillableObject.PlayerScript.TargetableObject.TargetChecker.NearestTarget;
+        GameObject target = CustomMonoBehavior.PlayerScript.TargetableObject.TargetChecker.NearestTarget.SkillCastOriginPoint;
         CustomMonoBehavior.Animator.SetBool("HandUpCast", true);
         CustomMonoBehavior.Animator.Play("UpperBody.HandUpCast", 1, 0);
         CustomMonoBehavior.SkillableObject.UseOnlySkillAnimator((int)SkillableObject.SkillID.ThousandSword);
@@ -73,7 +73,7 @@ public class SwordSkill : WeaponSkill
             swordWeapon.CollideAndDamage.ColliderDamage = 20f;
             swordWeaponParent1 = swordWeapon.transform.parent;
             swordWeaponParent1.transform.rotation = Quaternion.Euler(thousandSwordOriginalRotation[i]);
-            swordWeaponParent1.position = CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position;
+            swordWeaponParent1.position = CustomMonoBehavior.SkillCastOriginPoint.transform.position;
             swordWeapon.FlyingTrail.enabled = true;
             swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
             swordWeapon.Animator.SetBool("ThousandSword", true);

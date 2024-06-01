@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3336132723613366635}
   - component: {fileID: 4899582059188718524}
   - component: {fileID: 8259729005127527207}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TargetChecker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -66,6 +66,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa826e4cc42f00346a4b151c7181149b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nearestTarget: {fileID: 0}
-  shortestDistance: 2.1474836e+9
-  tempDistance: 0

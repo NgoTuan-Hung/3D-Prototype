@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class TargetChecker : MonoBehaviour
 {
-    private GameObject nearestTarget;
+    private CustomMonoBehavior nearestTarget;
     private float shortestDistance = int.MaxValue;
     private float tempDistance;
 
-    public GameObject NearestTarget { get => nearestTarget; set => nearestTarget = value; }
+    public CustomMonoBehavior NearestTarget { get => nearestTarget; set => nearestTarget = value; }
     public float ShortestDistance { get => shortestDistance; set => shortestDistance = value; }
     public float TempDistance { get => tempDistance; set => tempDistance = value; }
 
@@ -24,12 +24,17 @@ public class TargetChecker : MonoBehaviour
 
     public void GetNearestTarget(Collider other)
     {
-        tempDistance = Vector3.Distance(transform.position, other.transform.position);
-        if (tempDistance < shortestDistance)
+        CustomMonoBehavior tempCustomMonoBehavior;
+        if ((tempCustomMonoBehavior = GlobalObject.Instance.GetCustomMonoBehavior(other.gameObject)) != null)
         {
-            nearestTarget = other.gameObject;
-            shortestDistance = tempDistance;
+            tempDistance = Vector3.Distance(transform.position, other.transform.position);
+        
+            if (tempDistance < shortestDistance)
+            {
+                nearestTarget = tempCustomMonoBehavior;
+                shortestDistance = tempDistance;
+            }
+            else if (tempCustomMonoBehavior.GetInstanceID() == nearestTarget.GetInstanceID()) shortestDistance = tempDistance;
         }
-        else if (other.gameObject == nearestTarget) shortestDistance = tempDistance;
     }
 }

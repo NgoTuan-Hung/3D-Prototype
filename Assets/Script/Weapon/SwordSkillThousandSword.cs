@@ -26,7 +26,7 @@ class SwordSkillThousandSword : WeaponSubSkill
         List<PoolObject> freePoolObjects = freeObjectPool.Pick(3);
         SwordWeapon swordWeapon;
 
-        GameObject target = CustomMonoBehavior.PlayerScript.TargetableObject.TargetChecker.NearestTarget;
+        GameObject target = CustomMonoBehavior.PlayerScript.TargetableObject.TargetChecker.NearestTarget.SkillCastOriginPoint;
         //CustomMonoBehavior.Animator.SetBool("HandUpCast", true);
         //CustomMonoBehavior.Animator.Play("UpperBody.HandUpCast", 1, 0);
         for (int i = 0; i < timers.Length; i++)
@@ -52,24 +52,21 @@ class SwordSkillThousandSword : WeaponSubSkill
         Vector3 targetVector; 
         float targetDistance = Vector3.Distance
         (
-            CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position
+            CustomMonoBehavior.SkillCastOriginPoint.transform.position
             , target.transform.position
         );
 
-        A = CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position;
-        freeObject.transform.position = CustomMonoBehavior.SkillableObject.SkillCastOriginPoint.transform.position;
+        A = CustomMonoBehavior.SkillCastOriginPoint.transform.position;
+        freeObject.transform.position = A;
         targetVector = target.transform.position - freeObject.transform.position; 
-        freeObject.transform.rotation = Quaternion.LookRotation
-        (
-            targetVector
-        );
+        freeObject.transform.rotation = Quaternion.LookRotation(targetVector);
         freeObject.transform.position = freeObject.transform.TransformPoint
         (
             midPointPosition.x,
             midPointPosition.y,
             midPointPosition.z * targetDistance
         );
-        freeObject.transform.RotateAround(target.transform.position, targetVector, Random.Range(0, 360));
+        freeObject.transform.RotateAround(target.transform.position, targetVector, Random.Range(-90, 90));
         B = freeObject.transform.position;
         C = target.transform.position;
 

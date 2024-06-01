@@ -115,3 +115,13 @@ public class CameraMovement : MonoBehaviour
         PlayerScript.cameraDelegate -= Target;
     }
 }
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+        //animator.SetBool("Target", true);
+        //cameraDelegate?.Invoke(currentTarget);
+
+        // var weightedTransformArray = multiAimConstraintData.sourceObjects;
+        // weightedTransformArray.SetTransform(0, currentTarget.transform);
+        // multiAimConstraintData.sourceObjects = weightedTransformArray;
+        // multiAimConstraint.data = multiAimConstraintData;
+        // rigBuilder.Build();

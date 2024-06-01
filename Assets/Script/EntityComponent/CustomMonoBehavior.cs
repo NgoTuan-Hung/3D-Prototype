@@ -16,6 +16,7 @@ public class CustomMonoBehavior : MonoBehaviour
     private MoveToTarget moveToTarget;
     private MeleeSimpleAttackWhenNear meleeSimpleAttackWhenNear;
     private PlayerScript playerScript;
+    private GameObject skillCastOriginPoint;
     bool rigidbodyBool = false;
     bool skillableObjectBool = false;
     bool animatorBool = false;
@@ -24,6 +25,7 @@ public class CustomMonoBehavior : MonoBehaviour
     bool meleeSimpleAttackWhenNearBool = false;
     bool playerInputSystemBool = false;
     bool playerScriptBool = false;
+    bool skillCastOriginPointBool = false;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurentHealth { get => curentHealth; set => curentHealth = value; }
     public string EntityType { get => entityType; set => entityType = value; }
@@ -43,6 +45,8 @@ public class CustomMonoBehavior : MonoBehaviour
     public bool PlayerInputSystemBool { get => playerInputSystemBool; set => playerInputSystemBool = value; }
     public bool PlayerScriptBool { get => playerScriptBool; set => playerScriptBool = value; }
     public PlayerScript PlayerScript { get => playerScript; set => playerScript = value; }
+    public GameObject SkillCastOriginPoint { get => skillCastOriginPoint; set => skillCastOriginPoint = value; }
+    public bool SkillCastOriginPointBool { get => skillCastOriginPointBool; set => skillCastOriginPointBool = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -57,6 +61,8 @@ public class CustomMonoBehavior : MonoBehaviour
         if (TryGetComponent<MoveToTarget>(out moveToTarget)) moveToTargetBool = true;
         if (TryGetComponent<MeleeSimpleAttackWhenNear>(out meleeSimpleAttackWhenNear)) meleeSimpleAttackWhenNearBool = true;
         if (TryGetComponent<PlayerScript>(out playerScript)) playerScriptBool = true;
+
+        if ((skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject) != null) skillCastOriginPointBool = true;
     }
 
     public void UpdateHealth(float value)
