@@ -19,7 +19,7 @@ class SwordSkillThousandSword : WeaponSubSkill
     private Vector3 A;
     private Vector3 B;
     private Vector3 C;
-    [SerializeField] private float[] timers = {0f, 1f, 2f};
+    [SerializeField] private float[] timers = {0f, 0.5f, 1f};
     public void Trigger(InputAction.CallbackContext callbackContext)
     {
         List<PoolObject> weaponPoolObjects = WeaponPool.PickNWithoutActive(3);
@@ -32,27 +32,23 @@ class SwordSkillThousandSword : WeaponSubSkill
         for (int i = 0; i < timers.Length; i++)
         {
             swordWeapon = (SwordWeapon)weaponPoolObjects[i].Weapon;
-            
-            swordWeapon.transform.parent.gameObject.SetActive(true);
-            Debug.Log("swordWeapon : " + swordWeapon.CollideAndDamage.ColliderDamage);            
 
             StartCoroutine(Flying(timers[i], swordWeapon, freePoolObjects[i].GameObject, target));
         }
     }
 
-    // todo : set freeobject as child
-    // turn off flying trail
-    private Vector3 midPointPosition = new Vector3(0, 2, 1);
+    // todo :
+    [SerializeField] private Vector3 midPointPosition = new Vector3(0, 4, 1);
+    [SerializeField] private float timeScale = 2f;
     public IEnumerator Flying(float timer, SwordWeapon swordWeapon, GameObject freeObject, GameObject target)
     {
         yield return new WaitForSeconds(timer);
-        swordWeapon.gameObject.SetActive(true);
+        Transform swordWeaponParent = swordWeapon.transform.parent;
+        swordWeaponParent.gameObject.SetActive(true);
         swordWeapon.CollideAndDamage.ColliderDamage = 20f;
-        swordWeapon.FlyingTrail.enabled = true;
         swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
         swordWeapon.Animator.SetBool("ThousandSword", true);
 
-        Transform swordWeaponParent = swordWeapon.transform.parent;
         Vector3 targetVector; 
         float targetDistance = Vector3.Distance
         (
@@ -77,14 +73,19 @@ class SwordSkillThousandSword : WeaponSubSkill
         B = freeObject.transform.position;
         C = target.transform.position;
 
-        float t = 0;
+        swordWeapon.FlyingTrail.enabled = true;
+        swordWeapon.FlyingTrail.Clear();
+        float t = 0, realTimeIncrement = Time.fixedDeltaTime * timeScale;
+        Vector3 prevPosition;
         while (t < 1)
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
+            prevPosition = swordWeaponParent.position;
             // move it from a to c using bezier curve with mid point b
             swordWeaponParent.position = Mathf.Pow(1 - t, 2) * A + 2 * (1 - t) * t * B + Mathf.Pow(t, 2) * C;
-            t += Time.fixedDeltaTime;
+            swordWeaponParent.rotation = Quaternion.LookRotation(swordWeaponParent.position - prevPosition);
+            t += realTimeIncrement;
         }
 
         swordWeapon.Animator.SetBool("ThousandSword", false);

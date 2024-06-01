@@ -143,6 +143,7 @@
   <ItemGroup>
     <None Include="Assets\Script\OldCode.txt" />
     <None Include="Assets\Shader\Effect\BigSword\DissolveNoise.shader" />
+    <None Include="Assets\Material\energy.shader" />
     <None Include="Assets\Shader\Effect\BigSword\Add_Fresnel.shader" />
   </ItemGroup>
   <ItemGroup>
