@@ -13,9 +13,7 @@ public class CollideAndDamage : MonoBehaviour
     public List<string> CollideExcludeTags { get => collideExcludeTags; set => collideExcludeTags = value; }
 
     public virtual void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("CollideAndDamage OnTriggerEnter");
-        
+    {   
         if (!collideExcludeTags.Contains(other.gameObject.tag))
         {
             GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);

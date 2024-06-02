@@ -21,22 +21,57 @@ class SwordSkillSummonBigSword : WeaponSubSkill
     public override void Awake()
     {
         base.Awake();
-        skillCast = Instantiate(Resources.Load("BigSwordSkillCast")).GameObject();
-        skillCast.SetActive(false);
+        if (CustomMonoBehavior.EntityType.Equals("Player"))
+        {
+            skillCast = Instantiate(Resources.Load("BigSwordSkillCast")).GameObject();
+            skillCast.SetActive(false);
+        }
         GameObject bigSwordEffectPrefab = Resources.Load("Effect/SummonBigSword") as GameObject;
         bigSwordEffectPool ??= new ObjectPool(bigSwordEffectPrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
+
+        SubSkillChangableAttributes.AddRange(new SubSkillChangableAttribute[] {coolDown});
+
+        SubSkillRequiredParameter = new SubSkillRequiredParameter
+        {
+            Target = true
+        };
+
+        RecommendedAIBehavior.DistanceToTarget = 15f;
     }
 
     public override void Start()
     {
         base.Start();
     }
+
+    [SerializeField] private SubSkillChangableAttribute coolDown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 5f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
     public void Trigger(InputAction.CallbackContext callbackContext)
     {
         if (!isWaiting)
         {
-            StartCoroutine(HandleSummonSwordPlayer());
-        } else isWaiting = false;
+            if (CanUse)
+            {
+                CanUse = false;
+                StartCoroutine(HandleSummonSwordPlayer());
+            }
+        }
+        else isWaiting = false;
+    }
+
+    public override void Trigger(SubSkillParameter subSkillParameter)
+    {
+        if (CanUse)
+        {
+            CanUse = false;
+            HandleSummonSword(subSkillParameter.Target.position);
+            StartCoroutine(BeginCooldown());
+        }
+    }
+
+    public IEnumerator BeginCooldown()
+    {
+        yield return new WaitForSeconds(coolDown.FloatValue);
+        CanUse = true;
     }
 
     Vector3 tempVec;
@@ -52,6 +87,7 @@ class SwordSkillSummonBigSword : WeaponSubSkill
             skillCastAngle = CustomMonoBehavior.PlayerScript.CameraLookPoint.transform.eulerAngles.y;
             skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
         }
+        StartCoroutine(BeginCooldown());
 
         skillCast.SetActive(false);
         CustomMonoBehavior.SkillableObject.UseOnlySkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
@@ -67,6 +103,22 @@ class SwordSkillSummonBigSword : WeaponSubSkill
         CustomMonoBehavior.Animator.Play("UpperBody.CastSkillBlowDown", 1, 0);
         StartCoroutine(StopSummon());
         //StartCoroutine(StopSword(swordWeapon));
+    }
+
+    public void HandleSummonSword(Vector3 target)
+    {
+        skillCastAngle = Quaternion.LookRotation(target - transform.position).eulerAngles.y;
+        PoolObject poolObjectEffect = bigSwordEffectPool.PickOne();
+        GameEffect gameEffect = poolObjectEffect.GameEffect;
+        gameEffect.ParticleSystemEvent.particleSystemEventDelegate += () => poolObjectEffect.GameObject.SetActive(false);
+
+        gameEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
+        gameEffect.transform.position = transform.position;
+        gameEffect.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
+        
+        // CustomMonoBehavior.Animator.SetBool("CastSkillBlownDown", true);
+        // CustomMonoBehavior.Animator.Play("UpperBody.CastSkillBlowDown", 1, 0);
+        //StartCoroutine(StopSummon());
     }
 
     // public IEnumerator StopSword(SwordWeapon swordWeapon)

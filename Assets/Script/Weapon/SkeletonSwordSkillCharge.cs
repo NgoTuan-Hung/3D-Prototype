@@ -3,12 +3,12 @@ using UnityEngine;
 
 class SkeletonSwordSkillCharge : WeaponSubSkill
 {
-    SubSkillChangableAttribute chargeCooldown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 3f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
-    SubSkillChangableAttribute chargeSpeed = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 40f, SubSkillChangableAttribute.SubSkillAttributeType.Speed);
+    [SerializeField] SubSkillChangableAttribute chargeCooldown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 3f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
+    [SerializeField] SubSkillChangableAttribute chargeSpeed = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 40f, SubSkillChangableAttribute.SubSkillAttributeType.Speed);
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
         SubSkillChangableAttributes.AddRange(new SubSkillChangableAttribute[] {ChargeCooldown1, ChargeSpeed, ChargeDistance});
 
         SubSkillRequiredParameter = new SubSkillRequiredParameter
@@ -20,7 +20,12 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         SubSkillCondition.StopMoving = true;
         SubSkillCondition.StopRotating = true;
     }
-    SubSkillChangableAttribute chargeDistance = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 10f, SubSkillChangableAttribute.SubSkillAttributeType.Distance);
+
+    public override void Start()
+    {
+        base.Start();
+    }
+    [SerializeField] SubSkillChangableAttribute chargeDistance = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 10f, SubSkillChangableAttribute.SubSkillAttributeType.Distance);
     float chargedDistance;
     float chargeDistanceOverTime;
     Vector3 chargeTemp;
@@ -71,10 +76,10 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         skeletonSwordWeapon.StopChargeAttack();
         finishSkillDelegate?.Invoke();
         finishSkillDelegate = null;
-        StartCoroutine(ChargeCooldown());
+        StartCoroutine(BeginCooldown());
     }
 
-    IEnumerator ChargeCooldown()
+    IEnumerator BeginCooldown()
     {
         yield return new WaitForSeconds(chargeCooldown.FloatValue);
 
@@ -88,10 +93,5 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
 
             StartCoroutine(HandleCharge(subSkillParameter.Target));
         }
-    }
-
-    private void FixedUpdate() 
-    {
-    
     }
 }

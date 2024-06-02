@@ -23,7 +23,7 @@ public class MoveToTarget : EntityAction
         base.Awake();
         MoveSpeed = 1f;
         distanceToStopMove = 1f;
-        target = GameObject.Find("Player").transform;
+        target = GameObject.Find("Player").transform.Find("SkillCastOriginPoint");
     }
 
     public override void Start()

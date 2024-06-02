@@ -36,7 +36,6 @@ public class SkillableObject : MonoBehaviour
         //     gameObject.AddComponent(weaponSkill.GetType());
         // });
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-        Debug.Log(customMonoBehavior.AllyTags[0]);
         
         if (customMonoBehavior.EntityType.Equals("Player"))
         {

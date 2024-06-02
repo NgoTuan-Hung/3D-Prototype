@@ -26,9 +26,6 @@ public class ObjectPool
             pool.Add(poolObject);
         }
 
-        Debug.Log(typeof(PoolObject).GetFields(BindingFlags.Instance | BindingFlags.NonPublic).Length);
-        
-
         if (poolArguments.Length > 0)
         {   
             for (int i=0;i<pool.Capacity;i++)

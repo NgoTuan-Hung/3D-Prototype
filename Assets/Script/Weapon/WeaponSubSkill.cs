@@ -66,8 +66,10 @@ public class SubSkillChangableAttribute
 {
     private int intValue;
     private float floatValue;
-    public enum SubSkillAttributeType {Cooldown, Speed, Distance}
-    public enum SubSkillAttributeValueType {Int, Float}
+    private float[] floatArray;
+    private Vector3 vector3;
+    public enum SubSkillAttributeType {Cooldown, Speed, Distance, Timers, Position, TimeScale, CastRange}
+    public enum SubSkillAttributeValueType {Int, Float, FloatArray, Vector3}
     private SubSkillAttributeType subSkillAttributeType;
     private SubSkillAttributeValueType subSkillAttributeValueType;
 
@@ -82,6 +84,12 @@ public class SubSkillChangableAttribute
             case SubSkillAttributeValueType.Float:
                 floatValue = (float)value;
                 break;
+            case SubSkillAttributeValueType.FloatArray:
+                floatArray = (float[])value;
+                break;
+            case SubSkillAttributeValueType.Vector3:
+                vector3 = (Vector3)value;
+                break;
             default: break;
         }
         this.subSkillAttributeType = subSkillAttributeType;
@@ -89,4 +97,6 @@ public class SubSkillChangableAttribute
     private SubSkillAttributeType SubSkillAttributeType1 { get => subSkillAttributeType; set => subSkillAttributeType = value; }
     public int IntValue { get => intValue; set => intValue = value; }
     public float FloatValue { get => floatValue; set => floatValue = value; }
+    public float[] FloatArray { get => floatArray; set => floatArray = value; }
+    public Vector3 Vector3 { get => vector3; set => vector3 = value; }
 }

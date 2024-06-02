@@ -11,6 +11,8 @@ TODOS:
 
 --Some mistake:
 + Be careful of pass by reference in coroutine
++ Be careful of changing the velocity in coroutine
++ 
 
 
 ,

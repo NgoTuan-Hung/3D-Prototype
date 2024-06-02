@@ -8,19 +8,27 @@ public class Weapon : MonoBehaviour
     protected ParticleSystem attackParticleSystem;
     new protected Rigidbody rigidbody;
     protected Rigidbody parentRigidBody;
-    protected TrailRenderer attackTrail;
+    private TrailRenderer attackTrail;
     private CollideAndDamage collideAndDamage;
     protected List<Collider> colliders = new List<Collider>();
+    public delegate void OnEnableDelegate();
+    public OnEnableDelegate onEnableDelegate;
+    public delegate void OnDisableDelegate();
+    public OnDisableDelegate onDisableDelegate;
+    public delegate void AfterEnableDelegate();
+    public AfterEnableDelegate afterEnableDelegate;
+    public delegate void AfterDisableDelegate();
+    public AfterDisableDelegate afterDisableDelegate;
     public Animator Animator { get => animator; set => animator = value; }
     public ParticleSystem AttackParticleSystem { get => attackParticleSystem; set => attackParticleSystem = value; }
     public Rigidbody Rigidbody { get => rigidbody; set => rigidbody = value; }
     public Rigidbody ParentRigidBody { get => parentRigidBody; set => parentRigidBody = value; }
     public List<Collider> Colliders { get => colliders; set => colliders = value; }
     public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
+    public TrailRenderer AttackTrail { get => attackTrail; set => attackTrail = value; }
 
     public virtual void Awake() 
     {
-        Debug.Log("Weapon Awake");
         animator = GetComponent<Animator>();
         
         rigidbody = GetComponent<Rigidbody>();
@@ -49,6 +57,7 @@ public class Weapon : MonoBehaviour
 
     public virtual void StopAttack()
     {
+        Debug.Log("Stop Attack Called");
         animator.SetBool("Attack", false);
         transform.parent.gameObject.SetActive(false);
     }

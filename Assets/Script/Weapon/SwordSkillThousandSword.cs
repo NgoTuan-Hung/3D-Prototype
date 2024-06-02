@@ -5,11 +5,27 @@ using UnityEngine.InputSystem;
 class SwordSkillThousandSword : WeaponSubSkill
 {
     [SerializeField] private static ObjectPool freeObjectPool {get; set;}
+    public SubSkillChangableAttribute CoolDown { get => coolDown; set => coolDown = value; }
+    public SubSkillChangableAttribute CastRange { get => castRange; set => castRange = value; }
+    public SubSkillChangableAttribute Timers { get => timers; set => timers = value; }
+    public SubSkillChangableAttribute MidPointPosition { get => midPointPosition; set => midPointPosition = value; }
+    public SubSkillChangableAttribute TimeScale { get => timeScale; set => timeScale = value; }
+
+    [SerializeField] private SubSkillChangableAttribute coolDown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 3f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
+    [SerializeField] private SubSkillChangableAttribute castRange = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 20f, SubSkillChangableAttribute.SubSkillAttributeType.CastRange);
     public override void Awake()
     {
         base.Awake();
         GameObject freeObjectPrefab = Resources.Load("FreeObject") as GameObject;
         freeObjectPool ??= new ObjectPool(freeObjectPrefab, 20, new PoolArgument(typeof(Transform), PoolArgument.WhereComponent.Self));
+        SubSkillChangableAttributes.AddRange(new SubSkillChangableAttribute[] {coolDown, castRange, timers, midPointPosition, timeScale});
+
+        SubSkillRequiredParameter = new SubSkillRequiredParameter
+        {
+            Target = true
+        };
+
+        RecommendedAIBehavior.DistanceToTarget = castRange.FloatValue;
     }
     
     public override void Start()
@@ -19,32 +35,68 @@ class SwordSkillThousandSword : WeaponSubSkill
     private Vector3 A;
     private Vector3 B;
     private Vector3 C;
-    [SerializeField] private float[] timers = {0f, 0.5f, 1f};
+    [SerializeField] private SubSkillChangableAttribute timers = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.FloatArray, new float[] {0f, 0.5f, 1f}, SubSkillChangableAttribute.SubSkillAttributeType.Timers);
+
     public void Trigger(InputAction.CallbackContext callbackContext)
     {
-        List<PoolObject> weaponPoolObjects = WeaponPool.PickNWithoutActive(3);
-        List<PoolObject> freePoolObjects = freeObjectPool.Pick(3);
-        SwordWeapon swordWeapon;
-
-        GameObject target = CustomMonoBehavior.PlayerScript.TargetableObject.TargetChecker.NearestTarget.SkillCastOriginPoint;
-        //CustomMonoBehavior.Animator.SetBool("HandUpCast", true);
-        //CustomMonoBehavior.Animator.Play("UpperBody.HandUpCast", 1, 0);
-        for (int i = 0; i < timers.Length; i++)
+        if (CanUse)
         {
-            swordWeapon = (SwordWeapon)weaponPoolObjects[i].Weapon;
+            GameObject target = CustomMonoBehavior.PlayerScript.TargetableObject.TargetChecker.NearestTarget.SkillCastOriginPoint;
 
-            StartCoroutine(Flying(timers[i], swordWeapon, freePoolObjects[i].GameObject, target));
+            if (Vector3.Distance(CustomMonoBehavior.SkillCastOriginPoint.transform.position, target.transform.position) < castRange.FloatValue)
+            {
+                CanUse = false;
+
+                //CustomMonoBehavior.Animator.SetBool("HandUpCast", true);
+                //CustomMonoBehavior.Animator.Play("UpperBody.HandUpCast", 1, 0);
+                for (int i = 0; i < timers.FloatArray.Length; i++)
+                {
+                    StartCoroutine(Flying(timers.FloatArray[i], target));
+                }
+
+                StartCoroutine(BeginCooldown());
+            }
         }
     }
 
+    public override void Trigger(SubSkillParameter subSkillParameter)
+    {
+        if (CanUse)
+        {
+            GameObject target = subSkillParameter.Target.gameObject;
+
+            if (Vector3.Distance(CustomMonoBehavior.SkillCastOriginPoint.transform.position, target.transform.position) < castRange.FloatValue)
+            {
+                CanUse = false;
+
+                //CustomMonoBehavior.Animator.SetBool("HandUpCast", true);
+                //CustomMonoBehavior.Animator.Play("UpperBody.HandUpCast", 1, 0);
+                for (int i = 0; i < timers.FloatArray.Length; i++)
+                {
+                    StartCoroutine(Flying(timers.FloatArray[i], target));
+                }
+
+                StartCoroutine(BeginCooldown());
+            }
+        }
+    }
+
+    public IEnumerator BeginCooldown()
+    {
+        yield return new WaitForSeconds(coolDown.FloatValue);
+        CanUse = true;
+    }
+
     // todo :
-    [SerializeField] private Vector3 midPointPosition = new Vector3(0, 4, 1);
-    [SerializeField] private float timeScale = 2f;
-    public IEnumerator Flying(float timer, SwordWeapon swordWeapon, GameObject freeObject, GameObject target)
+    [SerializeField] private SubSkillChangableAttribute midPointPosition = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Vector3, new Vector3(0, 4, 1), SubSkillChangableAttribute.SubSkillAttributeType.Position);
+    [SerializeField] private SubSkillChangableAttribute timeScale = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 2f, SubSkillChangableAttribute.SubSkillAttributeType.TimeScale);
+    public IEnumerator Flying(float timer, GameObject target)
     {
         yield return new WaitForSeconds(timer);
+        SwordWeapon swordWeapon = WeaponPool.PickOne().Weapon as SwordWeapon;
+        GameObject freeObject = freeObjectPool.PickOne().GameObject;
         Transform swordWeaponParent = swordWeapon.transform.parent;
-        swordWeaponParent.gameObject.SetActive(true);
+        swordWeapon.FlyingTrail.enabled = true;
         swordWeapon.CollideAndDamage.ColliderDamage = 20f;
         swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
         swordWeapon.Animator.SetBool("ThousandSword", true);
@@ -62,17 +114,15 @@ class SwordSkillThousandSword : WeaponSubSkill
         freeObject.transform.rotation = Quaternion.LookRotation(targetVector);
         freeObject.transform.position = freeObject.transform.TransformPoint
         (
-            midPointPosition.x,
-            midPointPosition.y,
-            midPointPosition.z * targetDistance
+            midPointPosition.Vector3.x,
+            midPointPosition.Vector3.y,
+            midPointPosition.Vector3.z * targetDistance
         );
         freeObject.transform.RotateAround(target.transform.position, targetVector, Random.Range(-90, 90));
         B = freeObject.transform.position;
         C = target.transform.position;
 
-        swordWeapon.FlyingTrail.enabled = true;
-        swordWeapon.FlyingTrail.Clear();
-        float t = 0, realTimeIncrement = Time.fixedDeltaTime * timeScale;
+        float t = 0, realTimeIncrement = Time.fixedDeltaTime * timeScale.FloatValue;
         Vector3 prevPosition;
         while (t < 1)
         {

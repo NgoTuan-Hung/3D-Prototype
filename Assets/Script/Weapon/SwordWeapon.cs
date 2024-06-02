@@ -20,13 +20,34 @@ public class SwordWeapon : Weapon
     public override void Attack()
     {
         base.Attack();
-        attackTrail.enabled = true;
+        AttackTrail.enabled = true;
     }
 
     public override void StopAttack()
     {
-        attackTrail.Clear();
-        attackTrail.enabled = false;
+        AttackTrail.enabled = false;
         base.StopAttack();
     }
+
+    // public void OnEnable() 
+    // {
+    //     onEnableDelegate?.Invoke();
+    //     onEnableDelegate = null;
+    //     afterEnableDelegate?.Invoke();
+    //     afterEnableDelegate = null;
+    // }
+
+    // public void OnDisable() 
+    // {
+    //     onDisableDelegate?.Invoke();
+    //     onDisableDelegate = null;
+    //     afterDisableDelegate?.Invoke();
+    //     afterDisableDelegate = null;
+    // }
+
+    // public void ClearData()
+    // {
+    //     AttackTrail.Clear();
+    //     flyingTrail.Clear();
+    // }
 }
