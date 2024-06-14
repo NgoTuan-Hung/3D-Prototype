@@ -4,9 +4,11 @@
 - they both modify the same variable move 
 
 TODOS:
-- Fix effect collision
-- Reconstruct summon bigsword and thousand sword skill
-- Make the swordskill available for mob 
+- Fix effect collision ❎
+- Reconstruct summon bigsword and thousand sword skill ✅
+- Make the swordskill available for mob ✅
+- Make dropping system
+- Make dynamic enemies
 
 
 --Some mistake:
