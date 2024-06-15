@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityRandom = UnityEngine.Random;
@@ -101,6 +102,8 @@ public class BinarySearchTree<T> where T : IComparable<T>
 {
     private Node<T> root;
 
+    internal Node<T> Root { get => root; set => root = value; }
+
     public BinarySearchTree()
     {
         root = null;
@@ -108,26 +111,21 @@ public class BinarySearchTree<T> where T : IComparable<T>
 
     public void Insert(T data)
     {
-        root = InsertRecursive(root, data);
+        InsertRecursive(root, data);
     }
 
-    private Node<T> InsertRecursive(Node<T> current, T data)
+    private void InsertRecursive(Node<T> current, T data)
     {
-        if (current == null)
-        {
-            return new Node<T>(data);
-        }
+        current ??= new Node<T>(data);
 
         if (data.CompareTo(current.Data) < 0)
         {
-            current.Left = InsertRecursive(current.Left, data);
+            InsertRecursive(current.Left, data);
         }
         else if (data.CompareTo(current.Data) > 0)
         {
-            current.Right = InsertRecursive(current.Right, data);
+            InsertRecursive(current.Right, data);
         }
-
-        return current;
     }
 
     public T Search(Func<T, int> getKey, int key)
@@ -138,11 +136,13 @@ public class BinarySearchTree<T> where T : IComparable<T>
     // Recursive method to search for a node based on specific attribute
     private T SearchRecursive(Node<T> current, Func<T, int> getKey, int key)
     {
-        if (current == null || getKey(current.Data) == key)
+        if (current == null) return default;
+    
+        if (getKey(current.Data) == key)
         {
             return current.Data;
         }
-
+    
         if (key < getKey(current.Data))
         {
             return SearchRecursive(current.Left, getKey, key);

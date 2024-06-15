@@ -36,10 +36,10 @@ public class GlobalObject : Singleton<GlobalObject>
 
     public void UpdateCustomonoBehaviorHealth(float value, GameObject gameObject)
     {
-        utilObject.CustomMonoBehaviorBinarySearch(customMonoBehaviors, gameObject.GetInstanceID())
-        .UpdateHealth(value);
+        // utilObject.CustomMonoBehaviorBinarySearch(customMonoBehaviors, gameObject.GetInstanceID())
+        // .UpdateHealth(value);
 
-        customMonoBehaviorBinarySearchTree.Search((CustomMonoBehavior customMonoBehavior) => {return customMonoBehavior.gameObject.GetInstanceID();}, gameObject.GetInstanceID()).UpdateHealth(value);
+        customMonoBehaviorBinarySearchTree.Search((CustomMonoBehavior customMonoBehavior) => {return customMonoBehavior.gameObject.GetInstanceID();}, gameObject.GetInstanceID())?.UpdateHealth(value);
         
         // var searched = utilObject.CombatEntityInfoBinarySearch(combatEntityInfos, gameObject.GetInstanceID()).CombatEntity;
         // Debug.Log(searched.CurentHealth + "-" + searched.gameObject.name);
@@ -48,7 +48,7 @@ public class GlobalObject : Singleton<GlobalObject>
 
     public CustomMonoBehavior GetCustomMonoBehavior(GameObject gameObject)
     {
-        return utilObject.CustomMonoBehaviorBinarySearch(customMonoBehaviors, gameObject.GetInstanceID());
+        return customMonoBehaviorBinarySearchTree.Search((CustomMonoBehavior customMonoBehavior) => {return customMonoBehavior.gameObject.GetInstanceID();}, gameObject.GetInstanceID());
     }
 
     // Start is called before the first frame update
@@ -63,6 +63,10 @@ public class GlobalObject : Singleton<GlobalObject>
         {
             customMonoBehaviorBinarySearchTree.Insert(customMonoBehavior);
         });
+
+        Debug.Log(customMonoBehaviorBinarySearchTree.Root.Data.gameObject.GetInstanceID());
+        Debug.Log(customMonoBehaviorBinarySearchTree.Root.Right.Data.gameObject.GetInstanceID());
+        Debug.Log(customMonoBehaviorBinarySearchTree.Root.Left.Data.gameObject.GetInstanceID());
 
         // sort the list by object instance id
         // combatEntityInfos.Sort(combatEntityInfoComparer);
