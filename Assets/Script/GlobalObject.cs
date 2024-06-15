@@ -15,12 +15,11 @@ public class GlobalObject : Singleton<GlobalObject>
     public Vector2 mouseMoved;
     public float mouseSpeed = 5f;
     public PlayerInputSystem playerInputSystem;
-    public String entityDataPath;
+    public string entityDataPath;
     public List<EntityData> entityDatas;
-    public String playerSkillDataPath;
-    public List<CustomMonoBehavior> customMonoBehaviors = new List<CustomMonoBehavior>();
-    public BinarySearchTree<CustomMonoBehavior> customMonoBehaviorBinarySearchTree = new BinarySearchTree<CustomMonoBehavior>();
-    CustomMonoBehaviorComparer customMonoBehaviorComparer = new CustomMonoBehaviorComparer();
+    public string playerSkillDataPath;
+    public BinarySearchTree<CustomMonoBehavior> customMonoBehaviorBinarySearchTree = new();
+    CustomMonoBehaviorComparer customMonoBehaviorComparer = new();
     UtilObject utilObject = new UtilObject();
     public Coroutine nullCoroutine;
     private void Awake() 
@@ -36,9 +35,6 @@ public class GlobalObject : Singleton<GlobalObject>
 
     public void UpdateCustomonoBehaviorHealth(float value, GameObject gameObject)
     {
-        // utilObject.CustomMonoBehaviorBinarySearch(customMonoBehaviors, gameObject.GetInstanceID())
-        // .UpdateHealth(value);
-
         customMonoBehaviorBinarySearchTree.Search((CustomMonoBehavior customMonoBehavior) => {return customMonoBehavior.gameObject.GetInstanceID();}, gameObject.GetInstanceID())?.UpdateHealth(value);
         
         // var searched = utilObject.CombatEntityInfoBinarySearch(combatEntityInfos, gameObject.GetInstanceID()).CombatEntity;
@@ -56,17 +52,12 @@ public class GlobalObject : Singleton<GlobalObject>
     {
         screenResolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
         
-        #region search all combat entities
-        // customMonoBehaviors = FindObjectsByType<CustomMonoBehavior>(FindObjectsSortMode.InstanceID).ToList();
+        #region search all custom monobehavior
 
         FindObjectsByType<CustomMonoBehavior>(FindObjectsSortMode.InstanceID).ToList().ForEach((customMonoBehavior) => 
         {
             customMonoBehaviorBinarySearchTree.Insert(customMonoBehavior);
         });
-
-        Debug.Log(customMonoBehaviorBinarySearchTree.Root.Data.gameObject.GetInstanceID());
-        Debug.Log(customMonoBehaviorBinarySearchTree.Root.Right.Data.gameObject.GetInstanceID());
-        Debug.Log(customMonoBehaviorBinarySearchTree.Root.Left.Data.gameObject.GetInstanceID());
 
         // sort the list by object instance id
         // combatEntityInfos.Sort(combatEntityInfoComparer);
@@ -124,23 +115,6 @@ public class Wrapper<T>
 {
     public List<T> items;
 }
-
-// public class CustomMonoBehaviorInfo
-// {
-//     private GameObject gameObject;
-//     private CustomMonoBehavior customMonoBehavior;
-
-//     public CustomMonoBehaviorInfo(GameObject gameObject, CustomMonoBehavior customMonoBehavior)
-//     {
-//         this.gameObject = gameObject;
-//         this.customMonoBehavior = customMonoBehavior;
-//     }
-
-//     public GameObject GameObject { get => gameObject; set => gameObject = value; }
-//     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
-// }
-
-
 
 public class CustomMonoBehaviorComparer : IComparer<CustomMonoBehavior>
 {

@@ -125,3 +125,20 @@ public class CameraMovement : MonoBehaviour
         // multiAimConstraintData.sourceObjects = weightedTransformArray;
         // multiAimConstraint.data = multiAimConstraintData;
         // rigBuilder.Build();
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+// public class CustomMonoBehaviorInfo
+// {
+//     private GameObject gameObject;
+//     private CustomMonoBehavior customMonoBehavior;
+
+//     public CustomMonoBehaviorInfo(GameObject gameObject, CustomMonoBehavior customMonoBehavior)
+//     {
+//         this.gameObject = gameObject;
+//         this.customMonoBehavior = customMonoBehavior;
+//     }
+
+//     public GameObject GameObject { get => gameObject; set => gameObject = value; }
+//     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
+// }

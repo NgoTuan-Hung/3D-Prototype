@@ -84,7 +84,7 @@ public class UtilObject
     }
 }
 
-class Node<T>
+public class Node<T>
 {
     public T Data;
     public Node<T> Left;
@@ -101,7 +101,6 @@ class Node<T>
 public class BinarySearchTree<T> where T : IComparable<T>
 {
     private Node<T> root;
-
     internal Node<T> Root { get => root; set => root = value; }
 
     public BinarySearchTree()
@@ -111,20 +110,21 @@ public class BinarySearchTree<T> where T : IComparable<T>
 
     public void Insert(T data)
     {
-        InsertRecursive(root, data);
+        InsertRecursive(ref root, data);
     }
 
-    private void InsertRecursive(Node<T> current, T data)
+
+    private void InsertRecursive(ref Node<T> current, T data)
     {
         current ??= new Node<T>(data);
 
         if (data.CompareTo(current.Data) < 0)
         {
-            InsertRecursive(current.Left, data);
+            InsertRecursive(ref current.Left, data);
         }
         else if (data.CompareTo(current.Data) > 0)
         {
-            InsertRecursive(current.Right, data);
+            InsertRecursive(ref current.Right, data);
         }
     }
 
@@ -137,19 +137,32 @@ public class BinarySearchTree<T> where T : IComparable<T>
     private T SearchRecursive(Node<T> current, Func<T, int> getKey, int key)
     {
         if (current == null) return default;
-    
+
         if (getKey(current.Data) == key)
         {
             return current.Data;
         }
-    
-        if (key < getKey(current.Data))
+        else if (key < getKey(current.Data))
         {
             return SearchRecursive(current.Left, getKey, key);
         }
         else
         {
             return SearchRecursive(current.Right, getKey, key);
+        }
+    }
+
+    public void Travel(Action<T> action)
+    {
+        TravelRecursive(root, action);
+    }
+    private void TravelRecursive(Node<T> current, Action<T> action)
+    {
+        if (current != null)
+        {
+            action(current.Data);
+            TravelRecursive(current.Left, action);
+            TravelRecursive(current.Right, action);
         }
     }
 }
