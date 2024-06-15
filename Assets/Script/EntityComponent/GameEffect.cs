@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class GameEffect : MonoBehaviour
 {
     [SerializeField] new private ParticleSystem particleSystem;
     private ParticleSystemEvent particleSystemEvent;
     private bool particleSystemEventBool = false;
+    private VisualEffect visualEffect;
+    private bool visualEffectBool = false;
     private CollideAndDamage collideAndDamage;
     private bool collideAndDamageBool = false;
     [SerializeField] private List<Animator> animators = new List<Animator>();
@@ -15,6 +18,8 @@ public class GameEffect : MonoBehaviour
     public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
     public bool CollideAndDamageBool { get => collideAndDamageBool; set => collideAndDamageBool = value; }
     public List<Animator> Animators { get => animators; set => animators = value; }
+    public VisualEffect VisualEffect { get => visualEffect; set => visualEffect = value; }
+    public bool VisualEffectBool { get => visualEffectBool; set => visualEffectBool = value; }
 
     void Awake()
     {
@@ -29,6 +34,7 @@ public class GameEffect : MonoBehaviour
         }
 
         if ((particleSystemEvent = GetComponentInChildren<ParticleSystemEvent>()) != null) particleSystemEventBool = true;
+        if ((visualEffect = GetComponentInChildren<VisualEffect>()) != null) visualEffectBool = true;
         if ((collideAndDamage = GetComponentInChildren<CollideAndDamage>()) != null) collideAndDamageBool = true;
     }
 

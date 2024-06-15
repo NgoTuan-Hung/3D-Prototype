@@ -82,3 +82,76 @@ public class UtilObject
         #endregion
     }
 }
+
+class Node<T>
+{
+    public T Data;
+    public Node<T> Left;
+    public Node<T> Right;
+
+    public Node(T data)
+    {
+        Data = data;
+        Left = null;
+        Right = null;
+    }
+}
+
+class BinarySearchTree<T> where T : IComparable<T>
+{
+    private Node<T> root;
+
+    public BinarySearchTree()
+    {
+        root = null;
+    }
+
+    public void Insert(T data)
+    {
+        root = InsertRecursive(root, data);
+    }
+
+    private Node<T> InsertRecursive(Node<T> current, T data)
+    {
+        if (current == null)
+        {
+            return new Node<T>(data);
+        }
+
+        if (data.CompareTo(current.Data) < 0)
+        {
+            current.Left = InsertRecursive(current.Left, data);
+        }
+        else if (data.CompareTo(current.Data) > 0)
+        {
+            current.Right = InsertRecursive(current.Right, data);
+        }
+
+        return current;
+    }
+
+    public T Search(Func<T, int> getKey, int key)
+    {
+        return SearchRecursive(root, getKey, key);
+    }
+
+    // Recursive method to search for a node based on specific attribute
+    private T SearchRecursive(Node<T> current, Func<T, int> getKey, int key)
+    {
+        if (current == null || getKey(current.Data) == key)
+        {
+            return current.Data;
+        }
+
+        if (key < getKey(current.Data))
+        {
+            return SearchRecursive(current.Left, getKey, key);
+        }
+        else
+        {
+            return SearchRecursive(current.Right, getKey, key);
+        }
+    }
+}
+
+
