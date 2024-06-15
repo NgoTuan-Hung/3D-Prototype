@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomMonoBehavior : MonoBehaviour
+public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
 {
     [SerializeField] private String entityType;
     [SerializeField] private float maxHealth = 100;
@@ -71,5 +71,10 @@ public class CustomMonoBehavior : MonoBehaviour
 
         if (curentHealth <= 0) {gameObject.SetActive(false); curentHealth = maxHealth;}
         else if (curentHealth > maxHealth) curentHealth = maxHealth;
+    }
+
+    public int CompareTo(CustomMonoBehavior other)
+    {
+        return gameObject.GetInstanceID().CompareTo(other.gameObject.GetInstanceID());
     }
 }

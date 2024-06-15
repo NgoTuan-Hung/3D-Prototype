@@ -97,7 +97,7 @@ class Node<T>
     }
 }
 
-class BinarySearchTree<T> where T : IComparable<T>
+public class BinarySearchTree<T> where T : IComparable<T>
 {
     private Node<T> root;
 
