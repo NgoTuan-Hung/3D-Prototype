@@ -12444,7 +12444,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.19557852, y: 0.80259615, z: 0.36714765, w: -0.42754072}
+  m_LocalRotation: {x: 0.19557855, y: 0.80259615, z: 0.3671476, w: -0.42754084}
   m_LocalPosition: {x: -2.0587845, y: -4.8669996, z: 4.145638}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -56806,7 +56806,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1554390691}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1955785, y: 0.8025962, z: 0.36714762, w: -0.42754075}
+  m_LocalRotation: {x: 0.19557852, y: 0.80259615, z: 0.3671476, w: -0.42754078}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -76362,6 +76362,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2497851565429885137, guid: 2787805d35894964b8cd764b245006d9,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2497851565429885137, guid: 2787805d35894964b8cd764b245006d9,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -76375,10 +76380,20 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3767209685580520422, guid: 2787805d35894964b8cd764b245006d9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5930574429712916519, guid: 2787805d35894964b8cd764b245006d9,
         type: 3}
       propertyPath: m_Name
       value: ThousandSword
+      objectReference: {fileID: 0}
+    - target: {fileID: 5930574429712916519, guid: 2787805d35894964b8cd764b245006d9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6292187407164056388, guid: 2787805d35894964b8cd764b245006d9,
         type: 3}
@@ -76504,6 +76519,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 0}
+  disableAfterTime: 0
+  disableTime: 2
   animators: []
 --- !u!54 &2194219743452121496
 Rigidbody:

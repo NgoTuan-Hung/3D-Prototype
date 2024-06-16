@@ -91,6 +91,7 @@
     <Compile Include="Assets\Script\CameraMovement.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\SerializeException.cs" />
     <Compile Include="Assets\Script\UtilObject.cs" />
+    <Compile Include="Assets\Script\Weapon\SkeletonSwordSkillNonstopThrust.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JSONKeyNotFoundException.cs" />
     <Compile Include="Assets\Script\Weapon\SkillableObject.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JNumberOverflowException.cs" />

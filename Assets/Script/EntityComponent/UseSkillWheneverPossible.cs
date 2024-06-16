@@ -45,13 +45,18 @@ class UseSkillWheneverPossible : EntityAction
     {
         float chance = 0f;
 
-        if (recommendedAIBehavior.DistanceToTarget != 0)
+        if (recommendedAIBehavior.MaxDistanceToTarget != 0)
         {
-            if (CustomMonoBehavior.MoveToTarget.DistanceToTarget < recommendedAIBehavior.DistanceToTarget)
+            if (CustomMonoBehavior.MoveToTarget.DistanceToTarget < recommendedAIBehavior.MaxDistanceToTarget)
             {
-                chance += Random.Range(50, 60);
+                chance += Random.Range(20, 30);
             }
         }  
+        
+        if (CustomMonoBehavior.MoveToTarget.DistanceToTarget > recommendedAIBehavior.MinDistanceToTarget)
+        {
+            chance += Random.Range(20, 30);
+        }
 
         return chance;
     }

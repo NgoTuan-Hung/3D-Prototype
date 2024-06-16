@@ -12,6 +12,8 @@ public class GameEffect : MonoBehaviour
     private bool visualEffectBool = false;
     private CollideAndDamage collideAndDamage;
     private bool collideAndDamageBool = false;
+    [SerializeField] private bool disableAfterTime = false;
+    [SerializeField] private float disableTime = 2f;
     [SerializeField] private List<Animator> animators = new List<Animator>();
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
     internal ParticleSystemEvent ParticleSystemEvent { get => particleSystemEvent; set => particleSystemEvent = value; }
@@ -20,6 +22,8 @@ public class GameEffect : MonoBehaviour
     public List<Animator> Animators { get => animators; set => animators = value; }
     public VisualEffect VisualEffect { get => visualEffect; set => visualEffect = value; }
     public bool VisualEffectBool { get => visualEffectBool; set => visualEffectBool = value; }
+    public bool DisableAfterTime { get => disableAfterTime; set => disableAfterTime = value; }
+    public float DisableTime { get => disableTime; set => disableTime = value; }
 
     void Awake()
     {
@@ -44,6 +48,17 @@ public class GameEffect : MonoBehaviour
         {
             animators.Play("Effect");
         });
+
+        if (disableAfterTime)
+        {
+            StartCoroutine(DisableAfterTimeCoroutine());
+        }
+    }
+
+    public IEnumerator DisableAfterTimeCoroutine()
+    {
+        yield return new WaitForSeconds(disableTime);
+        gameObject.SetActive(false);
     }
 
     public delegate void OnDisableDelegate();

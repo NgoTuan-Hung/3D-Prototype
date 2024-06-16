@@ -25,7 +25,7 @@ class SwordSkillThousandSword : WeaponSubSkill
             Target = true
         };
 
-        RecommendedAIBehavior.DistanceToTarget = castRange.FloatValue;
+        RecommendedAIBehavior.MaxDistanceToTarget = castRange.FloatValue;
     }
     
     public override void Start()

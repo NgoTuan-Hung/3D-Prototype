@@ -45,6 +45,7 @@ public class SkeletonSwordSkill : WeaponSkill
 
         {
             WeaponSubSkills.Add(gameObject.AddComponent<SkeletonSwordSkillCharge>()); WeaponSubSkills[0].WeaponPool = weaponPool;
+            WeaponSubSkills.Add(gameObject.AddComponent<SkeletonSwordSkillNonstopThrust>()); WeaponSubSkills[1].WeaponPool = weaponPool;
         }
     }
 

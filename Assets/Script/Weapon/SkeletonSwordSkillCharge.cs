@@ -16,7 +16,8 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
             Target = true
         };
 
-        RecommendedAIBehavior.DistanceToTarget = ChargeDistance.FloatValue;
+        RecommendedAIBehavior.MaxDistanceToTarget = ChargeDistance.FloatValue;
+        RecommendedAIBehavior.MinDistanceToTarget = 7f;
         SubSkillCondition.StopMoving = true;
         SubSkillCondition.StopRotating = true;
     }
@@ -39,7 +40,7 @@ class SkeletonSwordSkillCharge : WeaponSubSkill
         set
         {
             chargeDistance = value; 
-            RecommendedAIBehavior.DistanceToTarget = value.FloatValue;
+            RecommendedAIBehavior.MaxDistanceToTarget = value.FloatValue;
         } 
     }
     public float ChargedDistance { get => chargedDistance; set => chargedDistance = value; }

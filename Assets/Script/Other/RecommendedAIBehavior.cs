@@ -1,6 +1,8 @@
 class RecommendedAIBehavior
 {
-    private float distanceToTarget = 0f;
+    private float maxDistanceToTarget = 0f;
+    private float minDistanceToTarget = 0f;
 
-    public float DistanceToTarget { get => distanceToTarget; set => distanceToTarget = value; }
+    public float MaxDistanceToTarget { get => maxDistanceToTarget; set => maxDistanceToTarget = value; }
+    public float MinDistanceToTarget { get => minDistanceToTarget; set => minDistanceToTarget = value; }
 }

@@ -36,7 +36,7 @@ class SwordSkillSummonBigSword : WeaponSubSkill
             Target = true
         };
 
-        RecommendedAIBehavior.DistanceToTarget = 15f;
+        RecommendedAIBehavior.MaxDistanceToTarget = 15f;
     }
 
     public override void Start()
