@@ -17,11 +17,11 @@ Shader "Custom/GhostShader"
 		Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
 		Blend SrcAlpha OneMinusSrcAlpha		
 
-		Pass
-		{
-			ZWrite On
-			ColorMask 0
-		}
+		// Pass
+		// {
+		// 	ZWrite On
+		// 	ColorMask 0
+		// }
 
 		
 		Pass
