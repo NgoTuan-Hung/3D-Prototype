@@ -51,5 +51,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "3D-Prototype.sln"
+    "dotnet.defaultSolution": "3D-Prototype.sln",
+    "vstuc.refreshOnSave": true
 }
