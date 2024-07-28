@@ -75,6 +75,7 @@ public class MoveToTarget : EntityAction
         else
         {
             CustomMonoBehavior.Animator.SetBool("Move", false);
+            CustomMonoBehavior.Rigidbody.velocity = Vector3.zero;
         }
     }
 }
