@@ -17,6 +17,10 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private MeleeSimpleAttackWhenNear meleeSimpleAttackWhenNear;
     private PlayerScript playerScript;
     private GameObject skillCastOriginPoint;
+    private FeetChecker feetChecker;
+    private JumpableObject jumpableObject;
+    private bool jumpableObjectBool = false;
+    private bool feetCheckerBool = false;
     bool rigidbodyBool = false;
     bool skillableObjectBool = false;
     bool animatorBool = false;
@@ -47,6 +51,10 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public PlayerScript PlayerScript { get => playerScript; set => playerScript = value; }
     public GameObject SkillCastOriginPoint { get => skillCastOriginPoint; set => skillCastOriginPoint = value; }
     public bool SkillCastOriginPointBool { get => skillCastOriginPointBool; set => skillCastOriginPointBool = value; }
+    public FeetChecker FeetChecker { get => feetChecker; set => feetChecker = value; }
+    public bool FeetCheckerBool { get => feetCheckerBool; set => feetCheckerBool = value; }
+    public JumpableObject JumpableObject { get => jumpableObject; set => jumpableObject = value; }
+    public bool JumpableObjectBool { get => jumpableObjectBool; set => jumpableObjectBool = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -63,6 +71,8 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         if (TryGetComponent<PlayerScript>(out playerScript)) playerScriptBool = true;
 
         if ((skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject) != null) skillCastOriginPointBool = true;
+        if ((feetChecker = GetComponentInChildren<FeetChecker>()) != null) feetCheckerBool = true;
+        if ((jumpableObject = GetComponentInChildren<JumpableObject>()) != null) jumpableObjectBool = true;
     }
 
     public void UpdateHealth(float value)
