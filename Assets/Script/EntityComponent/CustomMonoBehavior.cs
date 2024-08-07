@@ -19,6 +19,17 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private GameObject skillCastOriginPoint;
     private FeetChecker feetChecker;
     private JumpableObject jumpableObject;
+    private HumanLikeAnimatorBrain humanLikeAnimatorBrain;
+    private new Camera camera;
+    private GameObject cameraPoint;
+    private GameObject lookAtConstraintObjectParent;
+    private GameObject lookAtConstraintObject;
+    private Vector3 cameraPointToCameraVector;
+    private GameObject centerPoint;
+    private bool canRotateThisFrame;
+    private bool isControlByPlayer = false;
+    private bool cameraBool = false;
+    private bool humanLikeAnimatorBrainBool = false;
     private bool jumpableObjectBool = false;
     private bool feetCheckerBool = false;
     bool rigidbodyBool = false;
@@ -55,6 +66,17 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public bool FeetCheckerBool { get => feetCheckerBool; set => feetCheckerBool = value; }
     public JumpableObject JumpableObject { get => jumpableObject; set => jumpableObject = value; }
     public bool JumpableObjectBool { get => jumpableObjectBool; set => jumpableObjectBool = value; }
+    public HumanLikeAnimatorBrain HumanLikeAnimatorBrain { get => humanLikeAnimatorBrain; set => humanLikeAnimatorBrain = value; }
+    public Camera Camera { get => camera; set => camera = value; }
+    public GameObject CameraPoint { get => cameraPoint; set => cameraPoint = value; }
+    public GameObject LookAtConstraintObjectParent { get => lookAtConstraintObjectParent; set => lookAtConstraintObjectParent = value; }
+    public GameObject LookAtConstraintObject { get => lookAtConstraintObject; set => lookAtConstraintObject = value; }
+    public Vector3 CameraPointToCameraVector { get => cameraPointToCameraVector; set => cameraPointToCameraVector = value; }
+    public bool CameraBool { get => cameraBool; set => cameraBool = value; }
+    public bool HumanLikeAnimatorBrainBool { get => humanLikeAnimatorBrainBool; set => humanLikeAnimatorBrainBool = value; }
+    public bool CanRotateThisFrame { get => canRotateThisFrame; set => canRotateThisFrame = value; }
+    public bool IsControlByPlayer { get => isControlByPlayer; set => isControlByPlayer = value; }
+    public GameObject CenterPoint { get => centerPoint; set => centerPoint = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -69,10 +91,27 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         if (TryGetComponent<MoveToTarget>(out moveToTarget)) moveToTargetBool = true;
         if (TryGetComponent<MeleeSimpleAttackWhenNear>(out meleeSimpleAttackWhenNear)) meleeSimpleAttackWhenNearBool = true;
         if (TryGetComponent<PlayerScript>(out playerScript)) playerScriptBool = true;
+        if (TryGetComponent<HumanLikeAnimatorBrain>(out humanLikeAnimatorBrain)) humanLikeAnimatorBrainBool = true;
 
         if ((skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject) != null) skillCastOriginPointBool = true;
         if ((feetChecker = GetComponentInChildren<FeetChecker>()) != null) feetCheckerBool = true;
         if ((jumpableObject = GetComponentInChildren<JumpableObject>()) != null) jumpableObjectBool = true;
+
+        if (entityType.Equals("Player"))
+        {
+            camera = Camera.main;
+            cameraBool = true;
+            isControlByPlayer = true;
+        }
+        else
+        {
+            
+        }
+
+        cameraPoint = transform.Find("CameraPoint").gameObject;
+        lookAtConstraintObjectParent = transform.Find("LookAtConstraintObjectParent").gameObject;
+        lookAtConstraintObject = transform.Find("LookAtConstraintObject").gameObject;
+        centerPoint = transform.Find("CenterPoint").gameObject;
     }
 
     public void UpdateHealth(float value)
@@ -86,5 +125,9 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public int CompareTo(CustomMonoBehavior other)
     {
         return gameObject.GetInstanceID().CompareTo(other.gameObject.GetInstanceID());
+    }
+    private void FixedUpdate() 
+    {
+
     }
 }

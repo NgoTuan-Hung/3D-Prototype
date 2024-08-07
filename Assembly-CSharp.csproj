@@ -75,6 +75,7 @@
     <Compile Include="Assets\Script\TargetChecker.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Settings\ParseStringSettings.cs" />
     <Compile Include="Assets\Script\EntityComponent\ParticleSystemEvent.cs" />
+    <Compile Include="Assets\Model\Enemy\Skeleton1\MoveableObject.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\UnknownObjectTypeException.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\ProtectedException.cs" />
     <Compile Include="Assets\Script\Other\PlayerSkillData.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="Assets\Script\TestObject.cs" />
     <Compile Include="Assets\TotalJSON\Examples\SerializeAndDeserialize.cs" />
     <Compile Include="Assets\Script\CameraMovement.cs" />
+    <Compile Include="Assets\Script\EntityComponent\PlayerThirdPersonViewController.cs" />
+    <Compile Include="Assets\Model\Enemy\Skeleton1\MyGameObject1.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\SerializeException.cs" />
     <Compile Include="Assets\Morph\Script\RealMorph.cs" />
     <Compile Include="Assets\Script\UtilObject.cs" />
@@ -101,20 +104,22 @@
     <Compile Include="Assets\TotalJSON\Internal\DebugLogger.cs" />
     <Compile Include="Assets\Script\EntityComponent\GameEffect.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JValueNullException.cs" />
+    <Compile Include="Assets\Model\Enemy\Skeleton1\HumanLikeAnimatorBrain.cs" />
     <Compile Include="Assets\Morph\Script\CameraMovementScript.cs" />
     <Compile Include="Assets\Morph\Script\MyGameObject.cs" />
     <Compile Include="Assets\Script\Weapon\SkeletonSwordSkill.cs" />
     <Compile Include="Assets\Morph\Script\MyGameInputAction.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Attributes\IncludeToJSONSerializeAttribute.cs" />
     <Compile Include="Assets\Script\EntityComponent\CustomMonoBehavior.cs" />
+    <Compile Include="Assets\Model\Enemy\Skeleton1\GroundCheck.cs" />
     <Compile Include="Assets\Morph\Script\MyMeshStructure.cs" />
     <Compile Include="Assets\TotalJSON\Internal\JSONRuntimeDebugContainer.cs" />
     <Compile Include="Assets\Script\GlobalObject.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JNumberFormatException.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JValueTypeException.cs" />
     <Compile Include="Assets\Script\TargetableObject.cs" />
-    <Compile Include="Assets\Script\EntityComponent\JumpRandomly.cs" />
     <Compile Include="Assets\Script\Weapon\SwordWeapon.cs" />
+    <Compile Include="Assets\Model\Enemy\Skeleton1\JumpableObject.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\DeserializeException.cs" />
     <Compile Include="Assets\Script\EntityComponent\CollideAndDamage.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Attributes\ExcludeFromJSONSerializeAttribute.cs" />
@@ -132,7 +137,6 @@
     <Compile Include="Assets\TotalJSON\Scripts\Settings\SerializeSettings.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\JNumber.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\JString.cs" />
-    <Compile Include="Assets\Script\EntityComponent\JumpableObject.cs" />
     <Compile Include="Assets\Script\Other\RecommendedAIBehavior.cs" />
     <Compile Include="Assets\Script\EntityComponent\MoveToTarget.cs" />
     <Compile Include="Assets\TotalJSON\Internal\StringPointer.cs" />
@@ -142,6 +146,7 @@
     <Compile Include="Assets\Script\EntityComponent\UseSkillWheneverPossible.cs" />
     <Compile Include="Assets\Script\PlayerScript.cs" />
     <Compile Include="Assets\Script\ObjectPool.cs" />
+    <Compile Include="Assets\Model\Enemy\Skeleton1\AttackableObject.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Settings\DeserializeSettings.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JSONKeyAlreadyExistsException.cs" />
     <Compile Include="Assets\Morph\Script\BinarySave.cs" />

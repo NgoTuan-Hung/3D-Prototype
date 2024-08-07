@@ -1,0 +1,219 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum State {Idle = 0, Walk = 1, Attack = 2, Jump = 3, Land = 4, Run = 5, CastSpellShort = 6, CastSpellMiddle = 7, CastSpellLong = 8};
+public class HumanLikeAnimatorBrain : MonoBehaviour
+{
+    public MyGameObject1 myGameObject;
+    public bool onAir;
+    public bool prevOnAir = false;
+    public State currentLowerBodyState;
+    public State defaultLowerBodyState = State.Idle;
+    public List<GroundCheck> groundChecks = new List<GroundCheck>();
+    public TransitionRule[][] lowerBodyTransitionRules = new TransitionRule[9][]
+    {
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, true), new TransitionRule(false, true), new TransitionRule(false, true)},
+        new TransitionRule[9] {new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, false), new TransitionRule(true, false), new TransitionRule(true, false)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, false), new TransitionRule(true, false), new TransitionRule(true, false)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
+    };
+    public State currentUpperBodyState;
+    public State defaultUpperBodyState = State.Idle;
+    public TransitionRule[][] upperBodyTransitionRules = new TransitionRule[9][]
+    {
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
+        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)}
+    };
+
+    public bool ChangeState(State newState)
+    {
+        if (currentLowerBodyState != newState)
+        {
+            if (onAir)
+            {
+                if (lowerBodyTransitionRules[(int)currentLowerBodyState][(int)newState].OnAirOutCome)
+                {
+                    PlayLowerState(newState);
+                }
+            }
+            else
+            {
+                if (lowerBodyTransitionRules[(int)currentLowerBodyState][(int)newState].OnGroundOutCome)
+                {
+                    PlayLowerState(newState);
+                }
+            }
+        }
+
+        if (currentUpperBodyState != newState)
+        {
+            if (onAir)
+            {
+                if (upperBodyTransitionRules[(int)currentUpperBodyState][(int)newState].OnAirOutCome)
+                {
+                    PlayUpperState(newState);
+                    return true;
+                }
+            }
+            else
+            {
+                if (upperBodyTransitionRules[(int)currentUpperBodyState][(int)newState].OnGroundOutCome)
+                {
+                    PlayUpperState(newState);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void PlayLowerState(State state)
+    {
+        switch (state)
+        {
+            case State.Idle:
+                myGameObject.animator.Play("Idle", 0, 0);
+                break;
+            case State.Walk:
+                myGameObject.animator.Play("Walk", 0, 0);
+                break;
+            case State.Attack:
+                myGameObject.animator.Play("Attack", 0, 0);
+                break;
+            case State.Jump:
+                myGameObject.animator.Play("Jump", 0, 0);
+                break;
+            case State.Land:
+                myGameObject.animator.Play("Land", 0, 0);
+                break;
+            case State.Run:
+                myGameObject.animator.Play("Run", 0, 0);
+                break;
+            case State.CastSpellShort:
+                myGameObject.animator.Play("CastSpellShort", 0, 0);
+                break;
+            case State.CastSpellMiddle:
+                myGameObject.animator.Play("CastSpellMiddle", 0, 0);
+                break;
+            case State.CastSpellLong:
+                myGameObject.animator.Play("CastSpellLong", 0, 0);
+                break;
+        }
+        currentLowerBodyState = state;
+    }
+
+    public void PlayUpperState(State state)
+    {
+        switch (state)
+        {
+            case State.Idle:
+                myGameObject.animator.Play("Idle", 1, 0);
+                break;
+            case State.Walk:
+                myGameObject.animator.Play("Walk", 1, 0);
+                break;
+            case State.Attack:
+                myGameObject.animator.Play("Attack", 1, 0);
+                break;
+            case State.Jump:
+                myGameObject.animator.Play("Jump", 1, 0);
+                break;
+            case State.Land:
+                myGameObject.animator.Play("Land", 1, 0);
+                break;
+            case State.Run:
+                myGameObject.animator.Play("Run", 1, 0);
+                break;
+            case State.CastSpellShort:
+                myGameObject.animator.Play("CastSpellShort", 1, 0);
+                break;
+            case State.CastSpellMiddle:
+                myGameObject.animator.Play("CastSpellMiddle", 1, 0);
+                break;
+            case State.CastSpellLong:
+                myGameObject.animator.Play("CastSpellLong", 1, 0);
+                break;
+        }
+        currentUpperBodyState = state;
+    }
+
+    public delegate void StopStateDelegate();
+    public StopStateDelegate stopStateDelegate;
+    public void StopState(State state)
+    {
+        if (currentLowerBodyState == state)
+        {
+            if (onAir) myGameObject.animator.Play("Jump", 0, 0);
+            else myGameObject.animator.Play("Idle", 0, 0);
+            currentLowerBodyState = State.Idle;
+        }
+
+        if (currentUpperBodyState == state)
+        {
+            if (onAir) myGameObject.animator.Play("OnAir", 1, 0);
+            else myGameObject.animator.Play("Idle", 1, 0);
+            currentUpperBodyState = State.Idle;
+        }
+
+        stopStateDelegate?.Invoke();
+        stopStateDelegate = null;
+    }
+
+    private void Awake() 
+    {
+        myGameObject = GetComponent<MyGameObject1>();
+    }
+
+    private void FixedUpdate() 
+    {
+        GroundCheck();
+    }
+
+    public float acceptableGroundDistance = 0.05f;
+    public void GroundCheck()
+    {
+        onAir = false;
+        for (int i=0;i<groundChecks.Count;i++)
+        {
+            if (groundChecks[i].hit.distance > acceptableGroundDistance)
+            {
+                onAir = true;
+                break;
+            }
+        }
+        if (!onAir && prevOnAir) {ChangeState(State.Land);}
+        prevOnAir = onAir;
+    }
+
+    public void StopLand()
+    {
+        StopState(State.Land);
+    }
+}
+
+public class TransitionRule
+{
+    public bool OnAirOutCome;
+    public bool OnGroundOutCome;
+
+    public TransitionRule(bool onAirOutCome, bool onGroundOutCome)
+    {
+        OnAirOutCome = onAirOutCome;
+        OnGroundOutCome = onGroundOutCome;
+    }
+}
