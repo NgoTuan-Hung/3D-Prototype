@@ -4,7 +4,9 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
 {
     private CustomMonoBehavior customMonoBehavior;
     private GameObject eyeAtTarget;
-    
+    private bool isLookingAtTarget = false;
+    public bool IsLookingAtTarget { get => isLookingAtTarget; set => isLookingAtTarget = value; }
+
     private void Awake()
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
@@ -18,6 +20,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
 
     private void FixedUpdate()
     {
+        isLookingAtTarget = false;
         SetEyeAtTarget();
         LookAtTarget();
     }
@@ -36,5 +39,6 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         else customMonoBehavior.CanRotateThisFrame = true;
         customMonoBehavior.LookAtConstraintObjectParent.transform.rotation = Quaternion.LookRotation(customMonoBehavior.CameraPointToCameraVector);
         customMonoBehavior.LookAtConstraintObject.transform.position = customMonoBehavior.LookAtConstraintObjectParent.transform.TransformPoint(Vector3.forward);
+        isLookingAtTarget = true;
     }
 }

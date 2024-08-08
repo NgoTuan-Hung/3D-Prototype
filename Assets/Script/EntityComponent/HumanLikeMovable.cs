@@ -1,7 +1,7 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-public class MoveableObject : MonoBehaviour 
+public class HumanLikeMovable : MonoBehaviour 
 {
     private CustomMonoBehavior customMonoBehavior;
     private void Awake() 
@@ -52,6 +52,7 @@ public class MoveableObject : MonoBehaviour
 
     public void Move(Vector3 movement)
     {
+        movement = movement.normalized;
         rotation = movement.z < 0 ? -movement : movement;
         customMonoBehavior.Animator.SetFloat("MoveDirZ", movement.z);
         this.movement = customMonoBehavior.CameraPoint.transform.TransformDirection(movement);
@@ -59,11 +60,12 @@ public class MoveableObject : MonoBehaviour
         this.movement.y = 0;
         if (customMonoBehavior.CanRotateThisFrame) transform.rotation = Quaternion.LookRotation(rotation);
         customMonoBehavior.HumanLikeAnimatorBrain.ChangeState(State.Walk);
-        transform.position += movement * moveSpeedPerFrame;
+        transform.position += this.movement * moveSpeedPerFrame;
     }
 
     public void Run(Vector3 movement)
     {
+        movement = movement.normalized;
         rotation = movement.z < 0 ? -movement : movement;
         customMonoBehavior.Animator.SetFloat("MoveDirZ", movement.z);
         this.movement = customMonoBehavior.CameraPoint.transform.TransformDirection(movement);
@@ -71,7 +73,7 @@ public class MoveableObject : MonoBehaviour
         this.movement.y = 0;
         if (customMonoBehavior.CanRotateThisFrame) transform.rotation = Quaternion.LookRotation(rotation);
         customMonoBehavior.HumanLikeAnimatorBrain.ChangeState(State.Run);
-        transform.position += movement * runSpeedPerFrame;
+        transform.position += this.movement * runSpeedPerFrame;
     }
 
     public void Stop()

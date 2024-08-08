@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1630199, g: 0.035841998, b: 0.16362987, a: 1}
+  m_IndirectSpecularColor: {r: 0.089923166, g: 0.073090605, b: 0.14577529, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -77999,16 +77999,18 @@ GameObject:
   - component: {fileID: 4871536544903534193}
   - component: {fileID: 4630154966219758269}
   - component: {fileID: 9031872664141225549}
-  - component: {fileID: 9031872664141225555}
   - component: {fileID: 9031872664141225554}
   - component: {fileID: 9031872664141225553}
   - component: {fileID: 9031872664141225552}
+  - component: {fileID: 9031872664141225558}
+  - component: {fileID: 9031872664141225555}
   - component: {fileID: 9031872664141225551}
   - component: {fileID: 9031872664141225550}
   - component: {fileID: 9031872664141225556}
+  - component: {fileID: 9031872664141225557}
   m_Layer: 0
   m_Name: SkeletonBase
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -80959,14 +80961,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2629065055425830744}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24c1c1e48265ab84e8112f487bf91591, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  moveSpeedPerFrame: 5
-  runSpeedPerFrame: 10
+  moveSpeedPerFrame: 3
+  runSpeedPerFrame: 6
   moveHorizontal: 0
   moveVertical: 0
   movement: {x: 0, y: 0, z: 0}
@@ -81032,7 +81034,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2629065055425830744}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5dff842541f3832468451f879d07b135, type: 3}
   m_Name: 
@@ -81058,6 +81060,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2790b35ff6d88f74c8bac1ef1c0b335e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9031872664141225557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2629065055425830744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68afdddf839b0eb42a4a16db3d4c0092, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minAcceptableDistance: 3
+  maxAcceptableDistance: 4.5
+  distanceToTarget: 0
+  walkAwayMinChance: 0.3
+  acceptableWalkChance: 0.5
+  walkToMaxChance: 0.3
+--- !u!114 &9031872664141225558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2629065055425830744}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79c16dcc317438246a434ffafb049202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  canMove: 1
+  canRotate: 1
+  moveSpeed: 0
+  distanceToTarget: 0
+  distanceToStopMove: 0
+  funcMove_DistanceVector: {x: 0, y: 0, z: 0}
 --- !u!1 &9055608136736703480
 GameObject:
   m_ObjectHideFlags: 0
