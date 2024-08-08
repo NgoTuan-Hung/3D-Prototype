@@ -35,21 +35,29 @@ public class ObjectPool
                     switch (poolArgument.whereComponent)
                     {
                         case PoolArgument.WhereComponent.Child:
-                            foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
-                            {   
-                                if (fieldInfo.FieldType == poolArgument.Type)
-                                {
-                                    fieldInfo.SetValue(pool[i], pool[i].GameObject.GetComponentInChildren(poolArgument.Type));
+                            if (poolArgument.Type == typeof(GameObject)) break; 
+                            else
+                            {
+                                foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+                                {   
+                                    if (fieldInfo.FieldType == poolArgument.Type)
+                                    {
+                                        fieldInfo.SetValue(pool[i], pool[i].GameObject.GetComponentInChildren(poolArgument.Type));
+                                    }
                                 }
                             }
 
                             break;
                         case PoolArgument.WhereComponent.Self:
-                            foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+                            if (poolArgument.Type == typeof(GameObject)) break;
+                            else 
                             {
-                                if (fieldInfo.FieldType == poolArgument.Type)
+                                foreach (FieldInfo fieldInfo in typeof(PoolObject).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
                                 {
-                                    fieldInfo.SetValue(pool[i], pool[i].GameObject.GetComponent(poolArgument.Type));
+                                    if (fieldInfo.FieldType == poolArgument.Type)
+                                    {
+                                        fieldInfo.SetValue(pool[i], pool[i].GameObject.GetComponent(poolArgument.Type));
+                                    }
                                 }
                             }
                             

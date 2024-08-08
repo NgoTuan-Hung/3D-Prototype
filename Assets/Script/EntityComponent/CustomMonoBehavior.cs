@@ -25,7 +25,8 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private GameObject lookAtConstraintObjectParent;
     private GameObject lookAtConstraintObject;
     private Vector3 cameraPointToCameraVector;
-    private GameObject centerPoint;
+    private GameObject target;
+    public static ObjectPool freeObjectPool;
     private bool canRotateThisFrame;
     private bool isControlByPlayer = false;
     private bool cameraBool = false;
@@ -76,7 +77,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public bool HumanLikeAnimatorBrainBool { get => humanLikeAnimatorBrainBool; set => humanLikeAnimatorBrainBool = value; }
     public bool CanRotateThisFrame { get => canRotateThisFrame; set => canRotateThisFrame = value; }
     public bool IsControlByPlayer { get => isControlByPlayer; set => isControlByPlayer = value; }
-    public GameObject CenterPoint { get => centerPoint; set => centerPoint = value; }
+    public GameObject Target { get => target; set => target = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -111,7 +112,9 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         cameraPoint = transform.Find("CameraPoint").gameObject;
         lookAtConstraintObjectParent = transform.Find("LookAtConstraintObjectParent").gameObject;
         lookAtConstraintObject = transform.Find("LookAtConstraintObject").gameObject;
-        centerPoint = transform.Find("CenterPoint").gameObject;
+
+        GameObject freeObjectPrefab = Resources.Load("FreeObject") as GameObject;
+        freeObjectPool ??= new ObjectPool(freeObjectPrefab, 20, new PoolArgument(typeof(GameObject), PoolArgument.WhereComponent.Self));
     }
 
     public void UpdateHealth(float value)
