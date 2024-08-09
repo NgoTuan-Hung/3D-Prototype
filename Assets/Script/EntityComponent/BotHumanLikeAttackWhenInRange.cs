@@ -16,10 +16,11 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
     private float attackChancePerInterval = 0.5f;
     private float attackInterval = 1;
     private bool canAttack = true;
+    [SerializeField] private float stopMoveWhenAtDistance = 0.4f;
 
     private void FixedUpdate() 
     {
-        if (canAttack && customMonoBehavior.BotHumanLikeSimpleMoveToTarget.IsInsideAcceptableRange) Attack();
+        if (canAttack && customMonoBehavior.BotHumanLikeSimpleMoveToTarget.Zone == 2) Attack();
     }
 
     private Coroutine walkOrRunWithConditionCoroutine;
@@ -31,12 +32,13 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
             customMonoBehavior.HumanLikeAnimatorBrain.ChangeState(State.Attack);
             walkOrRunWithConditionCoroutine = StartCoroutine(customMonoBehavior.BotHumanLikeSimpleMoveToTarget.WalkOrRunWithCondition
             (
-                new Vector3(0, 0, 1), 0.3f, 
+                new Vector3(0, 0, 1), 0.2f, 
                 () => 
                     {
-                        return customMonoBehavior.BotHumanLikeSimpleMoveToTarget.DistanceToTarget < 0.1f;
+                        return customMonoBehavior.BotHumanLikeSimpleMoveToTarget.DistanceToTarget < stopMoveWhenAtDistance;
                     }
             ));
+            canAttack = false;
         }
         else StartCoroutine(ResetAttack());
     }
@@ -46,6 +48,7 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
         customMonoBehavior.HumanLikeAnimatorBrain.StopState(State.Attack);
         StopCoroutine(walkOrRunWithConditionCoroutine);
         customMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanMove = true;
+        canAttack = true;
     }
 
     public IEnumerator ResetAttack()

@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour 
 {
     private CustomMonoBehavior customMonoBehavior;
+    private int zone;
 
     private void Awake() 
     {
@@ -17,6 +18,10 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     private void FixedUpdate() 
     {
         distanceToTarget = Vector3.Distance(customMonoBehavior.Target.transform.position, transform.position);
+        if (distanceToTarget < minAcceptableDistance) zone = 1;
+        else if (distanceToTarget < maxAcceptableDistance) zone = 2;
+        else zone = 3;
+
         if (canMove) MoveToTarget();
     }
 
@@ -27,23 +32,20 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     [SerializeField] private float walkAwayMinChance = 0.3f;
     [SerializeField] private float acceptableWalkChance = 0.5f;
     [SerializeField] private float walkToMaxChance = 0.3f;
-    private bool isInsideAcceptableRange;
     public void MoveToTarget()
     {
-        isInsideAcceptableRange = false;
         if (walkToPatternBlock || runToPatternBlock) return;
-        if (distanceToTarget < minAcceptableDistance)
+        if (zone == 1)
         {
-            if (Random.value < walkAwayMinChance) StartCoroutine(WalkToPattern(new Vector3(0, 0, -1), Random.Range(0.1f, 1f)));
-            else StartCoroutine(RunToPattern(new Vector3(0, 0, -1), Random.Range(0.1f, 1f)));
+            if (Random.value < walkAwayMinChance) StartCoroutine(WalkToPattern(new Vector3(Random.Range(-1f,1f), 0, -1), Random.Range(0.1f, 1f)));
+            else StartCoroutine(RunToPattern(new Vector3(Random.Range(-1f,1f), 0, -1), Random.Range(0.1f, 1f)));
         }
         else
         {
-            if (distanceToTarget < maxAcceptableDistance)
+            if (zone == 2)
             {
-                isInsideAcceptableRange = true;
-                if (Random.value < acceptableWalkChance) StartCoroutine(WalkToPattern(new Vector3(Random.Range(-1,1), 0, Random.Range(-1,1)), Random.Range(0.1f, 2f)));
-                else StartCoroutine(RunToPattern(new Vector3(Random.Range(-1,1), 0, Random.Range(-1,1)), Random.Range(0.1f, 2f)));
+                if (Random.value < acceptableWalkChance) StartCoroutine(WalkToPattern(new Vector3(Random.Range(-1f,1f), 0, Random.Range(-1f,1f)), Random.Range(0.1f, 2f)));
+                else StartCoroutine(RunToPattern(new Vector3(Random.Range(-1f,1f), 0, Random.Range(-1f,1f)), Random.Range(0.1f, 2f)));
             }
             else
             {
@@ -78,7 +80,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     public float WalkAwayMinChance { get => walkAwayMinChance; set => walkAwayMinChance = value; }
     public float AcceptableWalkChance { get => acceptableWalkChance; set => acceptableWalkChance = value; }
     public float WalkToMaxChance { get => walkToMaxChance; set => walkToMaxChance = value; }
-    public bool IsInsideAcceptableRange { get => isInsideAcceptableRange; set => isInsideAcceptableRange = value; }
+    public int Zone { get => zone; set => zone = value; }
 
     public IEnumerator RunToPattern(Vector3 direction, float duration)
     {
@@ -99,9 +101,14 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     {
         while (true)
         {
-            if (condition()) break;
+            if (condition()) 
+            {
+                StopAllMovement();
+                canMove = true;
+                break;
+            }
 
-            if (walkToPatternBlock || runToPatternBlock) continue;
+            if (walkToPatternBlock || runToPatternBlock) {}
             else
             {
                 if (Random.value < walkChance) StartCoroutine(WalkToPattern(direction, Random.Range(0.1f, 1f)));

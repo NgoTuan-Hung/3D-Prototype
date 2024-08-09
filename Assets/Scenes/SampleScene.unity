@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.089923166, g: 0.073090605, b: 0.14577529, a: 1}
+  m_IndirectSpecularColor: {r: 0.1630199, g: 0.035841998, b: 0.16362987, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -77404,7 +77404,7 @@ Transform:
   m_GameObject: {fileID: 2629065055425830744}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.12, y: 0, z: 0}
+  m_LocalPosition: {x: 8, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -78008,6 +78008,7 @@ GameObject:
   - component: {fileID: 9031872664141225550}
   - component: {fileID: 9031872664141225556}
   - component: {fileID: 9031872664141225557}
+  - component: {fileID: 9031872664141225559}
   m_Layer: 0
   m_Name: SkeletonBase
   m_TagString: Enemy
@@ -81097,6 +81098,19 @@ MonoBehaviour:
   distanceToTarget: 0
   distanceToStopMove: 0
   funcMove_DistanceVector: {x: 0, y: 0, z: 0}
+--- !u!114 &9031872664141225559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2629065055425830744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b41410543eb5ae24494aa40950e225db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stopMoveWhenAtDistance: 0.6
 --- !u!1 &9055608136736703480
 GameObject:
   m_ObjectHideFlags: 0
