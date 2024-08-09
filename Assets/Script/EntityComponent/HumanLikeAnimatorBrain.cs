@@ -6,7 +6,7 @@ using UnityEngine;
 public enum State {Idle = 0, Walk = 1, Attack = 2, Jump = 3, Land = 4, Run = 5, CastSpellShort = 6, CastSpellMiddle = 7, CastSpellLong = 8};
 public class HumanLikeAnimatorBrain : MonoBehaviour
 {
-    public MyGameObject1 myGameObject;
+    public CustomMonoBehavior customMonoBehavior;
     public bool onAir;
     public bool prevOnAir = false;
     public State currentLowerBodyState;
@@ -87,31 +87,31 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
         switch (state)
         {
             case State.Idle:
-                myGameObject.animator.Play("Idle", 0, 0);
+                customMonoBehavior.Animator.Play("Idle", 0, 0);
                 break;
             case State.Walk:
-                myGameObject.animator.Play("Walk", 0, 0);
+                customMonoBehavior.Animator.Play("Walk", 0, 0);
                 break;
             case State.Attack:
-                myGameObject.animator.Play("Attack", 0, 0);
+                customMonoBehavior.Animator.Play("Attack", 0, 0);
                 break;
             case State.Jump:
-                myGameObject.animator.Play("Jump", 0, 0);
+                customMonoBehavior.Animator.Play("Jump", 0, 0);
                 break;
             case State.Land:
-                myGameObject.animator.Play("Land", 0, 0);
+                customMonoBehavior.Animator.Play("Land", 0, 0);
                 break;
             case State.Run:
-                myGameObject.animator.Play("Run", 0, 0);
+                customMonoBehavior.Animator.Play("Run", 0, 0);
                 break;
             case State.CastSpellShort:
-                myGameObject.animator.Play("CastSpellShort", 0, 0);
+                customMonoBehavior.Animator.Play("CastSpellShort", 0, 0);
                 break;
             case State.CastSpellMiddle:
-                myGameObject.animator.Play("CastSpellMiddle", 0, 0);
+                customMonoBehavior.Animator.Play("CastSpellMiddle", 0, 0);
                 break;
             case State.CastSpellLong:
-                myGameObject.animator.Play("CastSpellLong", 0, 0);
+                customMonoBehavior.Animator.Play("CastSpellLong", 0, 0);
                 break;
         }
         currentLowerBodyState = state;
@@ -122,31 +122,31 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
         switch (state)
         {
             case State.Idle:
-                myGameObject.animator.Play("Idle", 1, 0);
+                customMonoBehavior.Animator.Play("Idle", 1, 0);
                 break;
             case State.Walk:
-                myGameObject.animator.Play("Walk", 1, 0);
+                customMonoBehavior.Animator.Play("Walk", 1, 0);
                 break;
             case State.Attack:
-                myGameObject.animator.Play("Attack", 1, 0);
+                customMonoBehavior.Animator.Play("Attack", 1, 0);
                 break;
             case State.Jump:
-                myGameObject.animator.Play("Jump", 1, 0);
+                customMonoBehavior.Animator.Play("Jump", 1, 0);
                 break;
             case State.Land:
-                myGameObject.animator.Play("Land", 1, 0);
+                customMonoBehavior.Animator.Play("Land", 1, 0);
                 break;
             case State.Run:
-                myGameObject.animator.Play("Run", 1, 0);
+                customMonoBehavior.Animator.Play("Run", 1, 0);
                 break;
             case State.CastSpellShort:
-                myGameObject.animator.Play("CastSpellShort", 1, 0);
+                customMonoBehavior.Animator.Play("CastSpellShort", 1, 0);
                 break;
             case State.CastSpellMiddle:
-                myGameObject.animator.Play("CastSpellMiddle", 1, 0);
+                customMonoBehavior.Animator.Play("CastSpellMiddle", 1, 0);
                 break;
             case State.CastSpellLong:
-                myGameObject.animator.Play("CastSpellLong", 1, 0);
+                customMonoBehavior.Animator.Play("CastSpellLong", 1, 0);
                 break;
         }
         currentUpperBodyState = state;
@@ -158,15 +158,15 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
     {
         if (currentLowerBodyState == state)
         {
-            if (onAir) myGameObject.animator.Play("Jump", 0, 0);
-            else myGameObject.animator.Play("Idle", 0, 0);
+            if (onAir) customMonoBehavior.Animator.Play("Jump", 0, 0);
+            else customMonoBehavior.Animator.Play("Idle", 0, 0);
             currentLowerBodyState = State.Idle;
         }
 
         if (currentUpperBodyState == state)
         {
-            if (onAir) myGameObject.animator.Play("OnAir", 1, 0);
-            else myGameObject.animator.Play("Idle", 1, 0);
+            if (onAir) customMonoBehavior.Animator.Play("OnAir", 1, 0);
+            else customMonoBehavior.Animator.Play("Idle", 1, 0);
             currentUpperBodyState = State.Idle;
         }
 
@@ -176,7 +176,7 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
 
     private void Awake() 
     {
-        myGameObject = GetComponent<MyGameObject1>();
+        customMonoBehavior = GetComponent<CustomMonoBehavior>();
     }
 
     private void FixedUpdate() 
