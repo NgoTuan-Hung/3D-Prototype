@@ -21,6 +21,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private JumpableObject jumpableObject;
     private HumanLikeAnimatorBrain humanLikeAnimatorBrain;
     private HumanLikeMovable humanLikeMovable;
+    private HumanLikeLookable humanLikeLookable;
     private BotHumanLikeSimpleMoveToTarget botHumanLikeSimpleMoveToTarget;
     private BotHumanLikeLookAtTarget botHumanLikeLookAtTarget;
     private BotHumanLikeAttackWhenInRange botHumanLikeAttackWhenInRange;
@@ -31,6 +32,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private Vector3 cameraPointToCameraVector;
     private GameObject target;
     public static ObjectPool freeObjectPool;
+    private bool humanLikeLookableBool = false;
     private bool botHumanLikeSimpleMoveToTargetBool = false;
     private bool botHumanLikeLookAtTargetBool = false;
     private bool botHumanLikeAttackWhenInRangeBool = false;
@@ -94,6 +96,8 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public bool BotHumanLikeSimpleMoveToTargetBool { get => botHumanLikeSimpleMoveToTargetBool; set => botHumanLikeSimpleMoveToTargetBool = value; }
     public bool BotHumanLikeLookAtTargetBool { get => botHumanLikeLookAtTargetBool; set => botHumanLikeLookAtTargetBool = value; }
     public bool BotHumanLikeAttackWhenInRangeBool { get => botHumanLikeAttackWhenInRangeBool; set => botHumanLikeAttackWhenInRangeBool = value; }
+    public HumanLikeLookable HumanLikeLookable { get => humanLikeLookable; set => humanLikeLookable = value; }
+    public bool HumanLikeLookableBool { get => humanLikeLookableBool; set => humanLikeLookableBool = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -110,6 +114,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         if (TryGetComponent<PlayerScript>(out playerScript)) playerScriptBool = true;
         if (TryGetComponent<HumanLikeAnimatorBrain>(out humanLikeAnimatorBrain)) humanLikeAnimatorBrainBool = true;
         if (TryGetComponent<HumanLikeMovable>(out humanLikeMovable)) humanLikeMovableBool = true;
+        if (TryGetComponent<HumanLikeLookable>(out humanLikeLookable)) humanLikeLookableBool = true;
         if (TryGetComponent<BotHumanLikeSimpleMoveToTarget>(out botHumanLikeSimpleMoveToTarget)) botHumanLikeSimpleMoveToTargetBool = true;
         if (TryGetComponent<BotHumanLikeLookAtTarget>(out botHumanLikeLookAtTarget)) botHumanLikeLookAtTargetBool = true;
         if (TryGetComponent<BotHumanLikeAttackWhenInRange>(out botHumanLikeAttackWhenInRange)) botHumanLikeAttackWhenInRangeBool = true;

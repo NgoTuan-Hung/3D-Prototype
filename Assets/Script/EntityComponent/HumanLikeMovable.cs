@@ -18,8 +18,6 @@ public class HumanLikeMovable : MonoBehaviour
     {
         Move();
     }
-    public float moveHorizontal;
-    public float moveVertical;
     public Vector3 movement;
     public Vector3 rotation;
     private void Move()
