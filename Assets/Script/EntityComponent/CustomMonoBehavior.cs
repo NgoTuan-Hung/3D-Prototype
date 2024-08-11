@@ -158,4 +158,14 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     {
 
     }
+
+    public Coroutine NullCoroutine()
+    {
+        return StartCoroutine(NullIenumerator());
+    }
+
+    private IEnumerator NullIenumerator()
+    {
+        yield return new WaitForSeconds(0);
+    }
 }

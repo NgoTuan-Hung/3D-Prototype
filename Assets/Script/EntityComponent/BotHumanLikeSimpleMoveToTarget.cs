@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq.Expressions;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,7 +14,17 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     private void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-    }    
+        StartCoroutine(ChangeModeEvery3s());
+    }
+
+    public IEnumerator ChangeModeEvery3s()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(3);
+            customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode();
+        }
+    }
 
     private void FixedUpdate() 
     {
