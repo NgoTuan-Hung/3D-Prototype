@@ -20,7 +20,7 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
 
     private void FixedUpdate() 
     {
-        if (canAttack && customMonoBehavior.BotHumanLikeSimpleMoveToTarget.Zone == 2) Attack();
+        if (canAttack && customMonoBehavior.BotHumanLikeSimpleMoveToTarget.Zone == 2 && customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget) Attack();
     }
 
     private Coroutine walkOrRunWithConditionCoroutine;
@@ -48,6 +48,7 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
         customMonoBehavior.HumanLikeAnimatorBrain.StopState(State.Attack);
         StopCoroutine(walkOrRunWithConditionCoroutine);
         customMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanMove = true;
+        customMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanChangeMode = true;
         canAttack = true;
     }
 

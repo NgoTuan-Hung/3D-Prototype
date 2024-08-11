@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 public class BotHumanLikeLookAtTarget : MonoBehaviour
 {
     private CustomMonoBehavior customMonoBehavior;
-    private bool isLookingAtTarget = false;
+    [SerializeField] private bool isLookingAtTarget = true;
     private GameObject tempEye;
     public bool IsLookingAtTarget { get => isLookingAtTarget; set => isLookingAtTarget = value; }
 
@@ -16,6 +16,8 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
         customMonoBehavior.Target = GameObject.Find("Player");
         changeFreeDirectionCoroutine = customMonoBehavior.NullCoroutine();
+        freeDirectionEyeLookCoroutine = customMonoBehavior.NullCoroutine();
+        LookDelegateMethod = LookAtTarget;
     }
 
     private void Start()
@@ -45,14 +47,15 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         if (isLookingAtTarget)
         {
             isLookingAtTarget = false;
-            StopCoroutine(changeFreeDirectionCoroutine);
-            LookDelegateMethod = LookAtTarget;
+            changeFreeDirectionCoroutine = StartCoroutine(ChangeFreeDirection());
+            LookDelegateMethod = FreeLook;
         }
         else
         {
             isLookingAtTarget = true;
-            changeFreeDirectionCoroutine = StartCoroutine(ChangeFreeDirection());
-            LookDelegateMethod = FreeLook;
+            StopCoroutine(changeFreeDirectionCoroutine);
+            StopCoroutine(freeDirectionEyeLookCoroutine);
+            LookDelegateMethod = LookAtTarget;
         }
     }
 
@@ -72,6 +75,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     {
         while (true)
         {
+            StopCoroutine(freeDirectionEyeLookCoroutine);
             tempEye.transform.SetPositionAndRotation(customMonoBehavior.CameraPoint.transform.position, customMonoBehavior.CameraPoint.transform.rotation);
             tempEye.transform.Rotate(Vector3.up, Random.Range(0, 360));
             tempEye.transform.Rotate
@@ -82,24 +86,36 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
 
             Vector3 newEyeDirection = tempEye.transform.TransformDirection(Vector3.forward);
             tempEye.transform.rotation = customMonoBehavior.CameraPoint.transform.rotation;
-
-            float passedTime = 0;
             previousEyeDirection = customMonoBehavior.CameraPoint.transform.TransformDirection(Vector3.forward);
 
-            while (true)
-            {
-                tempEye.transform.position = customMonoBehavior.CameraPoint.transform.position;
-                customMonoBehavior.HumanLikeLookable.EyeAt.transform.position = tempEye.transform.TransformPoint
-                (
-                    Vector3.Lerp(previousEyeDirection, newEyeDirection, passedTime / moveEyeTime)
-                );
-
-                yield return new WaitForSeconds(Time.fixedDeltaTime);
-                passedTime += Time.fixedDeltaTime;
-                if (passedTime >= moveEyeTime) break;
-            }
+            freeDirectionEyeLookCoroutine = StartCoroutine(FreeDirectionEyeLook(newEyeDirection));
 
             yield return new WaitForSeconds(ChangeFreeDirectionInterval);
+        }
+    }
+
+    private Coroutine freeDirectionEyeLookCoroutine;
+    public IEnumerator FreeDirectionEyeLook(Vector3 newEyeDirection)
+    {
+        float passedTime = 0;
+        while (true)
+        {
+            tempEye.transform.position = customMonoBehavior.CameraPoint.transform.position;
+            customMonoBehavior.HumanLikeLookable.EyeAt.transform.position = tempEye.transform.TransformPoint
+            (
+                Vector3.Lerp(previousEyeDirection, newEyeDirection, passedTime / moveEyeTime)
+            );
+
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            passedTime += Time.fixedDeltaTime;
+            if (passedTime >= moveEyeTime) break;
+        }
+
+        while (true)
+        {
+            tempEye.transform.position = customMonoBehavior.CameraPoint.transform.position;
+            customMonoBehavior.HumanLikeLookable.EyeAt.transform.position = tempEye.transform.TransformPoint(newEyeDirection);
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
     }
 }
