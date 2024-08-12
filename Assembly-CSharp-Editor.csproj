@@ -65,11 +65,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Samples\Shader Graph\14.0.11\Feature Examples\SRPCommon\Scripts\Editor\SamplesShowcaseEditor.cs" />
+    <Compile Include="Assets\Script\Editor\BotHumanLikeSimpleMoveToTargetInspector.cs" />
     <Compile Include="Assets\TotalJSON\Internal\Editor\JSONRuntimeDebug.cs" />
     <Compile Include="Assets\Samples\Shader Graph\14.0.11\Feature Examples\SRPCommon\Scripts\Editor\SamplesShowcaseEditorWindow.cs" />
     <Compile Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\SRPCommon\Scripts\Editor\SamplesShowcaseEditorWindow.cs" />
     <Compile Include="Assets\TotalJSON\Internal\Editor\JSONValidator.cs" />
     <Compile Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\SRPCommon\Scripts\Editor\SamplesShowcaseEditor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Script\Editor\BotHumanLikeSimpleMoveToTargetInspector.uxml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

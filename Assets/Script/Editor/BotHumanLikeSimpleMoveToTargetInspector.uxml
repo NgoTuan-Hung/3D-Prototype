@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:Label tabindex="-1" text="What the fuck is this" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Fuck" tooltip="Yeah" focusable="false" enable-rich-text="true" style="height: 44px; width: 343px;" />
+    <ui:EnumField label="Intelligence&#10;" type="UnityEngine.TextAlignment, UnityEngine.TextRenderingModule" value="Left" include-obsolete-values="false" binding-path="intelligence" style="background-image: none; opacity: 1;" />
+</ui:UXML>

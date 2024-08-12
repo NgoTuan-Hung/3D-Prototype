@@ -16,6 +16,27 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     [SerializeField] private float modeMovingToTargetChance = 0.8f;
     [SerializeField] private float XSecond = 10;
     private bool canChangeMode = true;
+    public enum Intelligence {Dumb, Average, Smart}
+    [SerializeField] private Intelligence intelligence;
+    public Intelligence IntelligenceMode {get => intelligence; set 
+    {
+        intelligence = value;
+        switch (value)
+        {
+            case Intelligence.Dumb:
+                modeMovingToTargetChance = 0.3f;
+                XSecond = 10;
+                break;
+            case Intelligence.Average:
+                modeMovingToTargetChance = 0.5f;
+                XSecond = 5;
+                break;
+            case Intelligence.Smart:
+                modeMovingToTargetChance = 0.8f;
+                XSecond = 10;
+                break;
+        }
+    }}
     private void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
