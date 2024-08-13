@@ -4564,10 +4564,6 @@ GameObject:
   - component: {fileID: 138329310}
   - component: {fileID: 138329309}
   - component: {fileID: 138329308}
-  - component: {fileID: 138329307}
-  - component: {fileID: 138329306}
-  - component: {fileID: 138329305}
-  - component: {fileID: 138329304}
   - component: {fileID: 138329303}
   - component: {fileID: 138329302}
   - component: {fileID: 138329301}
@@ -4576,6 +4572,7 @@ GameObject:
   - component: {fileID: 138329317}
   - component: {fileID: 138329316}
   - component: {fileID: 138329315}
+  - component: {fileID: 138329319}
   m_Layer: 0
   m_Name: Player
   m_TagString: Enemy
@@ -4639,70 +4636,6 @@ MonoBehaviour:
   currentUpperBodyState: 0
   defaultUpperBodyState: 0
   acceptableGroundDistance: 0.05
---- !u!114 &138329304
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138329300}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79c16dcc317438246a434ffafb049202, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  canMove: 1
-  canRotate: 1
-  moveSpeed: 0
-  distanceToTarget: 0
-  distanceToStopMove: 0
-  funcMove_DistanceVector: {x: 0, y: 0, z: 0}
---- !u!114 &138329305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138329300}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a30c2c3f02cf224a8ece50fc893bc62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  customMonoBehavior: {fileID: 0}
-  jumpForce: 5
-  jumpCount: 2
-  currentJumpCount: 0
-  jumpDelay: 0.2
-  canJump: 1
---- !u!114 &138329306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138329300}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fc57e30975ef3d4194d8ad22940d266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGround: 0
-  hitDistance: 0
-  rayCastDistance: Infinity
---- !u!114 &138329307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138329300}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9485486b9e5e4d6438e8b8cf005f149b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &138329308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4908,12 +4841,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a30c2c3f02cf224a8ece50fc893bc62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customMonoBehavior: {fileID: 0}
-  jumpForce: 5
-  jumpCount: 2
-  currentJumpCount: 0
-  jumpDelay: 0.2
-  canJump: 1
 --- !u!114 &138329318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4931,6 +4858,18 @@ MonoBehaviour:
   canCastSpellShort: 1
   canCastSpellMiddle: 1
   canCastSpellLong: 1
+--- !u!114 &138329319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138329300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3135f84c6b333a34796fb7d7dd70a10f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &139504431
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -78381,7 +78320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2173750683733733187}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3572419, y: -0.33123913, z: 0.13720375, w: 0.86245817}
+  m_LocalRotation: {x: 0.3572419, y: -0.331239, z: 0.13720371, w: 0.86245817}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -79327,7 +79266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: -1, z: -3}
+  m_FollowOffset: {x: 0, y: 3, z: -3}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -79872,6 +79811,7 @@ GameObject:
   - component: {fileID: 9031872664141225557}
   - component: {fileID: 9031872664141225559}
   - component: {fileID: 9031872664141225560}
+  - component: {fileID: 9031872664141225561}
   m_Layer: 0
   m_Name: SkeletonBase
   m_TagString: Enemy
@@ -81964,7 +81904,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6847480171475532004}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.34149513, y: -0.33368, z: 0.131156, w: 0.8688135}
+  m_LocalRotation: {x: 0.34149516, y: -0.3336799, z: 0.13115595, w: 0.8688135}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -83311,7 +83251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: -1, z: -3}
+  m_FollowOffset: {x: 0, y: 3, z: -3}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -84064,7 +84004,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: -1, z: -3}
+  m_FollowOffset: {x: 0, y: 3, z: -3}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -84805,17 +84745,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2629065055425830744}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5a30c2c3f02cf224a8ece50fc893bc62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customMonoBehavior: {fileID: 0}
-  jumpForce: 5
-  jumpCount: 2
-  currentJumpCount: 0
-  jumpDelay: 0.2
-  canJump: 1
 --- !u!114 &9031872664141225555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84833,7 +84767,9 @@ MonoBehaviour:
   prevOnAir: 0
   currentLowerBodyState: 0
   defaultLowerBodyState: 0
-  groundChecks: []
+  groundChecks:
+  - {fileID: 7319171363971864471}
+  - {fileID: 2548915959446330752}
   currentUpperBodyState: 0
   defaultUpperBodyState: 0
   acceptableGroundDistance: 0.05
@@ -84900,6 +84836,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f946ccf55ac17a4a8b424ee278fd336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9031872664141225561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2629065055425830744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b1e9cc2e59bda64a8df40cf627d936c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canExecuteBotJump: 1
+  jumpChancePerInterval: 0.5
+  jumpInterval: 2
+  doubleJumpChance: 0.7
 --- !u!1 &9055608136736703480
 GameObject:
   m_ObjectHideFlags: 0

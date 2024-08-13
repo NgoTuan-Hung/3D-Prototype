@@ -18,13 +18,14 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private PlayerScript playerScript;
     private GameObject skillCastOriginPoint;
     private FeetChecker feetChecker;
-    private JumpableObject jumpableObject;
+    private HumanLikeJumpableObject humanLikeJumpableObject;
     private HumanLikeAnimatorBrain humanLikeAnimatorBrain;
     private HumanLikeMovable humanLikeMovable;
     private HumanLikeLookable humanLikeLookable;
     private BotHumanLikeSimpleMoveToTarget botHumanLikeSimpleMoveToTarget;
     private BotHumanLikeLookAtTarget botHumanLikeLookAtTarget;
     private BotHumanLikeAttackWhenInRange botHumanLikeAttackWhenInRange;
+    private BotHumanLikeJumpRandomly botHumanLikeJumpRandomly;
     private new Camera camera;
     private GameObject cameraPoint;
     private GameObject lookAtConstraintObjectParent;
@@ -32,6 +33,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private Vector3 cameraPointToCameraVector;
     private GameObject target;
     public static ObjectPool freeObjectPool;
+    private bool botHumanLikeJumpRandomlyBool = false;
     private bool humanLikeLookableBool = false;
     private bool botHumanLikeSimpleMoveToTargetBool = false;
     private bool botHumanLikeLookAtTargetBool = false;
@@ -41,7 +43,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private bool isControlByPlayer = false;
     private bool cameraBool = false;
     private bool humanLikeAnimatorBrainBool = false;
-    private bool jumpableObjectBool = false;
+    private bool humanLikeJumpableObjectBool = false;
     private bool feetCheckerBool = false;
     bool rigidbodyBool = false;
     bool skillableObjectBool = false;
@@ -75,8 +77,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public bool SkillCastOriginPointBool { get => skillCastOriginPointBool; set => skillCastOriginPointBool = value; }
     public FeetChecker FeetChecker { get => feetChecker; set => feetChecker = value; }
     public bool FeetCheckerBool { get => feetCheckerBool; set => feetCheckerBool = value; }
-    public JumpableObject JumpableObject { get => jumpableObject; set => jumpableObject = value; }
-    public bool JumpableObjectBool { get => jumpableObjectBool; set => jumpableObjectBool = value; }
+    public HumanLikeJumpableObject HumanLikeJumpableObject { get => humanLikeJumpableObject; set => humanLikeJumpableObject = value; }
     public HumanLikeAnimatorBrain HumanLikeAnimatorBrain { get => humanLikeAnimatorBrain; set => humanLikeAnimatorBrain = value; }
     public Camera Camera { get => camera; set => camera = value; }
     public GameObject CameraPoint { get => cameraPoint; set => cameraPoint = value; }
@@ -98,6 +99,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public bool BotHumanLikeAttackWhenInRangeBool { get => botHumanLikeAttackWhenInRangeBool; set => botHumanLikeAttackWhenInRangeBool = value; }
     public HumanLikeLookable HumanLikeLookable { get => humanLikeLookable; set => humanLikeLookable = value; }
     public bool HumanLikeLookableBool { get => humanLikeLookableBool; set => humanLikeLookableBool = value; }
+    public bool HumanLikeJumpableObjectBool { get => humanLikeJumpableObjectBool; set => humanLikeJumpableObjectBool = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -115,13 +117,13 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         if (TryGetComponent<HumanLikeAnimatorBrain>(out humanLikeAnimatorBrain)) humanLikeAnimatorBrainBool = true;
         if (TryGetComponent<HumanLikeMovable>(out humanLikeMovable)) humanLikeMovableBool = true;
         if (TryGetComponent<HumanLikeLookable>(out humanLikeLookable)) humanLikeLookableBool = true;
+        if (TryGetComponent<HumanLikeJumpableObject>(out humanLikeJumpableObject)) humanLikeJumpableObjectBool = true;
         if (TryGetComponent<BotHumanLikeSimpleMoveToTarget>(out botHumanLikeSimpleMoveToTarget)) botHumanLikeSimpleMoveToTargetBool = true;
         if (TryGetComponent<BotHumanLikeLookAtTarget>(out botHumanLikeLookAtTarget)) botHumanLikeLookAtTargetBool = true;
         if (TryGetComponent<BotHumanLikeAttackWhenInRange>(out botHumanLikeAttackWhenInRange)) botHumanLikeAttackWhenInRangeBool = true;
+        if (TryGetComponent<BotHumanLikeJumpRandomly>(out botHumanLikeJumpRandomly)) botHumanLikeJumpRandomlyBool = true;
 
         if ((skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject) != null) skillCastOriginPointBool = true;
-        if ((feetChecker = GetComponentInChildren<FeetChecker>()) != null) feetCheckerBool = true;
-        if ((jumpableObject = GetComponentInChildren<JumpableObject>()) != null) jumpableObjectBool = true;
 
         if (entityType.Equals("Player"))
         {
