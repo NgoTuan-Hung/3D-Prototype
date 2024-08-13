@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,7 +8,7 @@ using UnityEngine.UIElements;
 [CustomEditor(typeof(BotHumanLikeSimpleMoveToTarget))]
 public class BotHumanLikeSimpleMoveToTargetInspector : Editor
 {
-    // public VisualTreeAsset visualTreeAsset;
+    public VisualTreeAsset visualTreeAsset;
     // public override VisualElement CreateInspectorGUI()
     // {
     //     VisualElement myInspector = new VisualElement();

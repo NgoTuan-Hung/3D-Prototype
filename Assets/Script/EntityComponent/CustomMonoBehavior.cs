@@ -13,8 +13,6 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private SkillableObject skillableObject;
     private RotatableObject rotatableObject;
     private Animator animator;
-    private MoveToTarget moveToTarget;
-    private MeleeSimpleAttackWhenNear meleeSimpleAttackWhenNear;
     private PlayerScript playerScript;
     private GameObject skillCastOriginPoint;
     private FeetChecker feetChecker;
@@ -66,9 +64,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public bool SkillableObjectBool { get => skillableObjectBool; set => skillableObjectBool = value; }
     public bool AnimatorBool { get => animatorBool; set => animatorBool = value; }
     public bool RotatableObjectBool { get => rotatableObjectBool; set => rotatableObjectBool = value; }
-    public MoveToTarget MoveToTarget { get => moveToTarget; set => moveToTarget = value; }
     public bool MoveToTargetBool { get => moveToTargetBool; set => moveToTargetBool = value; }
-    public MeleeSimpleAttackWhenNear MeleeSimpleAttackWhenNear { get => meleeSimpleAttackWhenNear; set => meleeSimpleAttackWhenNear = value; }
     public bool MeleeSimpleAttackWhenNearBool { get => meleeSimpleAttackWhenNearBool; set => meleeSimpleAttackWhenNearBool = value; }
     public bool PlayerInputSystemBool { get => playerInputSystemBool; set => playerInputSystemBool = value; }
     public bool PlayerScriptBool { get => playerScriptBool; set => playerScriptBool = value; }
@@ -111,8 +107,6 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         if (TryGetComponent<SkillableObject>(out skillableObject)) skillableObjectBool = true;
         if (TryGetComponent<Animator>(out animator)) animatorBool = true;
         if (TryGetComponent<RotatableObject>(out rotatableObject)) rotatableObjectBool = true;
-        if (TryGetComponent<MoveToTarget>(out moveToTarget)) moveToTargetBool = true;
-        if (TryGetComponent<MeleeSimpleAttackWhenNear>(out meleeSimpleAttackWhenNear)) meleeSimpleAttackWhenNearBool = true;
         if (TryGetComponent<PlayerScript>(out playerScript)) playerScriptBool = true;
         if (TryGetComponent<HumanLikeAnimatorBrain>(out humanLikeAnimatorBrain)) humanLikeAnimatorBrainBool = true;
         if (TryGetComponent<HumanLikeMovable>(out humanLikeMovable)) humanLikeMovableBool = true;
