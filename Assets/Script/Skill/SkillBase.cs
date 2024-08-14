@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-class SkillBase : MonoBehaviour
+public class SkillBase : MonoBehaviour
 {
     public delegate void FinishSkillDelegate();
     public FinishSkillDelegate finishSkillDelegate;
@@ -75,13 +75,13 @@ public class SubSkillCondition
     public bool StopRotating { get => stopRotating; set => stopRotating = value; }
 }
 
-
+[Serializable]
 public class SubSkillChangableAttribute
 {
-    private int intValue;
-    private float floatValue;
-    private float[] floatArray;
-    private Vector3 vector3;
+    [SerializeField] private int intValue;
+    [SerializeField] private float floatValue;
+    [SerializeField] private float[] floatArray;
+    [SerializeField] private Vector3 vector3;
     public enum SubSkillAttributeType {Cooldown, Speed, Distance, Timers, Position, TimeScale, CastRange}
     public enum SubSkillAttributeValueType {Int, Float, FloatArray, Vector3}
     private SubSkillAttributeType subSkillAttributeType;

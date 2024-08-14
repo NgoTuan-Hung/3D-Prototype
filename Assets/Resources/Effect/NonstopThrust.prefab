@@ -184,8 +184,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 0}
-  disableAfterTime: 1
-  disableTime: 2
+  disableAfterTime: 0
+  disableTime: 0
   animators: []
 --- !u!114 &7608721305917560417
 MonoBehaviour:

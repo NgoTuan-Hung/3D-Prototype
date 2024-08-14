@@ -1,4 +1,4 @@
-class RecommendedAIBehavior
+public class RecommendedAIBehavior
 {
     private float maxDistanceToTarget = 0f;
     private float minDistanceToTarget = 0f;

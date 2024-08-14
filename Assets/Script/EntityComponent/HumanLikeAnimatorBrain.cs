@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum State {Idle = 0, Walk = 1, Attack = 2, Jump = 3, Land = 4, Run = 5, CastSpellShort = 6, CastSpellMiddle = 7, CastSpellLong = 8};
@@ -220,6 +221,43 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
         }
         if (!onAir && prevOnAir) {ChangeState(State.Land);}
         prevOnAir = onAir;
+    }
+
+    public enum AddEventForClipOfStateTimeType {Start, End, Value}
+    public void AddEventForClipOfState(String functionName, State state, AddEventForClipOfStateTimeType timeType, float timeValue)
+    {
+        string clipName = state switch
+        {
+            State.Idle => gameObject.name + "Idle",
+            State.Walk => gameObject.name + "Walk",
+            State.Attack => gameObject.name + "Attack",
+            State.Jump => gameObject.name + "Jump",
+            State.Land => gameObject.name + "Land",
+            State.Run => gameObject.name + "Run",
+            State.CastSpellShort => gameObject.name + "CastSpellShort",
+            State.CastSpellMiddle => gameObject.name + "CastSpellMiddle",
+            State.CastSpellLong => gameObject.name + "CastSpellLong",
+            _ => gameObject.name + "Idle",
+        };
+
+        AnimationClip clip = customMonoBehavior.Animator.runtimeAnimatorController.animationClips.First(clip => clip.name.Equals(clipName));
+        AnimationEvent animationEvent = new AnimationEvent();
+        animationEvent.functionName = functionName;
+
+        switch (timeType)
+        {
+            case AddEventForClipOfStateTimeType.Start:
+                animationEvent.time = 0;
+                break;
+            case AddEventForClipOfStateTimeType.End:
+                animationEvent.time = clip.length;
+                break;
+            case AddEventForClipOfStateTimeType.Value:
+                animationEvent.time = timeValue;
+                break;
+        }
+
+        clip.AddEvent(animationEvent);
     }
 
     public void StopLand()

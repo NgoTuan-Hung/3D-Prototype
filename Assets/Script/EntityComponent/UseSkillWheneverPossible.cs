@@ -21,7 +21,7 @@ class UseSkillWheneverPossible : EntityAction
     }
 
     void UseAnySkill()
-    {
+    {        
         CustomMonoBehavior.CanUseSkill.Skills.ForEach(skill => 
         {
             if (skill.CanUse && skill.CheckAction())

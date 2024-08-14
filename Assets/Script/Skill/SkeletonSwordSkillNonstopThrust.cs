@@ -1,4 +1,3 @@
-
 using System.Collections;
 using UnityEngine;
 
@@ -27,6 +26,11 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
         
         RecommendedAIBehavior.MaxDistanceToTarget = 5f;
         RecommendedAIBehavior.IsLookingAtTarget = true;
+        
+        CustomMonoBehavior.HumanLikeAnimatorBrain.AddEventForClipOfState
+        (
+            "SkeletonSwordSkillNonstopThrustStopAnimationEvent", AnimatorStateForSkill, HumanLikeAnimatorBrain.AddEventForClipOfStateTimeType.End, 0
+        );
     }
 
     public override void Start()
@@ -35,10 +39,16 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
     }
 
     [SerializeField] private SubSkillChangableAttribute coolDown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 3f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
+    [SerializeField] private SubSkillChangableAttribute flySpeed = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 5f, SubSkillChangableAttribute.SubSkillAttributeType.Speed);
     public override void Trigger(SubSkillParameter subSkillParameter)
     {
         CustomMonoBehavior.HumanLikeAnimatorBrain.ChangeState(AnimatorStateForSkill);
         StartCoroutine(ExecuteAfterAnimationFrame(subSkillParameter));
+    }
+
+    public void SkeletonSwordSkillNonstopThrustStopAnimationEvent()
+    {
+        CustomMonoBehavior.HumanLikeAnimatorBrain.StopState(AnimatorStateForSkill);
     }
 
     public IEnumerator ExecuteAfterAnimationFrame(SubSkillParameter subSkillParameter)
@@ -60,9 +70,9 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
             float angle = Quaternion.LookRotation(travelToDirection).eulerAngles.y;
             skeletonThrustingEffect.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
             
-            skeletonThrustingEffect.TravelToDirection(travelToDirection, 5);
+            skeletonThrustingEffect.TravelToDirection(travelToDirection, flySpeed.FloatValue);
             skeletonThrustingEffect.triggerActionDelegate += () => TriggerActionDelegateParam(skeletonThrustingEffect);
-            skeletonThrustingEffect.triggerActionDelegate1 += () => TriggerActionDelegate1Param(skeletonThrustingEffect);
+            skeletonThrustingEffect.triggerActionDelegate1 += () => TriggerActionDelegate1Param(gameEffect, skeletonThrustingEffect);
             skeletonThrustingEffect.animationEvent1Delegate += () => AnimationEvent1DelegateParam(gameEffect, skeletonThrustingEffect);
             skeletonThrustingEffect.animationEvent2Delegate += () => AnimationEvent2DelegateParam(skeletonThrustingEffect);
             skeletonThrustingEffect.TriggerActionWithCondition1(false, null, 0, true, 5f);
@@ -79,9 +89,10 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
         skeletonThrustingEffect.StopCoroutine(skeletonThrustingEffect.triggerActionWithConditionCoroutine1);
     }
 
-    public void TriggerActionDelegate1Param(GameEffect skeletonThrustingEffect)
+    public void TriggerActionDelegate1Param(GameEffect gameEffect, GameEffect skeletonThrustingEffect)
     {
         skeletonThrustingEffect.gameObject.SetActive(false);
+        gameEffect.gameObject.SetActive(false);
     }
 
     public void AnimationEvent1DelegateParam(GameEffect gameEffect, GameEffect skeletonThrustingEffect)
