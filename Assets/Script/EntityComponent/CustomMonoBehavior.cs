@@ -10,12 +10,9 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     [SerializeField] private float curentHealth;
     [SerializeField] private List<String> allyTags = new List<string>();
     new protected Rigidbody rigidbody;
-    private SkillableObject skillableObject;
     private RotatableObject rotatableObject;
     private Animator animator;
-    private PlayerScript playerScript;
     private GameObject skillCastOriginPoint;
-    private FeetChecker feetChecker;
     private HumanLikeJumpableObject humanLikeJumpableObject;
     private HumanLikeAnimatorBrain humanLikeAnimatorBrain;
     private HumanLikeMovable humanLikeMovable;
@@ -24,6 +21,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private BotHumanLikeLookAtTarget botHumanLikeLookAtTarget;
     private BotHumanLikeAttackWhenInRange botHumanLikeAttackWhenInRange;
     private BotHumanLikeJumpRandomly botHumanLikeJumpRandomly;
+    private CanUseSkill canUseSkill;
     private new Camera camera;
     private GameObject cameraPoint;
     private GameObject lookAtConstraintObjectParent;
@@ -31,6 +29,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private Vector3 cameraPointToCameraVector;
     private GameObject target;
     public static ObjectPool freeObjectPool;
+    private bool canUseSkillBool = false;
     private bool botHumanLikeJumpRandomlyBool = false;
     private bool humanLikeLookableBool = false;
     private bool botHumanLikeSimpleMoveToTargetBool = false;
@@ -42,37 +41,26 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private bool cameraBool = false;
     private bool humanLikeAnimatorBrainBool = false;
     private bool humanLikeJumpableObjectBool = false;
-    private bool feetCheckerBool = false;
     bool rigidbodyBool = false;
-    bool skillableObjectBool = false;
     bool animatorBool = false;
     bool rotatableObjectBool = false;
     bool moveToTargetBool = false;
     bool meleeSimpleAttackWhenNearBool = false;
-    bool playerInputSystemBool = false;
-    bool playerScriptBool = false;
     bool skillCastOriginPointBool = false;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurentHealth { get => curentHealth; set => curentHealth = value; }
     public string EntityType { get => entityType; set => entityType = value; }
     public List<string> AllyTags { get => allyTags; set => allyTags = value; }
     public Rigidbody Rigidbody { get => rigidbody; set => rigidbody = value; }
-    public SkillableObject SkillableObject { get => skillableObject; set => skillableObject = value; }
     public Animator Animator { get => animator; set => animator = value; }
     public RotatableObject RotatableObject { get => rotatableObject; set => rotatableObject = value; }
     public bool RigidbodyBool { get => rigidbodyBool; set => rigidbodyBool = value; }
-    public bool SkillableObjectBool { get => skillableObjectBool; set => skillableObjectBool = value; }
     public bool AnimatorBool { get => animatorBool; set => animatorBool = value; }
     public bool RotatableObjectBool { get => rotatableObjectBool; set => rotatableObjectBool = value; }
     public bool MoveToTargetBool { get => moveToTargetBool; set => moveToTargetBool = value; }
     public bool MeleeSimpleAttackWhenNearBool { get => meleeSimpleAttackWhenNearBool; set => meleeSimpleAttackWhenNearBool = value; }
-    public bool PlayerInputSystemBool { get => playerInputSystemBool; set => playerInputSystemBool = value; }
-    public bool PlayerScriptBool { get => playerScriptBool; set => playerScriptBool = value; }
-    public PlayerScript PlayerScript { get => playerScript; set => playerScript = value; }
     public GameObject SkillCastOriginPoint { get => skillCastOriginPoint; set => skillCastOriginPoint = value; }
     public bool SkillCastOriginPointBool { get => skillCastOriginPointBool; set => skillCastOriginPointBool = value; }
-    public FeetChecker FeetChecker { get => feetChecker; set => feetChecker = value; }
-    public bool FeetCheckerBool { get => feetCheckerBool; set => feetCheckerBool = value; }
     public HumanLikeJumpableObject HumanLikeJumpableObject { get => humanLikeJumpableObject; set => humanLikeJumpableObject = value; }
     public HumanLikeAnimatorBrain HumanLikeAnimatorBrain { get => humanLikeAnimatorBrain; set => humanLikeAnimatorBrain = value; }
     public Camera Camera { get => camera; set => camera = value; }
@@ -96,6 +84,10 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public HumanLikeLookable HumanLikeLookable { get => humanLikeLookable; set => humanLikeLookable = value; }
     public bool HumanLikeLookableBool { get => humanLikeLookableBool; set => humanLikeLookableBool = value; }
     public bool HumanLikeJumpableObjectBool { get => humanLikeJumpableObjectBool; set => humanLikeJumpableObjectBool = value; }
+    public BotHumanLikeJumpRandomly BotHumanLikeJumpRandomly { get => botHumanLikeJumpRandomly; set => botHumanLikeJumpRandomly = value; }
+    public bool BotHumanLikeJumpRandomlyBool { get => botHumanLikeJumpRandomlyBool; set => botHumanLikeJumpRandomlyBool = value; }
+    public bool CanUseSkillBool { get => canUseSkillBool; set => canUseSkillBool = value; }
+    public CanUseSkill CanUseSkill { get => canUseSkill; set => canUseSkill = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -104,10 +96,8 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         allyTags.Add(gameObject.tag);
 
         if (TryGetComponent<Rigidbody>(out rigidbody)) rigidbodyBool = true;
-        if (TryGetComponent<SkillableObject>(out skillableObject)) skillableObjectBool = true;
         if (TryGetComponent<Animator>(out animator)) animatorBool = true;
         if (TryGetComponent<RotatableObject>(out rotatableObject)) rotatableObjectBool = true;
-        if (TryGetComponent<PlayerScript>(out playerScript)) playerScriptBool = true;
         if (TryGetComponent<HumanLikeAnimatorBrain>(out humanLikeAnimatorBrain)) humanLikeAnimatorBrainBool = true;
         if (TryGetComponent<HumanLikeMovable>(out humanLikeMovable)) humanLikeMovableBool = true;
         if (TryGetComponent<HumanLikeLookable>(out humanLikeLookable)) humanLikeLookableBool = true;

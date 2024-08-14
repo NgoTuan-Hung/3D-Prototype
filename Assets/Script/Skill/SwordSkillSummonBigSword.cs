@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-class SwordSkillSummonBigSword : WeaponSubSkill
+class SwordSkillSummonBigSword : SkillBase
 {
     private bool isWaiting = false;
     private Coroutine summonCoroutine;
@@ -77,32 +77,32 @@ class SwordSkillSummonBigSword : WeaponSubSkill
     Vector3 tempVec;
     public IEnumerator HandleSummonSwordPlayer()
     {
-        isWaiting = true;
-        while (isWaiting)
-        {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        // isWaiting = true;
+        // while (isWaiting)
+        // {
+        //     yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            skillCast.transform.position = transform.position;
-            skillCast.SetActive(true);
-            skillCastAngle = CustomMonoBehavior.PlayerScript.CameraLookPoint.transform.eulerAngles.y;
-            skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
-        }
-        StartCoroutine(BeginCooldown());
+        //     skillCast.transform.position = transform.position;
+        //     skillCast.SetActive(true);
+        //     skillCastAngle = CustomMonoBehavior.PlayerScript.CameraLookPoint.transform.eulerAngles.y;
+        //     skillCast.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
+        // }
+        // StartCoroutine(BeginCooldown());
 
-        skillCast.SetActive(false);
-        CustomMonoBehavior.SkillableObject.UseOnlySkillAnimator((int)SkillableObject.SkillID.SummonBigSword);
-        PoolObject poolObjectEffect = bigSwordEffectPool.PickOne();
-        GameEffect gameEffect = poolObjectEffect.GameEffect;
-        gameEffect.ParticleSystemEvent.particleSystemEventDelegate += () => poolObjectEffect.GameObject.SetActive(false);
+        // skillCast.SetActive(false);
+        // PoolObject poolObjectEffect = bigSwordEffectPool.PickOne();
+        // GameEffect gameEffect = poolObjectEffect.GameEffect;
+        // gameEffect.ParticleSystemEvent.particleSystemEventDelegate += () => poolObjectEffect.GameObject.SetActive(false);
 
-        gameEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
-        gameEffect.transform.position = transform.position;
-        gameEffect.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
+        // gameEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
+        // gameEffect.transform.position = transform.position;
+        // gameEffect.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
         
-        CustomMonoBehavior.Animator.SetBool("CastSkillBlownDown", true);
-        CustomMonoBehavior.Animator.Play("UpperBody.CastSkillBlowDown", 1, 0);
-        StartCoroutine(StopSummon());
+        // CustomMonoBehavior.Animator.SetBool("CastSkillBlownDown", true);
+        // CustomMonoBehavior.Animator.Play("UpperBody.CastSkillBlowDown", 1, 0);
+        // StartCoroutine(StopSummon());
         //StartCoroutine(StopSword(swordWeapon));
+        yield return new WaitForSeconds(0);
     }
 
     public void HandleSummonSword(Vector3 target)
@@ -134,7 +134,8 @@ class SwordSkillSummonBigSword : WeaponSubSkill
 
     IEnumerator StopSummon()
     {
-        yield return new WaitForSeconds(CustomMonoBehavior.SkillableObject.CastSkillBlownDown.length);
+        // yield return new WaitForSeconds(CustomMonoBehavior.SkillableObject.CastSkillBlownDown.length);
+        yield return new WaitForSeconds(0);
 
         CustomMonoBehavior.Animator.SetBool("CastSkillBlownDown", false);
     }

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-class SkeletonSwordSkillCharge : WeaponSubSkill
+class SkeletonSwordSkillCharge : SkillBase
 {
     [SerializeField] SubSkillChangableAttribute chargeCooldown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 3f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
     [SerializeField] SubSkillChangableAttribute chargeSpeed = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 40f, SubSkillChangableAttribute.SubSkillAttributeType.Speed);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-class WeaponSubSkill : MonoBehaviour
+class SkillBase : MonoBehaviour
 {
     public delegate void FinishSkillDelegate();
     public FinishSkillDelegate finishSkillDelegate;
@@ -14,7 +14,9 @@ class WeaponSubSkill : MonoBehaviour
     private List<SubSkillChangableAttribute> subSkillChangableAttributes = new List<SubSkillChangableAttribute>();
     private SubSkillCondition subSkillCondition = new SubSkillCondition();
     private CustomMonoBehavior customMonoBehavior;
-
+    private State animatorStateForSkill;
+    private bool upperBodyCheckForAction;
+    [SerializeField] private float executionTimeAfterAnimationFrame;
     public ObjectPool WeaponPool { get => weaponPool; set => weaponPool = value; }
     public SubSkillRequiredParameter SubSkillRequiredParameter { get => subSkillRequiredParameter; set => subSkillRequiredParameter = value; }
     public RecommendedAIBehavior RecommendedAIBehavior { get => recommendedAIBehavior; set => recommendedAIBehavior = value; }
@@ -22,6 +24,9 @@ class WeaponSubSkill : MonoBehaviour
     public List<SubSkillChangableAttribute> SubSkillChangableAttributes { get => subSkillChangableAttributes; set => subSkillChangableAttributes = value; }
     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
     public SubSkillCondition SubSkillCondition { get => subSkillCondition; set => subSkillCondition = value; }
+    public State AnimatorStateForSkill { get => animatorStateForSkill; set => animatorStateForSkill = value; }
+    public bool UpperBodyCheckForAction { get => upperBodyCheckForAction; set => upperBodyCheckForAction = value; }
+    public float ExecutionTimeAfterAnimationFrame { get => executionTimeAfterAnimationFrame; set => executionTimeAfterAnimationFrame = value; }
 
     public virtual void Trigger(SubSkillParameter subSkillParameter)
     {
@@ -31,6 +36,15 @@ class WeaponSubSkill : MonoBehaviour
     public virtual void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
+        if (upperBodyCheckForAction) checkActionDelegate = () => customMonoBehavior.HumanLikeAnimatorBrain.CheckTransitionUpper(animatorStateForSkill);
+        else checkActionDelegate = () => customMonoBehavior.HumanLikeAnimatorBrain.CheckTransitionLower(animatorStateForSkill);
+    }
+
+    public delegate bool CheckActionDelegate();
+    public CheckActionDelegate checkActionDelegate; 
+    public bool CheckAction()
+    {
+        return checkActionDelegate();
     }
 
     public virtual void Start()

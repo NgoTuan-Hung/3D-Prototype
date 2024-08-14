@@ -1,89 +1,91 @@
-// using UnityEngine;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
-// class UseSkillWheneverPossible : EntityAction
-// {
-//     private float useSkillChanceRequired = 50f;
-//     private delegate void UseAnySkillDelegate();
-//     private UseAnySkillDelegate useAnySkillDelegate;
-//     public float UseSkillChanceRequired { get => useSkillChanceRequired; set => useSkillChanceRequired = value; }
+[RequireComponent(typeof(CustomMonoBehavior), typeof(CanUseSkill))]
+class UseSkillWheneverPossible : EntityAction
+{
+    private float useSkillChanceRequired = 50f;
+    public override void Awake()
+    {
+        base.Awake();
+    }
 
-//     public override void Awake()
-//     {
-//         base.Awake();
-//     }
+    public override void Start()
+    {
+        base.Start();
+    }
 
-//     public override void Start()
-//     {
-//         base.Start();
-//         if (CustomMonoBehavior.SkillableObjectBool && CustomMonoBehavior.MoveToTargetBool) useAnySkillDelegate += UseAnySkill;
-//     }
+    void FixedUpdate()
+    {
+        UseAnySkill();
+    }
 
-//     void FixedUpdate()
-//     {
-//         useAnySkillDelegate?.Invoke();
-//     }
+    void UseAnySkill()
+    {
+        CustomMonoBehavior.CanUseSkill.Skills.ForEach(skill => 
+        {
+            if (skill.CanUse && skill.CheckAction())
+            {
+                if (UseSkillChance(skill.RecommendedAIBehavior) >= useSkillChanceRequired)
+                {
+                    HandleSubSkillCondition(skill);
+                    skill.Trigger(GetSubSkillRequiredParameter(skill.SubSkillRequiredParameter));
+                }
+            }
+        });
+    }
 
-//     void UseAnySkill()
-//     {
-//         CustomMonoBehavior.SkillableObject.WeaponSkills.ForEach(weaponSkill => 
-//         {
-//             weaponSkill.WeaponSubSkills.ForEach(weaponSubSkill =>
-//             {
-//                 if (weaponSubSkill.CanUse)
-//                 {
-//                     if (UseSkillChance(weaponSubSkill.RecommendedAIBehavior) >= UseSkillChanceRequired)
-//                     {
-//                         HandleSubSkillCondition(weaponSubSkill);
-//                         weaponSubSkill.Trigger(GetSubSkillRequiredParameter(weaponSubSkill.SubSkillRequiredParameter));
-//                     }
-//                 }
-//             });
-//         });
-//     }
+    float UseSkillChance(RecommendedAIBehavior recommendedAIBehavior)
+    {
+        float chance = 0f;
 
-//     float UseSkillChance(RecommendedAIBehavior recommendedAIBehavior)
-//     {
-//         float chance = 0f;
-
-//         if (recommendedAIBehavior.MaxDistanceToTarget != 0)
-//         {
-//             if (CustomMonoBehavior.MoveToTarget.DistanceToTarget < recommendedAIBehavior.MaxDistanceToTarget)
-//             {
-//                 chance += Random.Range(20, 30);
-//             }
-//         }  
+        if (recommendedAIBehavior.MaxDistanceToTarget != 0)
+        {
+            if (CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.DistanceToTarget < recommendedAIBehavior.MaxDistanceToTarget)
+            {
+                chance += Random.Range(20, 30);
+            }
+        }  
         
-//         if (CustomMonoBehavior.MoveToTarget.DistanceToTarget > recommendedAIBehavior.MinDistanceToTarget)
-//         {
-//             chance += Random.Range(20, 30);
-//         }
+        if (CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.DistanceToTarget > recommendedAIBehavior.MinDistanceToTarget)
+        {
+            chance += Random.Range(20, 30);
+        }
 
-//         return chance;
-//     }
+        if (recommendedAIBehavior.IsLookingAtTarget)
+        {
+            if (CustomMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget)
+            {
+                chance += Random.Range(20, 30);
+            }
+        }
 
-//     SubSkillParameter GetSubSkillRequiredParameter(SubSkillRequiredParameter subSkillRequiredParameter)
-//     {
-//         SubSkillParameter subSkillParameter = new SubSkillParameter();
+        return chance;
+    }
 
-//         if (subSkillRequiredParameter.Target)
-//         {
-//             subSkillParameter.Target = CustomMonoBehavior.MoveToTarget.Target;
-//         }
+    SubSkillParameter GetSubSkillRequiredParameter(SubSkillRequiredParameter subSkillRequiredParameter)
+    {
+        SubSkillParameter subSkillParameter = new SubSkillParameter();
 
-//         return subSkillParameter;
-//     }
+        if (subSkillRequiredParameter.Target)
+        {
+            subSkillParameter.Target = CustomMonoBehavior.Target.transform;
+        }
 
-//     public void HandleSubSkillCondition(WeaponSubSkill weaponSubSkill)
-//     {
-//         if (weaponSubSkill.SubSkillCondition.StopMoving)
-//         {
-//             CustomMonoBehavior.MoveToTarget.CanMove = false;
-//             weaponSubSkill.finishSkillDelegate += () => CustomMonoBehavior.MoveToTarget.CanMove = true;
-//         }
-//         if (weaponSubSkill.SubSkillCondition.StopRotating)
-//         {
-//             CustomMonoBehavior.MoveToTarget.CanRotate = false;
-//             weaponSubSkill.finishSkillDelegate += () => CustomMonoBehavior.MoveToTarget.CanRotate = true;
-//         }
-//     }
-// }
+        return subSkillParameter;
+    }
+
+    public void HandleSubSkillCondition(SkillBase skill)
+    {
+        if (skill.SubSkillCondition.StopMoving)
+        {
+            CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanMove = false;
+            skill.finishSkillDelegate += () => CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanMove = true;
+        }
+        if (skill.SubSkillCondition.StopRotating)
+        {
+            // CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanRotate = false;
+            // skill.finishSkillDelegate += () => CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanRotate = true;
+        }
+    }
+}

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-class SwordSkillThousandSword : WeaponSubSkill
+class SwordSkillThousandSword : SkillBase
 {
     [SerializeField] private static ObjectPool freeObjectPool {get; set;}
     public SubSkillChangableAttribute CoolDown { get => coolDown; set => coolDown = value; }
@@ -41,21 +41,21 @@ class SwordSkillThousandSword : WeaponSubSkill
     {
         if (CanUse)
         {
-            GameObject target = CustomMonoBehavior.PlayerScript.TargetableObject.TargetChecker.NearestTarget.SkillCastOriginPoint;
+            // GameObject target = CustomMonoBehavior.PlayerScript.TargetableObject.TargetChecker.NearestTarget.SkillCastOriginPoint;
 
-            if (Vector3.Distance(CustomMonoBehavior.SkillCastOriginPoint.transform.position, target.transform.position) < castRange.FloatValue)
-            {
-                CanUse = false;
+            // if (Vector3.Distance(CustomMonoBehavior.SkillCastOriginPoint.transform.position, target.transform.position) < castRange.FloatValue)
+            // {
+            //     CanUse = false;
 
-                //CustomMonoBehavior.Animator.SetBool("HandUpCast", true);
-                //CustomMonoBehavior.Animator.Play("UpperBody.HandUpCast", 1, 0);
-                for (int i = 0; i < timers.FloatArray.Length; i++)
-                {
-                    StartCoroutine(Flying(timers.FloatArray[i], target));
-                }
+            //     //CustomMonoBehavior.Animator.SetBool("HandUpCast", true);
+            //     //CustomMonoBehavior.Animator.Play("UpperBody.HandUpCast", 1, 0);
+            //     for (int i = 0; i < timers.FloatArray.Length; i++)
+            //     {
+            //         StartCoroutine(Flying(timers.FloatArray[i], target));
+            //     }
 
-                StartCoroutine(BeginCooldown());
-            }
+            //     StartCoroutine(BeginCooldown());
+            // }
         }
     }
 
@@ -98,7 +98,7 @@ class SwordSkillThousandSword : WeaponSubSkill
         Transform swordWeaponParent = swordWeapon.transform.parent;
         swordWeapon.FlyingTrail.enabled = true;
         swordWeapon.CollideAndDamage.ColliderDamage = 20f;
-        swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.SkillableObject.CustomMonoBehavior.AllyTags;
+        swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
         swordWeapon.Animator.SetBool("ThousandSword", true);
 
         Vector3 targetVector; 

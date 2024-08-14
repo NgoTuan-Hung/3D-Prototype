@@ -82,6 +82,28 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
         return false;
     }
 
+    public bool CheckTransitionUpper(State newState)
+    {
+        if (currentUpperBodyState != newState)
+        {
+            if (onAir) return upperBodyTransitionRules[(int)currentUpperBodyState][(int)newState].OnAirOutCome;
+            else return upperBodyTransitionRules[(int)currentUpperBodyState][(int)newState].OnGroundOutCome;
+        }
+
+        return false;
+    }
+
+    public bool CheckTransitionLower(State newState)
+    {
+        if (currentLowerBodyState != newState)
+        {
+            if (onAir) return lowerBodyTransitionRules[(int)currentLowerBodyState][(int)newState].OnAirOutCome;
+            else return lowerBodyTransitionRules[(int)currentLowerBodyState][(int)newState].OnGroundOutCome;
+        }
+
+        return false;
+    }
+
     public void PlayLowerState(State state)
     {
         switch (state)

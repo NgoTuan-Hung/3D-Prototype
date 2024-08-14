@@ -51,5 +51,16 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "3D-Prototype.sln"
+    "dotnet.defaultSolution": "Upgraded_3D Prototype.sln",
+    "editor.tabSize": 4,
+    "editor.tabFocusMode": false,
+    "workbench.editor.highlightModifiedTabs": false,
+    "workbench.editor.pinnedTabSizing": "normal",
+    "workbench.editor.pinnedTabsOnSeparateRow": true,
+    "workbench.editor.showTabs": "multiple",
+    "workbench.editor.tabActionLocation": "right",
+    "workbench.editor.tabSizing": "fit",
+    "workbench.editor.wrapTabs": true,
+    "window.density.editorTabHeight": "compact",
+    "workbench.editor.scrollToSwitchTabs": true
 }
