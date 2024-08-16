@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,14 +72,12 @@ public class GameEffect : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public delegate void TriggerActionDelegate();
-    public TriggerActionDelegate triggerActionDelegate;
-    public void TriggerActionWithCondition(bool distanceToTarget, GameObject targetGameObject, float distance, bool timer, float time)
+    public Coroutine TriggerActionWithCondition(bool distanceToTarget, GameObject targetGameObject, float distance, bool timer, float time, Action action)
     {
-        StartCoroutine(TriggerActionWithConditionCoroutine(distanceToTarget, targetGameObject, distance, timer, time));
+        return StartCoroutine(TriggerActionWithConditionCoroutine(distanceToTarget, targetGameObject, distance, timer, time, action));
     }
 
-    public IEnumerator TriggerActionWithConditionCoroutine(bool distanceToTarget, GameObject targetGameObject, float distance, bool timer, float time)
+    public IEnumerator TriggerActionWithConditionCoroutine(bool distanceToTarget, GameObject targetGameObject, float distance, bool timer, float time, Action action)
     {
         if (distanceToTarget)
         {
@@ -88,8 +87,7 @@ public class GameEffect : MonoBehaviour
 
                 if (Vector3.Distance(targetGameObject.transform.position, transform.position) <= distance)
                 {
-                    triggerActionDelegate?.Invoke();
-                    triggerActionDelegate = null;
+                    action?.Invoke();
                     break;
                 }
             }
@@ -97,40 +95,7 @@ public class GameEffect : MonoBehaviour
         else if (timer)
         {
             yield return new WaitForSeconds(time);
-            triggerActionDelegate?.Invoke();
-            triggerActionDelegate = null;
-        }
-    }
-
-    public delegate void TriggerActionDelegate1();
-    public TriggerActionDelegate triggerActionDelegate1;
-    public Coroutine triggerActionWithConditionCoroutine1;
-    public void TriggerActionWithCondition1(bool distanceToTarget, GameObject targetGameObject, float distance, bool timer, float time)
-    {
-        triggerActionWithConditionCoroutine1 = StartCoroutine(TriggerActionWithConditionCoroutine1(distanceToTarget, targetGameObject, distance, timer, time));
-    }
-
-    public IEnumerator TriggerActionWithConditionCoroutine1(bool distanceToTarget, GameObject targetGameObject, float distance, bool timer, float time)
-    {
-        if (distanceToTarget)
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(Time.fixedDeltaTime);
-
-                if (Vector3.Distance(targetGameObject.transform.position, transform.position) <= distance)
-                {
-                    triggerActionDelegate1?.Invoke();
-                    triggerActionDelegate1 = null;
-                    break;
-                }
-            }
-        }
-        else if (timer)
-        {
-            yield return new WaitForSeconds(time);
-            triggerActionDelegate1?.Invoke();
-            triggerActionDelegate1 = null;
+            action?.Invoke();
         }
     }
 
@@ -151,6 +116,7 @@ public class GameEffect : MonoBehaviour
         }
     }
 
+    /* Use these in case we want to use the effect with animation */
     public delegate void AnimationEvent1Delegate();
     public AnimationEvent1Delegate animationEvent1Delegate;
     public void AnimationEvent1()

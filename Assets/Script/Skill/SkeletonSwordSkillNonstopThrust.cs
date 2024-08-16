@@ -51,6 +51,7 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
         CustomMonoBehavior.HumanLikeAnimatorBrain.StopState(AnimatorStateForSkill);
     }
 
+    private Coroutine timeoutCoroutine;
     public IEnumerator ExecuteAfterAnimationFrame(SubSkillParameter subSkillParameter)
     {
         yield return new WaitForSeconds(ExecutionTimeAfterAnimationFrame);
@@ -59,8 +60,8 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
         {
             CanUse = false;
             
-            GameEffect gameEffect = thrustingEffectPool.PickOne().GameEffect;
-            gameEffect.VisualEffect.Stop();
+            GameEffect thrustingEffect = thrustingEffectPool.PickOne().GameEffect;
+            thrustingEffect.VisualEffect.Stop();
 
             GameEffect skeletonThrustingEffect = skeletonThrustingEffectPool.PickOne().GameEffect;
             skeletonThrustingEffect.transform.position = transform.position;
@@ -71,41 +72,35 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
             skeletonThrustingEffect.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
             
             skeletonThrustingEffect.TravelToDirection(travelToDirection, flySpeed.FloatValue);
-            skeletonThrustingEffect.triggerActionDelegate += () => TriggerActionDelegateParam(skeletonThrustingEffect);
-            skeletonThrustingEffect.triggerActionDelegate1 += () => TriggerActionDelegate1Param(gameEffect, skeletonThrustingEffect);
-            skeletonThrustingEffect.animationEvent1Delegate += () => AnimationEvent1DelegateParam(gameEffect, skeletonThrustingEffect);
+            skeletonThrustingEffect.animationEvent1Delegate += () => AnimationEvent1DelegateParam(thrustingEffect, skeletonThrustingEffect);
             skeletonThrustingEffect.animationEvent2Delegate += () => AnimationEvent2DelegateParam(skeletonThrustingEffect);
-            skeletonThrustingEffect.TriggerActionWithCondition1(false, null, 0, true, 5f);
-            skeletonThrustingEffect.TriggerActionWithCondition(true, subSkillParameter.Target.gameObject, 2f, false, 0);
+            timeoutCoroutine = skeletonThrustingEffect.TriggerActionWithCondition(false, null, 0, true, 5f, () => TriggerActionDelegate1Param(thrustingEffect, skeletonThrustingEffect));
+            skeletonThrustingEffect.TriggerActionWithCondition(true, subSkillParameter.Target.gameObject, 2f, false, 0, () => TriggerActionDelegateParam(skeletonThrustingEffect, timeoutCoroutine));
 
             StartCoroutine(StopCoroutine());
         }
     }
 
-    public void TriggerActionDelegateParam(GameEffect skeletonThrustingEffect)
+    public void TriggerActionDelegateParam(GameEffect skeletonThrustingEffect, Coroutine timeoutCoroutine)
     {
         skeletonThrustingEffect.Animator.speed = 1;
         skeletonThrustingEffect.TravelToDirectionBool = false;
-        skeletonThrustingEffect.StopCoroutine(skeletonThrustingEffect.triggerActionWithConditionCoroutine1);
+        skeletonThrustingEffect.StopCoroutine(timeoutCoroutine);
     }
 
-    public void TriggerActionDelegate1Param(GameEffect gameEffect, GameEffect skeletonThrustingEffect)
+    public void TriggerActionDelegate1Param(GameEffect thrustingEffect, GameEffect skeletonThrustingEffect)
     {
         skeletonThrustingEffect.gameObject.SetActive(false);
-        gameEffect.gameObject.SetActive(false);
+        thrustingEffect.gameObject.SetActive(false);
     }
 
-    public void AnimationEvent1DelegateParam(GameEffect gameEffect, GameEffect skeletonThrustingEffect)
+    public void AnimationEvent1DelegateParam(GameEffect thrustingEffect, GameEffect skeletonThrustingEffect)
     {
-        gameEffect.transform.position = skeletonThrustingEffect.transform.position + new Vector3(0, 1, 0);
-        gameEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
-        gameEffect.transform.rotation = skeletonThrustingEffect.transform.rotation;
-        gameEffect.VisualEffect.Play();
-        gameEffect.triggerActionDelegate += () => 
-        {
-            gameEffect.gameObject.SetActive(false);
-        };
-        gameEffect.TriggerActionWithCondition(false, null, 0, true, 5f);
+        thrustingEffect.transform.position = skeletonThrustingEffect.transform.position + new Vector3(0, 1, 0);
+        thrustingEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
+        thrustingEffect.transform.rotation = skeletonThrustingEffect.transform.rotation;
+        thrustingEffect.VisualEffect.Play();
+        thrustingEffect.TriggerActionWithCondition(false, null, 0, true, 5f, () => thrustingEffect.gameObject.SetActive(false));
     }
     
     public void AnimationEvent2DelegateParam(GameEffect skeletonThrustingEffect)
