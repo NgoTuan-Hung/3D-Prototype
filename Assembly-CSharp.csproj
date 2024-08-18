@@ -186,6 +186,8 @@
     <None Include="Assets\Import\BOXOPHOBIC\Skybox Cubemap Extended\Core\Shaders\Skybox Cubemap Blend.shader" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Feature Examples\SRPCommon\TextMesh Pro\Resources\Fonts &amp; Materials\Inter-LICENSE.txt" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Feature Examples\Custom Lighting\PBR\CustomLighting.hlsl" />
+    <None Include="Assets\Material\Test\Fun\Shader\Hologram.shader" />
+    <None Include="Assets\Material\Test\Fun\Metalball.shader" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\Common\Subgraphs\SampleReflectionProbes.hlsl" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Feature Examples\Custom Lighting\PBR\SampleReflectionProbes.hlsl" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\SRPCommon\Scripts\Resources\SamplesSelectionUSS.uss" />
