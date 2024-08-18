@@ -10,15 +10,14 @@ Shader "Unlit/NewUnlitShader"
     }
     SubShader
     {
-        Tags {"Queue"="Transparent"}
-        LOD 100
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+		Blend SrcAlpha OneMinusSrcAlpha
+		LOD 100
+		ColorMask RGB
+        Cull Off
 
         Pass
         {
-            Blend SrcAlpha OneMinusSrcAlpha
-            Cull Off
-            
-
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag

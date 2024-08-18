@@ -30,11 +30,11 @@
 	}
 	SubShader
 	{
-		Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+		Tags { "Queue"="Geometry" "RenderType"="Transparent" }
 		Blend SrcAlpha OneMinusSrcAlpha
 		LOD 100
 		ColorMask RGB
-        Cull Back
+        Cull Off
 
 		Pass
 		{
