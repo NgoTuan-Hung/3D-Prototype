@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,7 +22,7 @@ class SwordSkillSummonBigSword : SkillBase
         base.Awake();
         if (CustomMonoBehavior.EntityType.Equals("Player"))
         {
-            skillCast = Instantiate(Resources.Load("BigSwordSkillCast")).GameObject();
+            skillCast = Instantiate(Resources.Load("BigSwordSkillCast")) as GameObject;
             skillCast.SetActive(false);
         }
         GameObject bigSwordEffectPrefab = Resources.Load("Effect/SummonBigSword") as GameObject;

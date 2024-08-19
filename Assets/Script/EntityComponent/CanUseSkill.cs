@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CustomMonoBehavior))]
 public class CanUseSkill : MonoBehaviour
 {
     private CustomMonoBehavior customMonoBehavior;
@@ -10,6 +11,7 @@ public class CanUseSkill : MonoBehaviour
     [SerializeField] private List<String> skillNames;
     public List<SkillBase> Skills { get => skills; set => skills = value; }
 
+    private SkillBase skillBaseTemp;
     private void Awake()
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
@@ -21,7 +23,10 @@ public class CanUseSkill : MonoBehaviour
         {
             skillNames.ForEach(skillName =>
             {
-                skills.Add((SkillBase)gameObject.AddComponent(Type.GetType(skillName)));
+                //skills.Add((SkillBase)gameObject.AddComponent(Type.GetType(skillName)));
+                skillBaseTemp = (SkillBase)customMonoBehavior.GetComponent(skillName);
+                skillBaseTemp.enabled = true;
+                skills.Add(skillBaseTemp);
             });
         }
     }

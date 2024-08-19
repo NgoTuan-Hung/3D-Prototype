@@ -26,16 +26,16 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
         
         RecommendedAIBehavior.MaxDistanceToTarget = 5f;
         RecommendedAIBehavior.IsLookingAtTarget = true;
-        
-        CustomMonoBehavior.HumanLikeAnimatorBrain.AddEventForClipOfState
-        (
-            "SkeletonSwordSkillNonstopThrustStopAnimationEvent", AnimatorStateForSkill, HumanLikeAnimatorBrain.AddEventForClipOfStateTimeType.End, 0
-        );
     }
 
     public override void Start()
     {
         base.Start();
+
+        CustomMonoBehavior.HumanLikeAnimatorBrain.AddEventForClipOfState
+        (
+            "SkeletonSwordSkillNonstopThrustStopAnimationEvent", AnimatorStateForSkill, HumanLikeAnimatorBrain.AddEventForClipOfStateTimeType.End, 0
+        );
     }
 
     [SerializeField] private SubSkillChangableAttribute coolDown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 3f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SkeletonSwordSkillNonstopThrust), typeof(SwordSkillSummonBigSword), typeof(SwordSkillThousandSword))]
 public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
 {
     [SerializeField] private String entityType;
@@ -29,6 +30,9 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private Vector3 cameraPointToCameraVector;
     private GameObject target;
     public static ObjectPool freeObjectPool;
+    private SkeletonSwordSkillNonstopThrust skeletonSwordSkillNonstopThrust;
+    private SwordSkillSummonBigSword swordSkillSummonBigSword;
+    private SwordSkillThousandSword swordSkillThousandSword;
     private bool canUseSkillBool = false;
     private bool botHumanLikeJumpRandomlyBool = false;
     private bool humanLikeLookableBool = false;
@@ -88,6 +92,9 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public bool BotHumanLikeJumpRandomlyBool { get => botHumanLikeJumpRandomlyBool; set => botHumanLikeJumpRandomlyBool = value; }
     public bool CanUseSkillBool { get => canUseSkillBool; set => canUseSkillBool = value; }
     public CanUseSkill CanUseSkill { get => canUseSkill; set => canUseSkill = value; }
+    internal SkeletonSwordSkillNonstopThrust SkeletonSwordSkillNonstopThrust { get => skeletonSwordSkillNonstopThrust; set => skeletonSwordSkillNonstopThrust = value; }
+    internal SwordSkillSummonBigSword SwordSkillSummonBigSword { get => swordSkillSummonBigSword; set => swordSkillSummonBigSword = value; }
+    internal SwordSkillThousandSword SwordSkillThousandSword { get => swordSkillThousandSword; set => swordSkillThousandSword = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -127,6 +134,18 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
 
         GameObject freeObjectPrefab = Resources.Load("FreeObject") as GameObject;
         freeObjectPool ??= new ObjectPool(freeObjectPrefab, 20, new PoolArgument(typeof(GameObject), PoolArgument.WhereComponent.Self));
+
+        DeactivateAllSkill();
+    }
+
+    public void DeactivateAllSkill()
+    {
+        skeletonSwordSkillNonstopThrust = GetComponent<SkeletonSwordSkillNonstopThrust>();
+        swordSkillSummonBigSword = GetComponent<SwordSkillSummonBigSword>();
+        swordSkillThousandSword = GetComponent<SwordSkillThousandSword>();
+        skeletonSwordSkillNonstopThrust.enabled = false;
+        swordSkillSummonBigSword.enabled = false;
+        swordSkillThousandSword.enabled = false;
     }
 
     public void UpdateHealth(float value)
