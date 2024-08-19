@@ -11,7 +11,9 @@ public class CollideAndDamage : MonoBehaviour
     [SerializeField] private float collisionDelayTime = 0.1f;
     [SerializeField] private List<string> collideExcludeTags = new List<string>();
     public enum ColliderType {Single, Multiple};
+    public enum CollisionType {Collider, ParticleSystem};
     [SerializeField] private ColliderType colliderType = ColliderType.Single;
+    [SerializeField] private CollisionType collisionType = CollisionType.Collider;
     private BinarySearchTree<CollisionData> binarySearchTree = new BinarySearchTree<CollisionData>();
     public delegate void OnTriggerEnterDelegate(Collider other);
     public delegate void OnTriggerStayDelegate(Collider other);
@@ -19,37 +21,45 @@ public class CollideAndDamage : MonoBehaviour
     public OnTriggerEnterDelegate onTriggerEnterDelegate;
     public OnTriggerStayDelegate onTriggerStayDelegate;
     public OntriggerStayOnceDelegate onTriggerStayOnceDelegate;
+    private ParticleSystemEvent particleSystemEvent;
     public float ColliderDamage { get => colliderDamage; set => colliderDamage = value; }
     public float BaseColliderDamage { get => baseColliderDamage; set => baseColliderDamage = value; }
     public List<string> CollideExcludeTags { get => collideExcludeTags; set => collideExcludeTags = value; }
 
     public void Awake()
     {
-        if (colliderType == ColliderType.Single)
+        if (collisionType == CollisionType.Collider)
         {
-            onTriggerEnterDelegate += (Collider other) => 
+            if (colliderType == ColliderType.Single)
             {
-                if (!collideExcludeTags.Contains(other.gameObject.tag))
+                onTriggerEnterDelegate += (Collider other) => 
                 {
-                    GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
-                }
-            };
-        }
-        else if (colliderType == ColliderType.Multiple)
+                    if (!collideExcludeTags.Contains(other.gameObject.tag))
+                    {
+                        GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
+                    }
+                };
+            }
+            else if (colliderType == ColliderType.Multiple)
+            {
+                onTriggerStayDelegate += (Collider other) => 
+                {
+                    onTriggerStayOnceDelegate?.Invoke(); onTriggerStayOnceDelegate = null;
+                    if
+                    (
+                        CheckCollidable(other.gameObject)
+                        && !collideExcludeTags.Contains(other.gameObject.tag)
+                    )
+                    {
+                        // need more work
+                        GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
+                    }
+                };
+            }
+        } 
+        else if (collisionType == CollisionType.ParticleSystem)
         {
-            onTriggerStayDelegate += (Collider other) => 
-            {
-                onTriggerStayOnceDelegate?.Invoke(); onTriggerStayOnceDelegate = null;
-                if
-                (
-                    CheckCollidable(other.gameObject)
-                    && !collideExcludeTags.Contains(other.gameObject.tag)
-                )
-                {
-                    // need more work
-                    GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
-                }
-            };
+            particleSystemEvent = GetComponentInChildren<ParticleSystemEvent>();
         }
     }
 

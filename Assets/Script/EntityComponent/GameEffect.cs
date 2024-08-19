@@ -35,16 +35,16 @@ public class GameEffect : MonoBehaviour
     {
         if ((particleSystem = GetComponentInChildren<ParticleSystem>()) != null)
         {
-            particleSystemBool = true;
-            if (!alreadySetOriginal)
-            {
-                alreadySetOriginal = true;
-                var main = particleSystem.main;
-                particleSystemStartSizeXMultiplierOriginal = main.startSizeXMultiplier;
-                particleSystemStartSizeYMultiplierOriginal = main.startSizeYMultiplier;
-                particleSystemStartSizeZMultiplierOriginal = main.startSizeZMultiplier;
-                particleSystemStartLifetimeOriginal = main.startLifetime.constantMax;
-            }
+            // particleSystemBool = true;
+            // if (!alreadySetOriginal)
+            // {
+            //     alreadySetOriginal = true;
+            //     var main = particleSystem.main;
+            //     particleSystemStartSizeXMultiplierOriginal = main.startSizeXMultiplier;
+            //     particleSystemStartSizeYMultiplierOriginal = main.startSizeYMultiplier;
+            //     particleSystemStartSizeZMultiplierOriginal = main.startSizeZMultiplier;
+            //     particleSystemStartLifetimeOriginal = main.startLifetime.constantMax;
+            // }
         }
 
         if ((particleSystemEvent = GetComponentInChildren<ParticleSystemEvent>()) != null) particleSystemEventBool = true;
