@@ -43,7 +43,7 @@ public class CollideAndDamage : MonoBehaviour
 
     public void Awake()
     {
-        boxCollider = GetComponent<BoxCollider>();
+        if ((boxCollider = GetComponent<BoxCollider>()) == null) boxCollider = GetComponentInChildren<BoxCollider>();
         colliderDefaultCenter = boxCollider.center;
         colliderDefaultSize = boxCollider.size;
 
@@ -53,6 +53,7 @@ public class CollideAndDamage : MonoBehaviour
             {
                 if (!collideExcludeTags.Contains(other.gameObject.tag))
                 {
+                    Debug.Log("CollideAndDamage: " + other.gameObject.name);
                     GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
                 }
             };
@@ -72,22 +73,6 @@ public class CollideAndDamage : MonoBehaviour
                     GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
                 }
             };
-        }
-    }
-
-    [UnityEditor.Callbacks.DidReloadScripts]
-    private static void ScriptsHasBeenReloaded()
-    {
-        SceneView.duringSceneGui += DuringSceneGui;
-    }
-
-    static void DuringSceneGui(SceneView sceneView)
-    {
-        Event e = Event.current;
-        if (e.isKey && e.keyCode == KeyCode.F)
-        {
-            print("You pressed F key!");
-            triggerEvent = true;
         }
     }
 
@@ -155,17 +140,21 @@ public class CollideAndDamage : MonoBehaviour
     {
         yield return new WaitForSeconds(startDelayTime);
         ResetDynamicCollider();
-        StartCoroutine(DynamicColliderCycle());
+        StartCoroutine(DynamicColliderCycle(false));
 
-        for (int i=1;i<cycle;i++)
+        for (int i=1;i<cycle-1;i++)
         {
             yield return new WaitForSeconds(cycleLifeTime + startDelayTime);
             ResetDynamicCollider();
-            StartCoroutine(DynamicColliderCycle());
+            StartCoroutine(DynamicColliderCycle(false));
         }
+
+        yield return new WaitForSeconds(cycleLifeTime + startDelayTime);
+        ResetDynamicCollider();
+        StartCoroutine(DynamicColliderCycle(true));
     }
 
-    public IEnumerator DynamicColliderCycle()
+    public IEnumerator DynamicColliderCycle(bool last)
     {
         float timePassed = 0f;
         float actualTime = 0f;
@@ -191,6 +180,8 @@ public class CollideAndDamage : MonoBehaviour
 
             if (timePassed > cycleLifeTime) break;
         }
+
+        if (last) ResetDynamicCollider();
     }
 
     public void ResetDynamicCollider()
