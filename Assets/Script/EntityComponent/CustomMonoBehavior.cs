@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SkeletonSwordSkillNonstopThrust), typeof(SwordSkillSummonBigSword), typeof(SwordSkillThousandSword))]
+[RequireComponent(typeof(LightingRain))]
 public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
 {
     [SerializeField] private String entityType;
@@ -33,6 +34,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private SkeletonSwordSkillNonstopThrust skeletonSwordSkillNonstopThrust;
     private SwordSkillSummonBigSword swordSkillSummonBigSword;
     private SwordSkillThousandSword swordSkillThousandSword;
+    private LightingRain lightingRain;
     private bool canUseSkillBool = false;
     private bool botHumanLikeJumpRandomlyBool = false;
     private bool humanLikeLookableBool = false;
@@ -95,6 +97,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     internal SkeletonSwordSkillNonstopThrust SkeletonSwordSkillNonstopThrust { get => skeletonSwordSkillNonstopThrust; set => skeletonSwordSkillNonstopThrust = value; }
     internal SwordSkillSummonBigSword SwordSkillSummonBigSword { get => swordSkillSummonBigSword; set => swordSkillSummonBigSword = value; }
     internal SwordSkillThousandSword SwordSkillThousandSword { get => swordSkillThousandSword; set => swordSkillThousandSword = value; }
+    public LightingRain LightingRain { get => lightingRain; set => lightingRain = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -143,9 +146,11 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         skeletonSwordSkillNonstopThrust = GetComponent<SkeletonSwordSkillNonstopThrust>();
         swordSkillSummonBigSword = GetComponent<SwordSkillSummonBigSword>();
         swordSkillThousandSword = GetComponent<SwordSkillThousandSword>();
+        lightingRain = GetComponent<LightingRain>();
         skeletonSwordSkillNonstopThrust.enabled = false;
         swordSkillSummonBigSword.enabled = false;
         swordSkillThousandSword.enabled = false;
+        lightingRain.enabled = false;
     }
 
     public void UpdateHealth(float value)

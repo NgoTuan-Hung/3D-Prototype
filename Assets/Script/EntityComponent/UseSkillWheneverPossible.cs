@@ -26,7 +26,7 @@ class UseSkillWheneverPossible : EntityAction
         {
             if (skill.CanUse && skill.CheckAction())
             {
-                if (UseSkillChance(skill.RecommendedAIBehavior) >= useSkillChanceRequired)
+                if (UseSkillChance(skill.RecommendedAIBehavior) >= skill.UseSkillChance)
                 {
                     HandleSubSkillCondition(skill);
                     skill.Trigger(GetSubSkillRequiredParameter(skill.SubSkillRequiredParameter));

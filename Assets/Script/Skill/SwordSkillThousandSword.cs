@@ -25,6 +25,7 @@ class SwordSkillThousandSword : SkillBase
         };
 
         RecommendedAIBehavior.MaxDistanceToTarget = castRange.FloatValue;
+        UseSkillChance = 25f;
     }
     
     public override void Start()

@@ -6,7 +6,6 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class CollideAndDamage : MonoBehaviour 
 {
     [SerializeField] private float colliderDamage = 0f;
@@ -18,7 +17,6 @@ public class CollideAndDamage : MonoBehaviour
     private BinarySearchTree<CollisionData> binarySearchTree = new BinarySearchTree<CollisionData>();
     private BoxCollider boxCollider;
     [SerializeField] private bool isDynamic = false;
-    [SerializeField] private bool isDynamicColliderTriggered = false;
     [SerializeField] private int cycle = 0;
     [SerializeField] private float cycleLifeTime = 0f;
     [SerializeField] private float startDelayTime = 0f;
@@ -76,23 +74,14 @@ public class CollideAndDamage : MonoBehaviour
         }
     }
 
-    public static bool triggerEvent = false;
-    void Update()
-    {
-        if (isDynamic && isDynamicColliderTriggered && triggerEvent)
-        {
-            triggerEvent = false;
-            isDynamicColliderTriggered = false;
-            StartCoroutine(StartDynamicCollider());
-        }
-    }
-
     public void OnEnable()
     {
         onTriggerStayOnceDelegate += () => 
         {
             StartCoroutine(CollisionTimer());
         };
+
+        if (isDynamic) StartCoroutine(StartDynamicCollider());
     }
 
 

@@ -240,7 +240,9 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
             _ => gameObject.name + "Idle",
         };
 
+        Debug.Log("clipName: " + clipName);
         AnimationClip clip = customMonoBehavior.Animator.runtimeAnimatorController.animationClips.First(clip => clip.name.Equals(clipName));
+        customMonoBehavior.Animator.runtimeAnimatorController.animationClips.ToList().ForEach(clip => Debug.Log(clip.name));
         AnimationEvent animationEvent = new AnimationEvent();
         animationEvent.functionName = functionName;
 

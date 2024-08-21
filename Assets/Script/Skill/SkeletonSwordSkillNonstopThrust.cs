@@ -26,6 +26,7 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
         
         RecommendedAIBehavior.MaxDistanceToTarget = 5f;
         RecommendedAIBehavior.IsLookingAtTarget = true;
+        UseSkillChance = 45f;
     }
 
     public override void Start()

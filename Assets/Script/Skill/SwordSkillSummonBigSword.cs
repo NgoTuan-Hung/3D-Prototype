@@ -36,6 +36,7 @@ class SwordSkillSummonBigSword : SkillBase
         };
 
         RecommendedAIBehavior.MaxDistanceToTarget = 15f;
+        UseSkillChance = 25f;
     }
 
     public override void Start()

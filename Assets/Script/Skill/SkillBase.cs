@@ -17,6 +17,7 @@ public class SkillBase : MonoBehaviour
     private State animatorStateForSkill;
     private bool upperBodyCheckForAction;
     [SerializeField] private float executionTimeAfterAnimationFrame;
+    [SerializeField] private float useSkillChance;
     public ObjectPool WeaponPool { get => weaponPool; set => weaponPool = value; }
     public SubSkillRequiredParameter SubSkillRequiredParameter { get => subSkillRequiredParameter; set => subSkillRequiredParameter = value; }
     public RecommendedAIBehavior RecommendedAIBehavior { get => recommendedAIBehavior; set => recommendedAIBehavior = value; }
@@ -27,6 +28,7 @@ public class SkillBase : MonoBehaviour
     public State AnimatorStateForSkill { get => animatorStateForSkill; set => animatorStateForSkill = value; }
     public bool UpperBodyCheckForAction { get => upperBodyCheckForAction; set => upperBodyCheckForAction = value; }
     public float ExecutionTimeAfterAnimationFrame { get => executionTimeAfterAnimationFrame; set => executionTimeAfterAnimationFrame = value; }
+    public float UseSkillChance { get => useSkillChance; set => useSkillChance = value; }
 
     public virtual void Trigger(SubSkillParameter subSkillParameter)
     {
@@ -82,7 +84,7 @@ public class SubSkillChangableAttribute
     [SerializeField] private float floatValue;
     [SerializeField] private float[] floatArray;
     [SerializeField] private Vector3 vector3;
-    public enum SubSkillAttributeType {Cooldown, Speed, Distance, Timers, Position, TimeScale, CastRange}
+    public enum SubSkillAttributeType {Cooldown, Speed, Distance, Timers, Position, TimeScale, CastRange, ParticleSystemTimeEnd}
     public enum SubSkillAttributeValueType {Int, Float, FloatArray, Vector3}
     private SubSkillAttributeType subSkillAttributeType;
     private SubSkillAttributeValueType subSkillAttributeValueType;

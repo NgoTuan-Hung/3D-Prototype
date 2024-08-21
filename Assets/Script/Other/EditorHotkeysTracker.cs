@@ -11,8 +11,7 @@ public static class EditorHotkeysTracker
             var e = Event.current;
             if (e != null && e.keyCode == KeyCode.F)
             {
-                Debug.Log("F key pressed");
-                CollideAndDamage.triggerEvent = true;
+                
             }
         };
     }
