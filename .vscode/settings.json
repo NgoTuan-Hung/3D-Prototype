@@ -51,7 +51,7 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "3D-Prototype.sln",
+    "dotnet.defaultSolution": "Upgraded_3D Prototype.sln",
     "editor.tabSize": 4,
     "editor.tabFocusMode": false,
     "workbench.editor.highlightModifiedTabs": false,
