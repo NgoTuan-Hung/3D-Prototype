@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SkeletonSwordSkillNonstopThrust), typeof(SwordSkillSummonBigSword), typeof(SwordSkillThousandSword))]
-[RequireComponent(typeof(LightingRain))]
+[RequireComponent(typeof(LightingRain), typeof(FlameRider))]
 public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
 {
     [SerializeField] private String entityType;
@@ -35,6 +35,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private SwordSkillSummonBigSword swordSkillSummonBigSword;
     private SwordSkillThousandSword swordSkillThousandSword;
     private LightingRain lightingRain;
+    private FlameRider flameRider;
     private bool canUseSkillBool = false;
     private bool botHumanLikeJumpRandomlyBool = false;
     private bool humanLikeLookableBool = false;
@@ -53,6 +54,8 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     bool moveToTargetBool = false;
     bool meleeSimpleAttackWhenNearBool = false;
     bool skillCastOriginPointBool = false;
+    public enum CustomMonoBehaviorState {Available, CanNotDoAnything}
+    private CustomMonoBehaviorState customMonoBehaviorState = CustomMonoBehaviorState.Available;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurentHealth { get => curentHealth; set => curentHealth = value; }
     public string EntityType { get => entityType; set => entityType = value; }
@@ -98,6 +101,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     internal SwordSkillSummonBigSword SwordSkillSummonBigSword { get => swordSkillSummonBigSword; set => swordSkillSummonBigSword = value; }
     internal SwordSkillThousandSword SwordSkillThousandSword { get => swordSkillThousandSword; set => swordSkillThousandSword = value; }
     public LightingRain LightingRain { get => lightingRain; set => lightingRain = value; }
+    public FlameRider FlameRider { get => flameRider; set => flameRider = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -147,6 +151,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         swordSkillSummonBigSword = GetComponent<SwordSkillSummonBigSword>();
         swordSkillThousandSword = GetComponent<SwordSkillThousandSword>();
         lightingRain = GetComponent<LightingRain>();
+        flameRider = GetComponent<FlameRider>();
         skeletonSwordSkillNonstopThrust.enabled = false;
         swordSkillSummonBigSword.enabled = false;
         swordSkillThousandSword.enabled = false;
