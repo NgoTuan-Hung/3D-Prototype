@@ -12,9 +12,9 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     private int zone;
     public delegate void MoveDelegate();
     public MoveDelegate MoveDelegateMethod;
-    public enum MoveMode {MoveToTarget, FreeMove, MoveForwardOnly}
+    public enum MoveMode {MoveToTargetWithCaution, FreeMove, MoveToTargetMindlessly, MoveAroundTarget}
     private MoveMode moveMode;
-    [SerializeField] private float modeMovingToTargetChance = 0.8f;
+    [SerializeField] private float modeMovingToTargetWithCautionChance = 0.8f;
     [SerializeField] private float XSecond = 10;
     private bool canChangeModeEveryXSecond = true;
     public enum Intelligence {Dumb, Average, Smart}
@@ -25,15 +25,15 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         switch (value)
         {
             case Intelligence.Dumb:
-                modeMovingToTargetChance = 0.3f;
+                modeMovingToTargetWithCautionChance = 0.3f;
                 XSecond = 10;
                 break;
             case Intelligence.Average:
-                modeMovingToTargetChance = 0.5f;
+                modeMovingToTargetWithCautionChance = 0.5f;
                 XSecond = 5;
                 break;
             case Intelligence.Smart:
-                modeMovingToTargetChance = 0.8f;
+                modeMovingToTargetWithCautionChance = 0.8f;
                 XSecond = 10;
                 break;
         }
@@ -41,17 +41,17 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     private void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-        StartCoroutine(ChangeModeEveryXSecond());
+        StartDefaultBehavior();
         walkToPatternCoroutine = customMonoBehavior.NullCoroutine();
         runToPatternCoroutine = customMonoBehavior.NullCoroutine();
-        MoveDelegateMethod = MoveToTarget;
+        MoveDelegateMethod = MoveToTargetWithCaution;
     }
 
     public void ChangeMode(MoveMode moveMode)
     {
         switch (moveMode)
         {
-            case MoveMode.MoveForwardOnly:
+            case MoveMode.MoveToTargetMindlessly:
                 canChangeModeEveryXSecond = false;
                 break;
             default: return;
@@ -69,14 +69,21 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     {
         switch (moveMode)
         {
-            case MoveMode.MoveForwardOnly:
+            case MoveMode.MoveToTargetMindlessly:
                 canChangeModeEveryXSecond = true;
                 break;
             default: return;
         }
     }
 
-    public IEnumerator ChangeModeEveryXSecond()
+    public void StartDefaultBehavior()
+    {
+        /* Default behavior is moving with caution to target 
+        or just look and move randomly */
+        StartCoroutine(ChangeBetweenTwoDefaultModeEveryXSecond());
+    }
+
+    public IEnumerator ChangeBetweenTwoDefaultModeEveryXSecond()
     {
         while (true)
         {
@@ -86,17 +93,17 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
                 yield return new WaitForSeconds(Time.fixedDeltaTime);
             }
 
-            if (Random.value < modeMovingToTargetChance)
+            if (Random.value < modeMovingToTargetWithCautionChance)
             {
-                moveMode = MoveMode.MoveToTarget;
-                MoveDelegateMethod = MoveToTarget;
-                if (!customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget) customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode();
+                moveMode = MoveMode.MoveToTargetWithCaution;
+                MoveDelegateMethod = MoveToTargetWithCaution;
+                if (!customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget) customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode(BotHumanLikeLookAtTarget.LookMode.LookAtTarget);
             }
             else
             {
                 moveMode = MoveMode.FreeMove;
                 MoveDelegateMethod = FreeMove;
-                if (customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget) customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode();
+                if (customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget) customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode(BotHumanLikeLookAtTarget.LookMode.FreeLook);
             }
         }
     }
@@ -120,7 +127,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     [SerializeField] private float walkToMaxChance = 0.3f;
     private Coroutine walkToPatternCoroutine;
     private Coroutine runToPatternCoroutine;
-    public void MoveToTarget()
+    public void MoveToTargetWithCaution()
     {
         if (walkToPatternBlock || runToPatternBlock) return;
         if (zone == 1)

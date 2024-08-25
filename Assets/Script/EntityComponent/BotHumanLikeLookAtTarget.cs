@@ -9,6 +9,8 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     private CustomMonoBehavior customMonoBehavior;
     [SerializeField] private bool isLookingAtTarget = true;
     private GameObject tempEye;
+    public enum LookMode {LookAtTarget, FreeLook, LookAroundTarget}
+    private LookMode lookMode;
     public bool IsLookingAtTarget { get => isLookingAtTarget; set => isLookingAtTarget = value; }
 
     private void Awake()
@@ -17,6 +19,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         customMonoBehavior.Target = GameObject.Find("Player");
         changeFreeDirectionCoroutine = customMonoBehavior.NullCoroutine();
         freeDirectionEyeLookCoroutine = customMonoBehavior.NullCoroutine();
+        lookAroundTargetCoroutine = customMonoBehavior.NullCoroutine();
         LookDelegateMethod = LookAtTarget;
     }
 
@@ -42,20 +45,31 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
 
     public delegate void LookDelegate();
     public LookDelegate LookDelegateMethod;
-    public void ChangeMode()
+    public void ChangeMode(LookMode mode)
     {
-        if (isLookingAtTarget)
+        if (changeFreeDirectionCoroutine != null) StopCoroutine(changeFreeDirectionCoroutine);
+        if (freeDirectionEyeLookCoroutine != null) StopCoroutine(freeDirectionEyeLookCoroutine);
+        if (lookAroundTargetCoroutine != null) StopCoroutine(lookAroundTargetCoroutine);
+
+        switch (mode)
         {
-            isLookingAtTarget = false;
-            changeFreeDirectionCoroutine = StartCoroutine(ChangeFreeDirection());
-            LookDelegateMethod = FreeLook;
-        }
-        else
-        {
-            isLookingAtTarget = true;
-            StopCoroutine(changeFreeDirectionCoroutine);
-            StopCoroutine(freeDirectionEyeLookCoroutine);
-            LookDelegateMethod = LookAtTarget;
+            case LookMode.LookAtTarget:
+                isLookingAtTarget = true;
+                lookMode = LookMode.LookAtTarget;
+                LookDelegateMethod = LookAtTarget;
+                break;
+            case LookMode.FreeLook:
+                isLookingAtTarget = false;
+                lookMode = LookMode.FreeLook;
+                changeFreeDirectionCoroutine = StartCoroutine(ChangeFreeDirection());
+                LookDelegateMethod = FreeLook;
+                break;
+            case LookMode.LookAroundTarget:
+                isLookingAtTarget = false;
+                lookMode = LookMode.LookAroundTarget;
+                lookAroundTargetCoroutine = StartCoroutine(LookAroundTarget());
+                LookDelegateMethod = () => customMonoBehavior.HumanLikeLookable.EyeLook();
+                break;
         }
     }
 
@@ -75,8 +89,11 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     {
         while (true)
         {
+            /* Change direction every specified interval */
             StopCoroutine(freeDirectionEyeLookCoroutine);
+            /* Pick random object and set its position and rotation similar to the camera point */
             tempEye.transform.SetPositionAndRotation(customMonoBehavior.CameraPoint.transform.position, customMonoBehavior.CameraPoint.transform.rotation);
+            /* Rotate its forward direction randomly horizontally and look up or down within boundary*/
             tempEye.transform.Rotate(Vector3.up, Random.Range(0, 360));
             tempEye.transform.Rotate
             (
@@ -84,10 +101,12 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
                 Random.Range(freeLookUpperBound, freeLookLowerBound)
             );
 
+            /* Get the new eye vector and save the current eye vector to prepare for lerping between them.*/
             Vector3 newEyeDirection = tempEye.transform.TransformDirection(Vector3.forward);
             tempEye.transform.rotation = customMonoBehavior.CameraPoint.transform.rotation;
-            previousEyeDirection = customMonoBehavior.CameraPoint.transform.TransformDirection(Vector3.forward);
+            previousEyeDirection = tempEye.transform.TransformDirection(Vector3.forward);
 
+            /* Start lerping */
             freeDirectionEyeLookCoroutine = StartCoroutine(FreeDirectionEyeLook(newEyeDirection));
 
             yield return new WaitForSeconds(ChangeFreeDirectionInterval);
@@ -100,22 +119,42 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         float passedTime = 0;
         while (true)
         {
+            /* move the temp eye along us and lerp our real eye along the position.
+            The position is calculated based on the vector relative to our position */
             tempEye.transform.position = customMonoBehavior.CameraPoint.transform.position;
             customMonoBehavior.HumanLikeLookable.EyeAt.transform.position = tempEye.transform.TransformPoint
             (
                 Vector3.Lerp(previousEyeDirection, newEyeDirection, passedTime / moveEyeTime)
             );
 
+            /* continue until reach specified time */
             yield return new WaitForSeconds(Time.fixedDeltaTime);
             passedTime += Time.fixedDeltaTime;
             if (passedTime >= moveEyeTime) break;
         }
 
+        /* after that just keep looking at final direction */
         while (true)
         {
             tempEye.transform.position = customMonoBehavior.CameraPoint.transform.position;
             customMonoBehavior.HumanLikeLookable.EyeAt.transform.position = tempEye.transform.TransformPoint(newEyeDirection);
             yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+    }
+
+    public Coroutine lookAroundTargetCoroutine;
+    public IEnumerator LookAroundTarget()
+    {
+        Vector3 newEyePosition;
+        while (true)
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            /* Make a temp object look at our target, and the new direction of our eye will be the left or right of
+            that temp object */
+            tempEye.transform.position = customMonoBehavior.CameraPoint.transform.position;
+            tempEye.transform.rotation = Quaternion.LookRotation(customMonoBehavior.Target.transform.position - customMonoBehavior.CameraPoint.transform.position);
+            newEyePosition = tempEye.transform.TransformPoint(Vector3.right);
+            customMonoBehavior.HumanLikeLookable.EyeAt.transform.position = newEyePosition;
         }
     }
 }

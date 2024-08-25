@@ -11,7 +11,7 @@ public class FlameRider : SkillBase
         UpperBodyCheckForAnimationTransition = true;
         // ExecutionTimeAfterAnimationFrame = 0.4f;
         base.Awake();
-        GameObject fireShieldEffectPrefab = Resources.Load("Effect/FlameRider/FireShield") as GameObject;
+        GameObject fireShieldEffectPrefab = Resources.Load("Effect/FlameRiderSkill/FireShield") as GameObject;
         fireShieldEffectPool ??= new ObjectPool(fireShieldEffectPrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
         
         RecommendedAIBehavior.MoveForwardOnly = true;

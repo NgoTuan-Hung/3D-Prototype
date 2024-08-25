@@ -41,9 +41,16 @@ public class CollideAndDamage : MonoBehaviour
 
     public void Awake()
     {
-        if ((boxCollider = GetComponent<BoxCollider>()) == null) boxCollider = GetComponentInChildren<BoxCollider>();
-        colliderDefaultCenter = boxCollider.center;
-        colliderDefaultSize = boxCollider.size;
+        if ((boxCollider = GetComponent<BoxCollider>()) == null) 
+        {
+            boxCollider = GetComponentInChildren<BoxCollider>();
+        }
+
+        if (boxCollider != null)
+        {
+            colliderDefaultCenter = boxCollider.center;
+            colliderDefaultSize = boxCollider.size;
+        }
 
         if (colliderType == ColliderType.Single)
         {
