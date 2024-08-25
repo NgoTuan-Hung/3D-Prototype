@@ -9,7 +9,7 @@ public class LightingRain : SkillBase
     public override void Awake()
     {
         AnimatorStateForSkill = State.CastSpellShort;
-        UpperBodyCheckForAction = true;
+        UpperBodyCheckForAnimationTransition = true;
         ExecutionTimeAfterAnimationFrame = 0.4f;
         base.Awake();
         GameObject effectPrefab = Resources.Load("Effect/LightingRain") as GameObject;

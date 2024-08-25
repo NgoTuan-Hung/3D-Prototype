@@ -10,12 +10,13 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
 {
     private CustomMonoBehavior customMonoBehavior;
     private int zone;
-    private bool modeMovingToTarget = true;
     public delegate void MoveDelegate();
     public MoveDelegate MoveDelegateMethod;
+    public enum MoveMode {MoveToTarget, FreeMove, MoveForwardOnly}
+    private MoveMode moveMode;
     [SerializeField] private float modeMovingToTargetChance = 0.8f;
     [SerializeField] private float XSecond = 10;
-    private bool canChangeMode = true;
+    private bool canChangeModeEveryXSecond = true;
     public enum Intelligence {Dumb, Average, Smart}
     [SerializeField] private Intelligence intelligence;
     public Intelligence IntelligenceMode {get => intelligence; set 
@@ -46,25 +47,54 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         MoveDelegateMethod = MoveToTarget;
     }
 
+    public void ChangeMode(MoveMode moveMode)
+    {
+        switch (moveMode)
+        {
+            case MoveMode.MoveForwardOnly:
+                canChangeModeEveryXSecond = false;
+                break;
+            default: return;
+        }
+    }
+
+    public void MoveForwardOnly()
+    {
+        if (walkToPatternBlock || runToPatternBlock) return;
+        if (Random.value < 0.5f) walkToPatternCoroutine = StartCoroutine(WalkToPattern(new Vector3(0, 0, 1), Random.Range(0.1f, 1f)));
+        else runToPatternCoroutine = StartCoroutine(RunToPattern(new Vector3(0, 0, 1), Random.Range(0.1f, 1f)));
+    }
+
+    public void StopMode(MoveMode moveMode)
+    {
+        switch (moveMode)
+        {
+            case MoveMode.MoveForwardOnly:
+                canChangeModeEveryXSecond = true;
+                break;
+            default: return;
+        }
+    }
+
     public IEnumerator ChangeModeEveryXSecond()
     {
         while (true)
         {
             yield return new WaitForSeconds(XSecond);
-            while (!canChangeMode)
+            while (!canChangeModeEveryXSecond)
             {
                 yield return new WaitForSeconds(Time.fixedDeltaTime);
             }
 
             if (Random.value < modeMovingToTargetChance)
             {
-                modeMovingToTarget = true;
+                moveMode = MoveMode.MoveToTarget;
                 MoveDelegateMethod = MoveToTarget;
                 if (!customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget) customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode();
             }
             else
             {
-                modeMovingToTarget = false;
+                moveMode = MoveMode.FreeMove;
                 MoveDelegateMethod = FreeMove;
                 if (customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget) customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode();
             }
@@ -146,7 +176,8 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     public float AcceptableWalkChance { get => acceptableWalkChance; set => acceptableWalkChance = value; }
     public float WalkToMaxChance { get => walkToMaxChance; set => walkToMaxChance = value; }
     public int Zone { get => zone; set => zone = value; }
-    public bool CanChangeMode { get => canChangeMode; set => canChangeMode = value; }
+    public bool CanChangeMode { get => canChangeModeEveryXSecond; set => canChangeModeEveryXSecond = value; }
+    public MoveMode MoveMode1 { get => moveMode; set => moveMode = value; }
 
     public IEnumerator RunToPattern(Vector3 direction, float duration)
     {
@@ -171,7 +202,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
             {
                 StopAllMovement();
                 canMove = true;
-                canChangeMode = true;
+                canChangeModeEveryXSecond = true;
                 break;
             }
 
@@ -189,7 +220,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     public void StopAllMovement()
     {
         canMove = false;
-        canChangeMode = false;
+        canChangeModeEveryXSecond = false;
         StopCoroutine(walkToPatternCoroutine);
         StopCoroutine(runToPatternCoroutine);
         runToPatternBlock = false;

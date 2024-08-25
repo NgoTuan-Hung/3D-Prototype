@@ -15,7 +15,7 @@ public class SkillBase : MonoBehaviour
     private SubSkillCondition subSkillCondition = new SubSkillCondition();
     private CustomMonoBehavior customMonoBehavior;
     private State animatorStateForSkill;
-    private bool upperBodyCheckForAction;
+    private bool upperBodyCheckForAnimationTransition;
     [SerializeField] private float executionTimeAfterAnimationFrame;
     [SerializeField] private float useSkillChance;
     public ObjectPool WeaponPool { get => weaponPool; set => weaponPool = value; }
@@ -26,9 +26,9 @@ public class SkillBase : MonoBehaviour
     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
     public SubSkillCondition SubSkillCondition { get => subSkillCondition; set => subSkillCondition = value; }
     public State AnimatorStateForSkill { get => animatorStateForSkill; set => animatorStateForSkill = value; }
-    public bool UpperBodyCheckForAction { get => upperBodyCheckForAction; set => upperBodyCheckForAction = value; }
     public float ExecutionTimeAfterAnimationFrame { get => executionTimeAfterAnimationFrame; set => executionTimeAfterAnimationFrame = value; }
     public float UseSkillChance { get => useSkillChance; set => useSkillChance = value; }
+    public bool UpperBodyCheckForAnimationTransition { get => upperBodyCheckForAnimationTransition; set => upperBodyCheckForAnimationTransition = value; }
 
     public virtual void Trigger(SubSkillParameter subSkillParameter)
     {
@@ -38,15 +38,23 @@ public class SkillBase : MonoBehaviour
     public virtual void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-        if (upperBodyCheckForAction) checkActionDelegate = () => customMonoBehavior.HumanLikeAnimatorBrain.CheckTransitionUpper(animatorStateForSkill);
-        else checkActionDelegate = () => customMonoBehavior.HumanLikeAnimatorBrain.CheckTransitionLower(animatorStateForSkill);
+        if (upperBodyCheckForAnimationTransition) checkForAnimationTransitionDelegate = () => customMonoBehavior.HumanLikeAnimatorBrain.CheckTransitionUpper(animatorStateForSkill);
+        else checkForAnimationTransitionDelegate = () => customMonoBehavior.HumanLikeAnimatorBrain.CheckTransitionLower(animatorStateForSkill);
     }
 
-    public delegate bool CheckActionDelegate();
-    public CheckActionDelegate checkActionDelegate; 
-    public bool CheckAction()
+    public delegate bool CheckForAnimationTransitionDelegate();
+    private CheckForAnimationTransitionDelegate checkForAnimationTransitionDelegate;
+    public bool CheckForAnimationTransition()
     {
-        return checkActionDelegate();
+        return checkForAnimationTransitionDelegate();
+    }
+
+    public virtual bool CheckCanUseSkill()
+    {
+        if (canUse && CheckForAnimationTransition() && customMonoBehavior.CustomMonoBehaviorState1 == CustomMonoBehavior.CustomMonoBehaviorState.Available)
+        return true; 
+
+        return false;
     }
 
     public virtual void Start()
@@ -84,7 +92,7 @@ public class SubSkillChangableAttribute
     [SerializeField] private float floatValue;
     [SerializeField] private float[] floatArray;
     [SerializeField] private Vector3 vector3;
-    public enum SubSkillAttributeType {Cooldown, Speed, Distance, Timers, Position, TimeScale, CastRange, ParticleSystemTimeEnd}
+    public enum SubSkillAttributeType {Cooldown, Speed, Distance, Timers, Position, TimeScale, CastRange, ParticleSystemTimeEnd, Duration}
     public enum SubSkillAttributeValueType {Int, Float, FloatArray, Vector3}
     private SubSkillAttributeType subSkillAttributeType;
     private SubSkillAttributeValueType subSkillAttributeValueType;

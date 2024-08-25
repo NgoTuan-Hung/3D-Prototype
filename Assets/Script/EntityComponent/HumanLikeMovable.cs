@@ -7,13 +7,15 @@ public class HumanLikeMovable : MonoBehaviour
     private void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-        moveSpeedPerFrame *= Time.fixedDeltaTime;
-        runSpeedPerFrame *= Time.fixedDeltaTime;
+        defaultMoveSpeedPerFrame *= Time.fixedDeltaTime;
+        defaultRunSpeedPerFrame *= Time.fixedDeltaTime;
+        moveSpeedPerFrame = defaultMoveSpeedPerFrame;
+        runSpeedPerFrame = defaultRunSpeedPerFrame;
     }
-    private float moveSpeedPerFrame = 5 * Time.fixedDeltaTime;
-    private float runSpeedPerFrame = 10 * Time.fixedDeltaTime;
-    private float defaultMoveSpeedPerFrame = 5 * Time.fixedDeltaTime;
-    private float defaultRunSpeedPerFrame = 10 * Time.fixedDeltaTime;
+    private float moveSpeedPerFrame = 5;
+    private float runSpeedPerFrame = 10;
+    private float defaultMoveSpeedPerFrame = 5;
+    private float defaultRunSpeedPerFrame = 10;
     private Vector3 movement;
     private Vector3 rotation;
 

@@ -8,7 +8,7 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
     public override void Awake() 
     {
         AnimatorStateForSkill = State.CastSpellMiddle;
-        UpperBodyCheckForAction = true;
+        UpperBodyCheckForAnimationTransition = true;
         ExecutionTimeAfterAnimationFrame = 1.1f;
         base.Awake();
         GameObject effectPrefab = Resources.Load("Effect/NonstopThrust") as GameObject;

@@ -54,7 +54,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     bool moveToTargetBool = false;
     bool meleeSimpleAttackWhenNearBool = false;
     bool skillCastOriginPointBool = false;
-    public enum CustomMonoBehaviorState {Available, CanNotDoAnything}
+    public enum CustomMonoBehaviorState {Available, IsUsingSkill}
     private CustomMonoBehaviorState customMonoBehaviorState = CustomMonoBehaviorState.Available;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurentHealth { get => curentHealth; set => curentHealth = value; }
@@ -102,6 +102,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     internal SwordSkillThousandSword SwordSkillThousandSword { get => swordSkillThousandSword; set => swordSkillThousandSword = value; }
     public LightingRain LightingRain { get => lightingRain; set => lightingRain = value; }
     public FlameRider FlameRider { get => flameRider; set => flameRider = value; }
+    public CustomMonoBehaviorState CustomMonoBehaviorState1 { get => customMonoBehaviorState; set => customMonoBehaviorState = value; }
 
     // Start is called before the first frame update
     public void Awake()

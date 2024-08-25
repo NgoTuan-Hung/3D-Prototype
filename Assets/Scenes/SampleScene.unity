@@ -4577,6 +4577,7 @@ GameObject:
   - component: {fileID: 138329322}
   - component: {fileID: 138329321}
   - component: {fileID: 138329323}
+  - component: {fileID: 138329324}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -4612,11 +4613,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24c1c1e48265ab84e8112f487bf91591, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  moveSpeedPerFrame: 3
-  runSpeedPerFrame: 6
-  movement: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0}
 --- !u!114 &138329303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4986,6 +4982,25 @@ MonoBehaviour:
   particleSystemTimeEnd:
     intValue: 0
     floatValue: 5.6
+    floatArray: []
+    vector3: {x: 0, y: 0, z: 0}
+--- !u!114 &138329324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138329300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0238370f61619244ab9005f692ac8335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executionTimeAfterAnimationFrame: 0
+  useSkillChance: 0
+  duration:
+    intValue: 0
+    floatValue: 5
     floatArray: []
     vector3: {x: 0, y: 0, z: 0}
 --- !u!1001 &139504431
@@ -92625,7 +92640,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6321002058470032252}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.32567737, y: -0.33600444, z: 0.12508096, w: 0.8748657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -92995,6 +93010,84 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1001 &667172014164348050
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9.96
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914460339963122484, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312141309092336944, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_Name
+      value: EnergyShield
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312141309092336944, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6038366218930770808, guid: b170da0173332c34fa17ca20deb63659,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b170da0173332c34fa17ca20deb63659, type: 3}
 --- !u!1 &684976342983200437
 GameObject:
   m_ObjectHideFlags: 0
@@ -94160,6 +94253,7 @@ GameObject:
   - component: {fileID: 9031872664141225566}
   - component: {fileID: 9031872664141225565}
   - component: {fileID: 9031872664141225567}
+  - component: {fileID: 9031872664141225568}
   m_Layer: 3
   m_Name: Skeleton
   m_TagString: Enemy
@@ -95292,7 +95386,7 @@ GameObject:
   - component: {fileID: 125665585243231261}
   - component: {fileID: 2763665799531651287}
   m_Layer: 0
-  m_Name: energy shield
+  m_Name: EnergyShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97892,11 +97986,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24c1c1e48265ab84e8112f487bf91591, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  moveSpeedPerFrame: 3
-  runSpeedPerFrame: 6
-  movement: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0}
 --- !u!114 &9031872664141225552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98153,6 +98242,25 @@ MonoBehaviour:
     floatValue: 5.6
     floatArray: []
     vector3: {x: 0, y: 0, z: 0}
+--- !u!114 &9031872664141225568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2629065055425830744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0238370f61619244ab9005f692ac8335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executionTimeAfterAnimationFrame: 0
+  useSkillChance: 0
+  duration:
+    intValue: 0
+    floatValue: 5
+    floatArray: []
+    vector3: {x: 0, y: 0, z: 0}
 --- !u!1 &9055608136736703480
 GameObject:
   m_ObjectHideFlags: 0
@@ -98226,3 +98334,4 @@ SceneRoots:
   - {fileID: 313765132}
   - {fileID: 1201711621}
   - {fileID: 3896088367643040696}
+  - {fileID: 667172014164348050}
