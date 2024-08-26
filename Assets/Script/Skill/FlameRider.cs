@@ -9,16 +9,22 @@ public class FlameRider : SkillBase
     {
         AnimatorStateForSkill = State.CastSpellShort;
         UpperBodyCheckForAnimationTransition = true;
-        // ExecutionTimeAfterAnimationFrame = 0.4f;
+        ExecutionTimeAfterAnimationFrame = 0.4f;
         base.Awake();
         GameObject fireShieldEffectPrefab = Resources.Load("Effect/FlameRiderSkill/FireShield") as GameObject;
         fireShieldEffectPool ??= new ObjectPool(fireShieldEffectPrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
         
+        SubSkillRequiredParameter = new SubSkillRequiredParameter
+        {
+            Target = false
+        };
+
         RecommendedAIBehavior.MoveForwardOnly = true;
         UseSkillChance = 25f;
     }
 
     [SerializeField] private SubSkillChangableAttribute duration = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 5f, SubSkillChangableAttribute.SubSkillAttributeType.Duration);
+    [SerializeField] private SubSkillChangableAttribute coolDown = new SubSkillChangableAttribute(SubSkillChangableAttribute.SubSkillAttributeValueType.Float, 5f, SubSkillChangableAttribute.SubSkillAttributeType.Cooldown);
 
     public override void Start()
     {
@@ -47,22 +53,31 @@ public class FlameRider : SkillBase
         yield return new WaitForSeconds(ExecutionTimeAfterAnimationFrame);
 
         CanUse = false;
-        GameEffect fireShieldEffect = fireShieldEffectPool.PickOne().GameEffect;
-        fireShieldEffect.VisualEffect.Stop();
-        //fireShieldEffect.
+        // GameEffect fireShieldEffect = fireShieldEffectPool.PickOne().GameEffect;
+        // fireShieldEffect.VisualEffect.Stop();
+        
+        CustomMonoBehavior.HumanLikeMovable.MoveSpeedPerFrame *= 1.5f;
+        CustomMonoBehavior.HumanLikeMovable.RunSpeedPerFrame *= 1.5f;
+        StartCoroutine(CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.CustomModeWithCondition
+        (
+            false, null, true, duration.FloatValue, 
+            () => 
+            {
+                if (Random.value < 0.5f) CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.ChangeMode(BotHumanLikeSimpleMoveToTarget.MoveMode.MoveToTargetMindlessly);
+                else CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.ChangeMode(BotHumanLikeSimpleMoveToTarget.MoveMode.MoveAroundTarget);
+            }, 1f
+        ));
 
-        CustomMonoBehavior.HumanLikeMovable.MoveSpeedPerFrame *= 2;
-        CustomMonoBehavior.HumanLikeMovable.RunSpeedPerFrame *= 2;
-
-        float timePassed = 0;
-        while (true)
-        {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
-            timePassed += Time.fixedDeltaTime;
-            if (timePassed >= duration.FloatValue) break;
-        }
+        yield return new WaitForSeconds(duration.FloatValue);
 
         CustomMonoBehavior.HumanLikeMovable.SetSpeedDefault();
         CustomMonoBehavior.StopCustomonobehaviorState(CustomMonoBehavior.CustomMonoBehaviorState.IsUsingSkill);
+        StartCoroutine(StartCooldown());
+    }
+
+    public IEnumerator StartCooldown()
+    {
+        yield return new WaitForSeconds(coolDown.FloatValue);
+        CanUse = true;
     }
 }

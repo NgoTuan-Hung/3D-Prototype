@@ -37,7 +37,7 @@ class UseSkillWheneverPossible : EntityAction
 
     float UseSkillChance(RecommendedAIBehavior recommendedAIBehavior)
     {
-        float chance = 0f;
+        float chance = 10f;
 
         if (recommendedAIBehavior.MaxDistanceToTarget != 0)
         {

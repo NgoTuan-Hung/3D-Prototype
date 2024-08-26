@@ -87,21 +87,24 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
         skeletonThrustingEffect.Animator.speed = 1;
         skeletonThrustingEffect.TravelToDirectionBool = false;
         skeletonThrustingEffect.StopCoroutine(timeoutCoroutine);
+        Debug.Log("Stopped coroutine");
     }
 
     public void TriggerActionDelegate1Param(GameEffect thrustingEffect, GameEffect skeletonThrustingEffect)
     {
+        Debug.Log("TriggerActionDelegate1Param");
         skeletonThrustingEffect.gameObject.SetActive(false);
         thrustingEffect.gameObject.SetActive(false);
     }
 
+    private Coroutine triggerActionWithConditionCoroutine;
     public void AnimationEvent1DelegateParam(GameEffect thrustingEffect, GameEffect skeletonThrustingEffect)
     {
         thrustingEffect.transform.position = skeletonThrustingEffect.transform.position + new Vector3(0, 1, 0);
         thrustingEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
         thrustingEffect.transform.rotation = skeletonThrustingEffect.transform.rotation;
         thrustingEffect.VisualEffect.Play();
-        thrustingEffect.TriggerActionWithCondition(false, null, 0, true, 5f, () => thrustingEffect.gameObject.SetActive(false));
+        triggerActionWithConditionCoroutine = thrustingEffect.TriggerActionWithCondition(false, null, 0, true, 5f, () => thrustingEffect.gameObject.SetActive(false));
     }
     
     public void AnimationEvent2DelegateParam(GameEffect skeletonThrustingEffect)

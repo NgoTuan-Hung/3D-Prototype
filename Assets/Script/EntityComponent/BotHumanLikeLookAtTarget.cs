@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(CustomMonoBehavior), typeof(HumanLikeLookable))]
 public class BotHumanLikeLookAtTarget : MonoBehaviour
 {
+    private static ObjectPool freeObjectPool;
     private CustomMonoBehavior customMonoBehavior;
     [SerializeField] private bool isLookingAtTarget = true;
     private GameObject tempEye;
@@ -21,11 +22,15 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         freeDirectionEyeLookCoroutine = customMonoBehavior.NullCoroutine();
         lookAroundTargetCoroutine = customMonoBehavior.NullCoroutine();
         LookDelegateMethod = LookAtTarget;
+
+        GameObject freeObjectPrefab = Resources.Load("FreeObject") as GameObject;
+        freeObjectPool ??= new ObjectPool(freeObjectPrefab, 1, new PoolArgument(typeof(GameObject), PoolArgument.WhereComponent.Self));
+        tempEye = freeObjectPool.PickOne().GameObject;
     }
 
     private void Start()
     {
-        tempEye = CustomMonoBehavior.freeObjectPool.PickOne().GameObject;
+        
     }
     private void FixedUpdate()
     {

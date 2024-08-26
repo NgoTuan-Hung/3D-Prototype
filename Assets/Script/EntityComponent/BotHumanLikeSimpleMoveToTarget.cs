@@ -13,7 +13,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     public delegate void MoveDelegate();
     public MoveDelegate MoveDelegateMethod;
     public enum MoveMode {MoveToTargetWithCaution, FreeMove, MoveToTargetMindlessly, MoveAroundTarget, None}
-    private MoveMode moveMode;
+    private MoveMode moveMode = MoveMode.None;
     [SerializeField] private float modeMovingToTargetWithCautionChance = 0.8f;
     [SerializeField] private float XSecond = 10;
     private bool canChangeModeEveryXSecond = true;
@@ -41,10 +41,13 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     private void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-        InitDefaultBehavior();
         walkToPatternCoroutine = customMonoBehavior.NullCoroutine();
         runToPatternCoroutine = customMonoBehavior.NullCoroutine();
-        MoveDelegateMethod = MoveToTargetWithCaution;
+    }
+
+    void Start()
+    {
+        InitDefaultBehavior();
     }
 
     public void ChangeMode(MoveMode mode)
@@ -264,17 +267,50 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         }
     }
 
-    public IEnumerator CustomModeWithCondition(Func<bool> condition, Action customMode)
+    private bool customModeWithConditionTimeOut = false;
+    public IEnumerator CustomModeWithCondition(bool conditionBool, Func<bool> condition, bool timerBool, float timer, Action customMode, float interval)
     {
+        StopAllMovement();
+        StopDefaultBehavior();
+        if (conditionBool)
+        {
+            while (true)
+            {
+                if (condition()) 
+                {
+                    break;
+                }
+
+                customMode();
+                yield return new WaitForSeconds(interval);
+            }
+        }
+        else if (timerBool)
+        {
+            customModeWithConditionTimeOut = true;
+            StartCoroutine(CustomModeWithConditionTimer(timer));
+            while (customModeWithConditionTimeOut)
+            {
+                customMode();
+                yield return new WaitForSeconds(interval);
+            }
+        }
+        StopAllMovement();
+        InitDefaultBehavior();
+    }
+
+    public IEnumerator CustomModeWithConditionTimer(float totalTime)
+    {
+        float passedTime = 0;
         while (true)
         {
-            if (condition()) 
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            passedTime += Time.fixedDeltaTime;
+            if (passedTime > totalTime)
             {
+                customModeWithConditionTimeOut = false;
                 break;
             }
-
-            customMode();
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
     }
 
