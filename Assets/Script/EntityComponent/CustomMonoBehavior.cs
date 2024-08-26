@@ -157,6 +157,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         swordSkillSummonBigSword.enabled = false;
         swordSkillThousandSword.enabled = false;
         lightingRain.enabled = false;
+        flameRider.enabled = false;
     }
 
     public void UpdateHealth(float value)
@@ -184,5 +185,15 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private IEnumerator NullIenumerator()
     {
         yield return new WaitForSeconds(0);
+    }
+
+    public void ChangeCustomonobehaviorState(CustomMonoBehaviorState state)
+    {
+        customMonoBehaviorState = state;
+    }
+
+    public void StopCustomonobehaviorState(CustomMonoBehaviorState state)
+    {
+        customMonoBehaviorState = CustomMonoBehaviorState.Available;
     }
 }

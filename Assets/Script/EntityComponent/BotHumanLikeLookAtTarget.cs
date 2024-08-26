@@ -51,25 +51,28 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         if (freeDirectionEyeLookCoroutine != null) StopCoroutine(freeDirectionEyeLookCoroutine);
         if (lookAroundTargetCoroutine != null) StopCoroutine(lookAroundTargetCoroutine);
 
-        switch (mode)
+        if (mode != lookMode)
         {
-            case LookMode.LookAtTarget:
-                isLookingAtTarget = true;
-                lookMode = LookMode.LookAtTarget;
-                LookDelegateMethod = LookAtTarget;
-                break;
-            case LookMode.FreeLook:
-                isLookingAtTarget = false;
-                lookMode = LookMode.FreeLook;
-                changeFreeDirectionCoroutine = StartCoroutine(ChangeFreeDirection());
-                LookDelegateMethod = FreeLook;
-                break;
-            case LookMode.LookAroundTarget:
-                isLookingAtTarget = false;
-                lookMode = LookMode.LookAroundTarget;
-                lookAroundTargetCoroutine = StartCoroutine(LookAroundTarget());
-                LookDelegateMethod = () => customMonoBehavior.HumanLikeLookable.EyeLook();
-                break;
+            switch (mode)
+            {
+                case LookMode.LookAtTarget:
+                    isLookingAtTarget = true;
+                    lookMode = LookMode.LookAtTarget;
+                    LookDelegateMethod = LookAtTarget;
+                    break;
+                case LookMode.FreeLook:
+                    isLookingAtTarget = false;
+                    lookMode = LookMode.FreeLook;
+                    changeFreeDirectionCoroutine = StartCoroutine(ChangeFreeDirection());
+                    LookDelegateMethod = FreeLook;
+                    break;
+                case LookMode.LookAroundTarget:
+                    isLookingAtTarget = false;
+                    lookMode = LookMode.LookAroundTarget;
+                    lookAroundTargetCoroutine = StartCoroutine(LookAroundTarget());
+                    LookDelegateMethod = () => customMonoBehavior.HumanLikeLookable.EyeLook();
+                    break;
+            }
         }
     }
 
@@ -90,7 +93,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         while (true)
         {
             /* Change direction every specified interval */
-            StopCoroutine(freeDirectionEyeLookCoroutine);
+            if (CoroutineWrapper.CheckCoroutineNotNull(freeDirectionEyeLookCoroutine)) StopCoroutine(freeDirectionEyeLookCoroutine);
             /* Pick random object and set its position and rotation similar to the camera point */
             tempEye.transform.SetPositionAndRotation(customMonoBehavior.CameraPoint.transform.position, customMonoBehavior.CameraPoint.transform.rotation);
             /* Rotate its forward direction randomly horizontally and look up or down within boundary*/

@@ -31,7 +31,6 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
     {
         if (Random.value < attackChancePerInterval)
         {
-            customMonoBehavior.BotHumanLikeSimpleMoveToTarget.StopAllMovement();
             customMonoBehavior.HumanLikeAnimatorBrain.ChangeState(State.Attack);
             walkOrRunWithConditionCoroutine = StartCoroutine(customMonoBehavior.BotHumanLikeSimpleMoveToTarget.WalkOrRunWithCondition
             (
@@ -49,9 +48,8 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
     public void StopAttack()
     {
         customMonoBehavior.HumanLikeAnimatorBrain.StopState(State.Attack);
-        StopCoroutine(walkOrRunWithConditionCoroutine);
-        customMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanMove = true;
-        customMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanChangeMode = true;
+        if (CoroutineWrapper.CheckCoroutineNotNull(walkOrRunWithConditionCoroutine)) StopCoroutine(walkOrRunWithConditionCoroutine);
+        customMonoBehavior.BotHumanLikeSimpleMoveToTarget.InitDefaultBehavior();
         canAttack = true;
     }
 

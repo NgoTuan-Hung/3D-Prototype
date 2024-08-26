@@ -12,7 +12,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     private int zone;
     public delegate void MoveDelegate();
     public MoveDelegate MoveDelegateMethod;
-    public enum MoveMode {MoveToTargetWithCaution, FreeMove, MoveToTargetMindlessly, MoveAroundTarget}
+    public enum MoveMode {MoveToTargetWithCaution, FreeMove, MoveToTargetMindlessly, MoveAroundTarget, None}
     private MoveMode moveMode;
     [SerializeField] private float modeMovingToTargetWithCautionChance = 0.8f;
     [SerializeField] private float XSecond = 10;
@@ -41,20 +41,45 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     private void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-        StartDefaultBehavior();
+        InitDefaultBehavior();
         walkToPatternCoroutine = customMonoBehavior.NullCoroutine();
         runToPatternCoroutine = customMonoBehavior.NullCoroutine();
         MoveDelegateMethod = MoveToTargetWithCaution;
     }
 
-    public void ChangeMode(MoveMode moveMode)
+    public void ChangeMode(MoveMode mode)
     {
-        switch (moveMode)
+        if (mode != moveMode) 
         {
-            case MoveMode.MoveToTargetMindlessly:
-                canChangeModeEveryXSecond = false;
-                break;
-            default: return;
+            StopAllMovement();
+            switch (mode)
+            {
+                case MoveMode.MoveToTargetMindlessly:
+                    moveMode = MoveMode.MoveToTargetMindlessly;
+                    customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode(BotHumanLikeLookAtTarget.LookMode.LookAtTarget);
+                    MoveDelegateMethod = MoveToTargetMindlessly;
+                    break;
+                case MoveMode.MoveToTargetWithCaution:
+                    moveMode = MoveMode.MoveToTargetWithCaution;
+                    customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode(BotHumanLikeLookAtTarget.LookMode.LookAtTarget);
+                    MoveDelegateMethod = MoveToTargetWithCaution;
+                    break;
+                case MoveMode.FreeMove:
+                    moveMode = MoveMode.FreeMove;
+                    customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode(BotHumanLikeLookAtTarget.LookMode.FreeLook);
+                    MoveDelegateMethod = FreeMove;
+                    break;
+                case MoveMode.MoveAroundTarget:
+                    moveMode = MoveMode.MoveAroundTarget;
+                    customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode(BotHumanLikeLookAtTarget.LookMode.LookAroundTarget);
+                    MoveDelegateMethod = MoveAroundTarget;
+                    break;
+                case MoveMode.None:
+                    moveMode = MoveMode.None;
+                    MoveDelegateMethod = null;
+                    break;
+                default: return;
+            }
         }
     }
 
@@ -76,35 +101,31 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         }
     }
 
-    public void StartDefaultBehavior()
+    public Coroutine changeBetweenTwoDefaultModeEveryXSecondCoroutine;
+    public void InitDefaultBehavior()
     {
         /* Default behavior is moving with caution to target 
         or just look and move randomly */
-        StartCoroutine(ChangeBetweenTwoDefaultModeEveryXSecond());
+        changeBetweenTwoDefaultModeEveryXSecondCoroutine = StartCoroutine(ChangeBetweenTwoDefaultModeEveryXSecond());
+    }
+
+    public void StopDefaultBehavior()
+    {
+        if (changeBetweenTwoDefaultModeEveryXSecondCoroutine != null) StopCoroutine(changeBetweenTwoDefaultModeEveryXSecondCoroutine);
     }
 
     public IEnumerator ChangeBetweenTwoDefaultModeEveryXSecond()
     {
         while (true)
         {
-            yield return new WaitForSeconds(XSecond);
             while (!canChangeModeEveryXSecond)
             {
                 yield return new WaitForSeconds(Time.fixedDeltaTime);
             }
 
-            if (Random.value < modeMovingToTargetWithCautionChance)
-            {
-                moveMode = MoveMode.MoveToTargetWithCaution;
-                MoveDelegateMethod = MoveToTargetWithCaution;
-                if (!customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget) customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode(BotHumanLikeLookAtTarget.LookMode.LookAtTarget);
-            }
-            else
-            {
-                moveMode = MoveMode.FreeMove;
-                MoveDelegateMethod = FreeMove;
-                if (customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget) customMonoBehavior.BotHumanLikeLookAtTarget.ChangeMode(BotHumanLikeLookAtTarget.LookMode.FreeLook);
-            }
+            if (Random.value < modeMovingToTargetWithCautionChance) ChangeMode(MoveMode.MoveToTargetWithCaution);
+            else ChangeMode(MoveMode.FreeMove);
+            yield return new WaitForSeconds(XSecond);
         }
     }
 
@@ -157,6 +178,22 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         else runToPatternCoroutine = StartCoroutine(RunToPattern(new Vector3(Random.Range(-1f,1f), 0, Random.Range(-1f,1f)), Random.Range(0.1f, 2f)));
     }
 
+    public void MoveToTargetMindlessly()
+    {
+        if (walkToPatternBlock || runToPatternBlock) return;
+        /* Just move or run forward while looking at target */
+        if (Random.value < 0.5f) walkToPatternCoroutine = StartCoroutine(WalkToPattern(new Vector3(0, 0, 1), Random.Range(0.1f, 1f)));
+        else runToPatternCoroutine = StartCoroutine(RunToPattern(new Vector3(0, 0, 1), Random.Range(0.1f, 1f)));
+    }
+
+    public void MoveAroundTarget()
+    {
+        if (walkToPatternBlock || runToPatternBlock) return;
+        /* Just move forward while looking around target, see ChangeMode() for more info */
+        if (Random.value < 0.5f) walkToPatternCoroutine = StartCoroutine(WalkToPattern(new Vector3(0, 0, 1), Random.Range(0.1f, 1f)));
+        else runToPatternCoroutine = StartCoroutine(RunToPattern(new Vector3(0, 0, 1), Random.Range(0.1f, 1f)));
+    }
+
     private bool walkToPatternBlock = false;
     public IEnumerator WalkToPattern(Vector3 direction, float duration)
     {
@@ -203,16 +240,19 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
 
     public IEnumerator WalkOrRunWithCondition(Vector3 direction, float walkChance, Func<bool> condition)
     {
+        /* Walk or run in direction while condition is true */
+        StopDefaultBehavior();
+        ChangeMode(MoveMode.None);
+        /* This loop run every frame until the condition is true */
         while (true)
         {
             if (condition()) 
             {
-                StopAllMovement();
-                canMove = true;
-                canChangeModeEveryXSecond = true;
+                InitDefaultBehavior();
                 break;
             }
 
+            /* Our walk or run logic */
             if (walkToPatternBlock || runToPatternBlock) {}
             else
             {
@@ -224,12 +264,24 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         }
     }
 
+    public IEnumerator CustomModeWithCondition(Func<bool> condition, Action customMode)
+    {
+        while (true)
+        {
+            if (condition()) 
+            {
+                break;
+            }
+
+            customMode();
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+    }
+
     public void StopAllMovement()
     {
-        canMove = false;
-        canChangeModeEveryXSecond = false;
-        StopCoroutine(walkToPatternCoroutine);
-        StopCoroutine(runToPatternCoroutine);
+        if (CoroutineWrapper.CheckCoroutineNotNull(walkToPatternCoroutine)) StopCoroutine(walkToPatternCoroutine);
+        if (CoroutineWrapper.CheckCoroutineNotNull(runToPatternCoroutine)) StopCoroutine(runToPatternCoroutine);
         runToPatternBlock = false;
         walkToPatternBlock = false;
     }

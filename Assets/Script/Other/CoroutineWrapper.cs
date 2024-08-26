@@ -6,4 +6,9 @@ using UnityEngine;
 public class CoroutineWrapper
 {
     public Coroutine coroutine;
+
+    public static bool CheckCoroutineNotNull(Coroutine coroutine)
+    {
+        return coroutine != null;
+    }
 }

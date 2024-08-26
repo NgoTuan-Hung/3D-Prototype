@@ -30,9 +30,15 @@ public class FlameRider : SkillBase
         );
     }
 
+    public void FlameRiderStopAnimationEvent()
+    {
+        CustomMonoBehavior.HumanLikeAnimatorBrain.StopState(AnimatorStateForSkill);
+    }
+
     public override void Trigger(SubSkillParameter subSkillParameter)
     {
         CustomMonoBehavior.HumanLikeAnimatorBrain.ChangeState(AnimatorStateForSkill);
+        CustomMonoBehavior.ChangeCustomonobehaviorState(CustomMonoBehavior.CustomMonoBehaviorState.IsUsingSkill);
         StartCoroutine(ExecuteAfterAnimationFrame(subSkillParameter));
     }
 
@@ -45,5 +51,18 @@ public class FlameRider : SkillBase
         fireShieldEffect.VisualEffect.Stop();
         //fireShieldEffect.
 
+        CustomMonoBehavior.HumanLikeMovable.MoveSpeedPerFrame *= 2;
+        CustomMonoBehavior.HumanLikeMovable.RunSpeedPerFrame *= 2;
+
+        float timePassed = 0;
+        while (true)
+        {
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            timePassed += Time.fixedDeltaTime;
+            if (timePassed >= duration.FloatValue) break;
+        }
+
+        CustomMonoBehavior.HumanLikeMovable.SetSpeedDefault();
+        CustomMonoBehavior.StopCustomonobehaviorState(CustomMonoBehavior.CustomMonoBehaviorState.IsUsingSkill);
     }
 }

@@ -9,6 +9,11 @@ public class HumanLikeMovable : MonoBehaviour
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
         defaultMoveSpeedPerFrame *= Time.fixedDeltaTime;
         defaultRunSpeedPerFrame *= Time.fixedDeltaTime;
+        SetSpeedDefault();
+    }
+
+    public void SetSpeedDefault()
+    {
         moveSpeedPerFrame = defaultMoveSpeedPerFrame;
         runSpeedPerFrame = defaultRunSpeedPerFrame;
     }

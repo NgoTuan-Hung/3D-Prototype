@@ -24,7 +24,7 @@ class UseSkillWheneverPossible : EntityAction
     {        
         CustomMonoBehavior.CanUseSkill.Skills.ForEach(skill => 
         {
-            if (skill.CanUse && skill.CheckForAnimationTransition())
+            if (skill.CheckCanUseSkill())
             {
                 if (UseSkillChance(skill.RecommendedAIBehavior) >= skill.UseSkillChance)
                 {
