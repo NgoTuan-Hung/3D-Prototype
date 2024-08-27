@@ -15,6 +15,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private RotatableObject rotatableObject;
     private Animator animator;
     private GameObject skillCastOriginPoint;
+    private SkinnedMeshRenderer mainSkinnedMeshRenderer;
     private HumanLikeJumpableObject humanLikeJumpableObject;
     private HumanLikeAnimatorBrain humanLikeAnimatorBrain;
     private HumanLikeMovable humanLikeMovable;
@@ -103,6 +104,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public LightingRain LightingRain { get => lightingRain; set => lightingRain = value; }
     public FlameRider FlameRider { get => flameRider; set => flameRider = value; }
     public CustomMonoBehaviorState CustomMonoBehaviorState1 { get => customMonoBehaviorState; set => customMonoBehaviorState = value; }
+    public SkinnedMeshRenderer MainSkinnedMeshRenderer { get => mainSkinnedMeshRenderer; set => mainSkinnedMeshRenderer = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -139,6 +141,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         cameraPoint = transform.Find("CameraPoint").gameObject;
         lookAtConstraintObjectParent = transform.Find("LookAtConstraintObjectParent").gameObject;
         lookAtConstraintObject = transform.Find("LookAtConstraintObject").gameObject;
+        mainSkinnedMeshRenderer = transform.Find("MainMesh").GetComponent<SkinnedMeshRenderer>();
 
         GameObject freeObjectPrefab = Resources.Load("FreeObject") as GameObject;
         freeObjectPool ??= new ObjectPool(freeObjectPrefab, 20, new PoolArgument(typeof(GameObject), PoolArgument.WhereComponent.Self));

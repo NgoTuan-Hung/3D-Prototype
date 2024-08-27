@@ -5,6 +5,7 @@ using UnityEngine;
 public class FlameRider : SkillBase
 {
     private static ObjectPool fireShieldEffectPool;
+    private static ObjectPool objectBurningEffectPool;
     public override void Awake()
     {
         AnimatorStateForSkill = State.CastSpellShort;
@@ -13,6 +14,8 @@ public class FlameRider : SkillBase
         base.Awake();
         GameObject fireShieldEffectPrefab = Resources.Load("Effect/FlameRiderSkill/FireShield") as GameObject;
         fireShieldEffectPool ??= new ObjectPool(fireShieldEffectPrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
+        GameObject objectBurningEffectPrefab = Resources.Load("Effect/FlameRiderSkill/ObjectBurning") as GameObject;
+        objectBurningEffectPool ??= new ObjectPool(objectBurningEffectPrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
         
         SubSkillRequiredParameter = new SubSkillRequiredParameter
         {
@@ -53,8 +56,12 @@ public class FlameRider : SkillBase
         yield return new WaitForSeconds(ExecutionTimeAfterAnimationFrame);
 
         CanUse = false;
-        // GameEffect fireShieldEffect = fireShieldEffectPool.PickOne().GameEffect;
-        // fireShieldEffect.VisualEffect.Stop();
+        GameEffect fireShieldEffect = fireShieldEffectPool.PickOne().GameEffect;
+        fireShieldEffect.Follow(transform, new Vector3(0, 0.75f, -4.15f), true, true);
+        fireShieldEffect.VisualEffect.Play();
+        GameEffect objectBurningEffect = objectBurningEffectPool.PickOne().GameEffect;
+        objectBurningEffect.VisualEffect.SetSkinnedMeshRenderer("SkinnedMeshRenderer", CustomMonoBehavior.MainSkinnedMeshRenderer);
+        objectBurningEffect.VisualEffect.Play();
         
         CustomMonoBehavior.HumanLikeMovable.MoveSpeedPerFrame *= 1.5f;
         CustomMonoBehavior.HumanLikeMovable.RunSpeedPerFrame *= 1.5f;
@@ -72,7 +79,12 @@ public class FlameRider : SkillBase
 
         CustomMonoBehavior.HumanLikeMovable.SetSpeedDefault();
         CustomMonoBehavior.StopCustomonobehaviorState(CustomMonoBehavior.CustomMonoBehaviorState.IsUsingSkill);
+        fireShieldEffect.VisualEffect.Stop();
+        fireShieldEffect.gameObject.SetActive(false);
         StartCoroutine(StartCooldown());
+
+        yield return new WaitForSeconds(2f);
+        objectBurningEffect.gameObject.SetActive(false);
     }
 
     public IEnumerator StartCooldown()

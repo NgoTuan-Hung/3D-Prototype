@@ -162,19 +162,21 @@ public class GameEffect : MonoBehaviour
         StartCoroutine(FollowCoroutine(target, offset, transformPoint, keepTargetRotation));
     }
 
+    private delegate void FollowDelegate();
+    private FollowDelegate followDelegate;
     public IEnumerator FollowCoroutine(Transform target, Vector3 offset, bool transformPoint, bool keepTargetRotation)
     {
+        followDelegate = null;
+        if (transformPoint) followDelegate += () => transform.position = target.TransformPoint(offset);
+        else followDelegate += () => transform.position = target.position + offset;
+
+        if (keepTargetRotation) followDelegate += () => transform.rotation = target.rotation;
+
         while (true)
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
 
-            if (transformPoint)
-                transform.position = target.TransformPoint(offset);
-            else
-                transform.position = target.position + offset;
-
-            if (keepTargetRotation)
-                transform.rotation = target.rotation;
+            followDelegate?.Invoke();
         }
     }
 }
