@@ -132,7 +132,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TrailNum: 50
+    - _TrailNum: 5
     - _WorkflowMode: 1
     - _ZWrite: 1
     - _uv_x_Offset: 9999
