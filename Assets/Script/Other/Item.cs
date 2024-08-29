@@ -13,13 +13,15 @@ public class Item : MonoBehaviour
     private string skillName;
     private Animator animator;
     private ObjectPool objectPool;
+    private List<BoxCollider> boxColliders = new List<BoxCollider>();
 
     void Awake()
     {
+        boxColliders = GetComponents<BoxCollider>().ToList();
         switch (itemType)
         {
             case ItemType.RandomSkillBook:
-                skillName = "SkillBook";
+                bookSkinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
                 OnInteract = SkillBookInteract;
                 animator = GetComponent<Animator>();
                 objectPool = new ObjectPool
@@ -36,6 +38,14 @@ public class Item : MonoBehaviour
                     functionName = "RandomSkillBookSpawnVFX",
                     time = 0.915f
                 });
+
+                OnTriggerEnterDelegateInstance = () =>
+                {
+                    bookSkinnedMeshRenderer.SetMaterials(new List<Material> {bookDissolveMaterial, bookDissolveMaterial});
+                    bookDissolveMaterial.SetFloat("Fade", 1);
+                    StartCoroutine(BookDissolve(1.5f));
+                };
+
                 break;
             default:
                 break;
@@ -53,6 +63,9 @@ public class Item : MonoBehaviour
     public event InteractableDelegate OnInteract;
 
     private CustomMonoBehavior interactedCustomMonoBehavior;
+    public Material bookMainMaterial;
+    public Material bookDissolveMaterial;
+    [SerializeField] private SkinnedMeshRenderer bookSkinnedMeshRenderer;
     public void SkillBookInteract(Collision collision)
     {
         interactedCustomMonoBehavior = GlobalObject.Instance.GetCustomMonoBehavior(collision.gameObject);
@@ -68,9 +81,36 @@ public class Item : MonoBehaviour
         StartCoroutine(Coroutine1(5f, () => gameEffect.gameObject.SetActive(false)));
     }
 
+    public IEnumerator BookDissolve(float totalTime)
+    {
+        float timePassed = 0;
+        float fade = 1, fadePerFrame = Time.fixedDeltaTime / totalTime;
+        while (true)
+        {
+            bookSkinnedMeshRenderer.materials[0].SetFloat("Fade", fade -= fadePerFrame);
+            bookSkinnedMeshRenderer.materials[1].SetFloat("Fade", fade);
+
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            timePassed += Time.fixedDeltaTime;
+            if (timePassed > totalTime)
+            {
+                break;
+            }
+        }
+    }
+
+    public delegate void OnCollisionEnterDelegate();
+    public event OnCollisionEnterDelegate OnCollisionEnterDelegateInstance;
     void OnCollisionEnter(Collision collision)
     {
-        
+        OnCollisionEnterDelegateInstance?.Invoke();
+    }
+
+    public delegate void OnTriggerEnterDelegate();
+    public event OnTriggerEnterDelegate OnTriggerEnterDelegateInstance;
+    private void OnTriggerEnter(Collider other) 
+    {
+        OnTriggerEnterDelegateInstance?.Invoke();
     }
 
     private delegate void AnimationEventDelegate();
@@ -85,5 +125,21 @@ public class Item : MonoBehaviour
         yield return new WaitForSeconds(time);
         
         action();
+    }
+
+    public IEnumerator Coroutine2(float time, Action action)
+    {
+        float timePassed = 0;
+        while (true)
+        {
+            action();
+
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            timePassed += Time.fixedDeltaTime;
+            if (timePassed >= time)
+            {
+                break;
+            }
+        }
     }
 }
