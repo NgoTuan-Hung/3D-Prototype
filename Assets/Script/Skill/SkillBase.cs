@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+[RequireComponent(typeof(CustomMonoBehavior))]
 public class SkillBase : MonoBehaviour
 {
     public delegate void FinishSkillDelegate();

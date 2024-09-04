@@ -133,6 +133,22 @@ public class GameEffect : MonoBehaviour
         animationEvent2Delegate = null;
     }
 
+    public delegate void AnimationEvent3Delegate();
+    public AnimationEvent3Delegate animationEvent3Delegate;
+    public void AnimationEvent3()
+    {
+        animationEvent3Delegate?.Invoke();
+        animationEvent3Delegate = null;
+    }
+
+    public delegate void AnimationEvent4Delegate();
+    public AnimationEvent4Delegate animationEvent4Delegate;
+    public void AnimationEvent4()
+    {
+        animationEvent4Delegate?.Invoke();
+        animationEvent4Delegate = null;
+    }
+
     public delegate void OnDisableDelegate();
     public OnDisableDelegate onDisableDelegate;
     void OnDisable()
