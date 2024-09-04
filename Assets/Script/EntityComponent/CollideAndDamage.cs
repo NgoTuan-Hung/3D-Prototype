@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class CollideAndDamage : MonoBehaviour 
 {
     [SerializeField] private float colliderDamage = 0f;
@@ -15,19 +16,9 @@ public class CollideAndDamage : MonoBehaviour
     public enum ColliderType {Single, Multiple};
     [SerializeField] private ColliderType colliderType = ColliderType.Single;
     private BinarySearchTree<CollisionData> binarySearchTree = new BinarySearchTree<CollisionData>();
-    private BoxCollider boxCollider;
+    private List<BoxCollider> boxColliders = new List<BoxCollider>();
+    [SerializeField] private List<DynamicCollisionData> dynamicCollisionDatas = new List<DynamicCollisionData>();
     [SerializeField] private bool isDynamic = false;
-    [SerializeField] private int cycle = 0;
-    [SerializeField] private float cycleLifeTime = 0f;
-    [SerializeField] private float startDelayTime = 0f;
-    private Vector3 colliderDefaultCenter = new Vector3();
-    private Vector3 colliderDefaultSize = new Vector3();
-    [SerializeField] private AnimationCurve centerXOverLifeTime = new();
-    [SerializeField] private AnimationCurve centerYOverLifeTime = new();
-    [SerializeField] private AnimationCurve centerZOverLifeTime = new();
-    [SerializeField] private AnimationCurve sizeXOverLifeTime = new ();
-    [SerializeField] private AnimationCurve sizeYOverLifeTime = new ();
-    [SerializeField] private AnimationCurve sizeZOverLifeTime = new ();
     public delegate void OnTriggerEnterDelegate(Collider other);
     public delegate void OnTriggerStayDelegate(Collider other);
     public delegate void OntriggerStayOnceDelegate();
@@ -41,15 +32,12 @@ public class CollideAndDamage : MonoBehaviour
 
     public void Awake()
     {
-        if ((boxCollider = GetComponent<BoxCollider>()) == null) 
-        {
-            boxCollider = GetComponentInChildren<BoxCollider>();
-        }
+        boxColliders.AddRange(GetComponents<BoxCollider>());
 
-        if (boxCollider != null)
+        if (boxColliders.Count != 0) for (int i=0;i<boxColliders.Count;i++)
         {
-            colliderDefaultCenter = boxCollider.center;
-            colliderDefaultSize = boxCollider.size;
+            dynamicCollisionDatas[i].ColliderDefaultCenter = boxColliders[i].center;
+            dynamicCollisionDatas[i].ColliderDefaultSize = boxColliders[i].size;
         }
 
         if (colliderType == ColliderType.Single)
@@ -88,7 +76,7 @@ public class CollideAndDamage : MonoBehaviour
             StartCoroutine(CollisionTimer());
         };
 
-        if (isDynamic) StartCoroutine(StartDynamicCollider());
+        if (isDynamic) StartDynamicCollider();
     }
 
 
@@ -132,58 +120,85 @@ public class CollideAndDamage : MonoBehaviour
         return false;
     }
 
-    public IEnumerator StartDynamicCollider()
+    public void StartDynamicCollider()
     {
-        yield return new WaitForSeconds(startDelayTime);
-        ResetDynamicCollider();
-        StartCoroutine(DynamicColliderCycle(false));
-
-        for (int i=1;i<cycle-1;i++)
+        for (int i=0;i<boxColliders.Count;i++)
         {
-            yield return new WaitForSeconds(cycleLifeTime + startDelayTime);
-            ResetDynamicCollider();
-            StartCoroutine(DynamicColliderCycle(false));
+            StartCoroutine(StartDynamicCollider(i));
         }
-
-        yield return new WaitForSeconds(cycleLifeTime + startDelayTime);
-        ResetDynamicCollider();
-        StartCoroutine(DynamicColliderCycle(true));
     }
 
-    public IEnumerator DynamicColliderCycle(bool last)
+    public static bool test = false;
+    public bool valid = false;
+    public void Update()
+    {
+        if (test && valid)
+        {
+            test = false;
+            valid = false;
+            StartCoroutine(Valid());
+            Test();
+        }
+    }
+
+    public IEnumerator Valid()
+    {
+        yield return new WaitForSeconds(0.5f);
+        valid = true;
+    }
+
+    public void Test()
+    {
+        StartDynamicCollider();
+    }
+
+    public IEnumerator StartDynamicCollider(int i)
+    {
+        yield return new WaitForSeconds(dynamicCollisionDatas[i].StartDelayTime);
+
+        for (int j=0;j<dynamicCollisionDatas[i].Cycle;j++)
+        {
+            ResetDynamicCollider(i);
+            StartCoroutine(DynamicColliderCycle(i));
+            yield return new WaitForSeconds(dynamicCollisionDatas[i].CycleLifeTime + dynamicCollisionDatas[i].StartDelayTime);
+        }
+
+        yield return new WaitForSeconds(dynamicCollisionDatas[i].CycleLifeTime);
+        ResetDynamicCollider(i);
+    }
+
+    public IEnumerator DynamicColliderCycle(int i)
     {
         float timePassed = 0f;
         float actualTime = 0f;
         while (true)
         {
-            boxCollider.center = new Vector3
+            boxColliders[i].center = new Vector3
             (
-                centerXOverLifeTime.Evaluate(actualTime),
-                centerYOverLifeTime.Evaluate(actualTime),
-                centerZOverLifeTime.Evaluate(actualTime)
+                dynamicCollisionDatas[i].CenterXOverLifeTime.Evaluate(actualTime),
+                dynamicCollisionDatas[i].CenterYOverLifeTime.Evaluate(actualTime),
+                dynamicCollisionDatas[i].CenterZOverLifeTime.Evaluate(actualTime)
             );
 
-            boxCollider.size = new Vector3
+            boxColliders[i].size = new Vector3
             (
-                sizeXOverLifeTime.Evaluate(actualTime),
-                sizeYOverLifeTime.Evaluate(actualTime),
-                sizeZOverLifeTime.Evaluate(actualTime)
+                dynamicCollisionDatas[i].SizeXOverLifeTime.Evaluate(actualTime),
+                dynamicCollisionDatas[i].SizeYOverLifeTime.Evaluate(actualTime),
+                dynamicCollisionDatas[i].SizeZOverLifeTime.Evaluate(actualTime)
             );
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);
             timePassed += Time.fixedDeltaTime;
-            actualTime = timePassed / cycleLifeTime;
+            actualTime = timePassed / dynamicCollisionDatas[i].CycleLifeTime;
 
-            if (timePassed > cycleLifeTime) break;
+            if (timePassed > dynamicCollisionDatas[i].CycleLifeTime) break;
         }
-
-        if (last) ResetDynamicCollider();
     }
 
-    public void ResetDynamicCollider()
+    public void ResetDynamicCollider(int i)
     {
-        boxCollider.center = colliderDefaultCenter;
-        boxCollider.size = colliderDefaultSize;
+        boxColliders[i].center = dynamicCollisionDatas[i].ColliderDefaultCenter;
+        boxColliders[i].size = dynamicCollisionDatas[i].ColliderDefaultSize;
     }
 }
 
@@ -199,4 +214,32 @@ class CollisionData : IComparable<CollisionData>
     {
         return customMonoBehavior.gameObject.GetInstanceID().CompareTo(other.customMonoBehavior.gameObject.GetInstanceID());
     }
+}
+
+[Serializable]
+class DynamicCollisionData
+{
+    [SerializeField] private int cycle = 0;
+    [SerializeField] private float cycleLifeTime = 0f;
+    [SerializeField] private float startDelayTime = 0f;
+    [SerializeField] private Vector3 colliderDefaultCenter = new Vector3();
+    [SerializeField] private Vector3 colliderDefaultSize = new Vector3();
+    [SerializeField] private AnimationCurve centerXOverLifeTime = new();
+    [SerializeField] private AnimationCurve centerYOverLifeTime = new();
+    [SerializeField] private AnimationCurve centerZOverLifeTime = new();
+    [SerializeField] private AnimationCurve sizeXOverLifeTime = new ();
+    [SerializeField] private AnimationCurve sizeYOverLifeTime = new ();
+    [SerializeField] private AnimationCurve sizeZOverLifeTime = new ();
+
+    public Vector3 ColliderDefaultCenter { get => colliderDefaultCenter; set => colliderDefaultCenter = value; }
+    public Vector3 ColliderDefaultSize { get => colliderDefaultSize; set => colliderDefaultSize = value; }
+    public AnimationCurve CenterXOverLifeTime { get => centerXOverLifeTime; set => centerXOverLifeTime = value; }
+    public AnimationCurve CenterYOverLifeTime { get => centerYOverLifeTime; set => centerYOverLifeTime = value; }
+    public AnimationCurve CenterZOverLifeTime { get => centerZOverLifeTime; set => centerZOverLifeTime = value; }
+    public AnimationCurve SizeXOverLifeTime { get => sizeXOverLifeTime; set => sizeXOverLifeTime = value; }
+    public AnimationCurve SizeYOverLifeTime { get => sizeYOverLifeTime; set => sizeYOverLifeTime = value; }
+    public AnimationCurve SizeZOverLifeTime { get => sizeZOverLifeTime; set => sizeZOverLifeTime = value; }
+    public int Cycle { get => cycle; set => cycle = value; }
+    public float CycleLifeTime { get => cycleLifeTime; set => cycleLifeTime = value; }
+    public float StartDelayTime { get => startDelayTime; set => startDelayTime = value; }
 }
