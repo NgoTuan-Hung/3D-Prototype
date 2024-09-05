@@ -30523,6 +30523,7 @@ MonoBehaviour:
   mouseSpeed: 5
   entityDataPath: 
   playerSkillDataPath: 
+  lowerBodyTransitionRulePath: 
 --- !u!4 &516855879
 Transform:
   m_ObjectHideFlags: 0
@@ -67030,22 +67031,22 @@ PrefabInstance:
     - target: {fileID: 7673754935400743313, guid: 4e9529a4ea70ac24d9848d1ca8fa7f51,
         type: 3}
       propertyPath: m_Size.x
-      value: 0
+      value: 4.8400006
       objectReference: {fileID: 0}
     - target: {fileID: 7673754935400743313, guid: 4e9529a4ea70ac24d9848d1ca8fa7f51,
         type: 3}
       propertyPath: m_Size.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7673754935400743313, guid: 4e9529a4ea70ac24d9848d1ca8fa7f51,
         type: 3}
       propertyPath: m_Size.z
-      value: 0
+      value: 4.8400006
       objectReference: {fileID: 0}
     - target: {fileID: 7673754935400743313, guid: 4e9529a4ea70ac24d9848d1ca8fa7f51,
         type: 3}
       propertyPath: m_Center.y
-      value: 0
+      value: -3.8400006
       objectReference: {fileID: 0}
     - target: {fileID: 8704846034627712255, guid: 4e9529a4ea70ac24d9848d1ca8fa7f51,
         type: 3}
