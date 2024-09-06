@@ -13,32 +13,10 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
     public State currentLowerBodyState;
     public State defaultLowerBodyState = State.Idle;
     public List<GroundCheck> groundChecks = new List<GroundCheck>();
-    public TransitionRule[][] lowerBodyTransitionRules = new TransitionRule[9][]
-    {
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, true), new TransitionRule(false, true), new TransitionRule(false, true)},
-        new TransitionRule[9] {new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, false), new TransitionRule(true, false), new TransitionRule(true, false)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, false), new TransitionRule(true, false), new TransitionRule(true, false)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
-    };
+    public TransitionRule[][] lowerBodyTransitionRules;
     public State currentUpperBodyState;
     public State defaultUpperBodyState = State.Idle;
-    public TransitionRule[][] upperBodyTransitionRules = new TransitionRule[9][]
-    {
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(false, true), new TransitionRule(true, true), new TransitionRule(true, true), new TransitionRule(true, true)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)},
-        new TransitionRule[9] {new TransitionRule(true, true), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false), new TransitionRule(false, false)}
-    };
+    public TransitionRule[][] upperBodyTransitionRules;
 
     public bool ChangeState(State newState)
     {
@@ -200,6 +178,12 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
     private void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
+    }
+
+    private void Start() 
+    {
+        lowerBodyTransitionRules = GlobalObject.Instance.LowerBodyTransitionRules;
+        upperBodyTransitionRules = GlobalObject.Instance.UpperBodyTransitionRules;
     }
 
     private void FixedUpdate() 

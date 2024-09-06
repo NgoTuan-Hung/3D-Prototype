@@ -30524,6 +30524,7 @@ MonoBehaviour:
   entityDataPath: 
   playerSkillDataPath: 
   lowerBodyTransitionRulePath: 
+  upperBodyTransitionRulePath: 
 --- !u!4 &516855879
 Transform:
   m_ObjectHideFlags: 0
@@ -104479,7 +104480,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2173750683733733187}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3572419, y: -0.33123913, z: 0.13720375, w: 0.86245817}
+  m_LocalRotation: {x: 0.35724193, y: -0.33123907, z: 0.13720374, w: 0.86245817}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -107005,7 +107006,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6847480171475532004}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.34149513, y: -0.33368, z: 0.131156, w: 0.8688135}
+  m_LocalRotation: {x: 0.3414952, y: -0.3336799, z: 0.13115597, w: 0.8688135}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -107419,8 +107420,8 @@ MonoBehaviour:
   - cycle: 1
     cycleLifeTime: 0.5
     startDelayTime: 0
-    colliderDefaultCenter: {x: 0, y: 0, z: 0}
-    colliderDefaultSize: {x: 0, y: 0, z: 0}
+    colliderDefaultCenter: {x: 0, y: 2.5464616, z: -2.784541}
+    colliderDefaultSize: {x: 0.65, y: 1.5742935, z: 0.96864414}
     centerXOverLifeTime:
       serializedVersion: 2
       m_Curve:
@@ -107649,8 +107650,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0, y: 0, z: 0}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.65, y: 1.5742935, z: 0.96864414}
+  m_Center: {x: 0, y: 2.5464616, z: -2.784541}
 --- !u!4 &5811129725224685662
 Transform:
   m_ObjectHideFlags: 0

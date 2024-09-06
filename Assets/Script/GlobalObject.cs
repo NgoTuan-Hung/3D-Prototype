@@ -24,8 +24,13 @@ public class GlobalObject : Singleton<GlobalObject>
     CustomMonoBehaviorComparer customMonoBehaviorComparer = new();
     UtilObject utilObject = new UtilObject();
     public Coroutine nullCoroutine;
-    private TransitionRule[,] lowerBodyTransitionRules;
+    private TransitionRule[][] lowerBodyTransitionRules;
+    private TransitionRule[][] upperBodyTransitionRules;
     [SerializeField] private string lowerBodyTransitionRulePath;
+    [SerializeField] private string upperBodyTransitionRulePath;
+    public TransitionRule[][] LowerBodyTransitionRules { get => lowerBodyTransitionRules; set => lowerBodyTransitionRules = value; }
+    public TransitionRule[][] UpperBodyTransitionRules { get => upperBodyTransitionRules; set => upperBodyTransitionRules = value; }
+
     private void Awake() 
     {
         playerInputSystem = new PlayerInputSystem();
@@ -36,6 +41,7 @@ public class GlobalObject : Singleton<GlobalObject>
         playerSkillDataPath = Application.dataPath + "/JsonData/PlayerSkillData.json";
         nullCoroutine = StartCoroutine(Null());
         lowerBodyTransitionRulePath = Application.dataPath + "/ExcelData/LowerBodyTransitionRule.xlsx";
+        upperBodyTransitionRulePath = Application.dataPath + "/ExcelData/UpperBodyTransitionRule.xlsx";
         LoadTransitionRule();
     }
 
@@ -108,6 +114,12 @@ public class GlobalObject : Singleton<GlobalObject>
 
     public void LoadTransitionRule()
     {
+        LoadHumanlikeLowerBodyTransitionRule();
+        LoadHumanlikeUpperBodyTransitionRule();
+    }
+
+    public void LoadHumanlikeLowerBodyTransitionRule()
+    {
         if (!File.Exists(lowerBodyTransitionRulePath))
         {
             print("LowerBodyTransitionRule file not found!");
@@ -121,39 +133,33 @@ public class GlobalObject : Singleton<GlobalObject>
             {
                 var dataSet = reader.AsDataSet();
                 var dataTable = dataSet.Tables[0];
+                object[] rowValues; 
+                int columnIndex;
+                string cellValue;
+                string[] values;
+                bool onAirOutcome, onGroundOutcome;
 
                 // Prepare a 2D array to hold the TransitionRule objects
-                lowerBodyTransitionRules = new TransitionRule[dataTable.Rows.Count - 1, dataTable.Columns.Count - 1];
+                lowerBodyTransitionRules = new TransitionRule[dataTable.Rows.Count - 1][];
 
                 // Extract column and row names
-                var columnHeaders = dataTable.Rows[0].ItemArray;
                 var rows = dataTable.AsEnumerable().Skip(1).ToArray();
 
                 int rowIndex = 0;
                 foreach (var row in rows)
                 {
-                    var rowValues = row.ItemArray;
-                    int columnIndex = 0;
+                    lowerBodyTransitionRules[rowIndex] = new TransitionRule[dataTable.Columns.Count - 1];
+                    rowValues = row.ItemArray;
+                    columnIndex = 0;
                     foreach (var cell in rowValues.Skip(1)) // Skip the first cell (row header)
                     {
-                        var cellValue = cell?.ToString(); // Handle null values
-                        if (string.IsNullOrEmpty(cellValue))
-                        {
-                            print($"Warning: Empty cell found at row {rowIndex + 1}, column {columnIndex + 1}");
-                            continue;
-                        }
+                        cellValue = cell?.ToString();
+                        values = cellValue.Split(','); // Split the cell value by comma
 
-                        var values = cellValue.Split(','); // Split the cell value by comma
-                        if (values.Length != 2)
-                        {
-                            print($"Warning: Unexpected cell format at row {rowIndex + 1}, column {columnIndex + 1}");
-                            continue;
-                        }
+                        onAirOutcome = values[0].Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
+                        onGroundOutcome = values[1].Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
 
-                        var onAirOutcome = values[0].Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
-                        var onGroundOutcome = values[1].Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
-
-                        lowerBodyTransitionRules[rowIndex, columnIndex] = new TransitionRule(onAirOutcome, onGroundOutcome);
+                        lowerBodyTransitionRules[rowIndex][columnIndex] = new TransitionRule(onAirOutcome, onGroundOutcome);
                         columnIndex++;
                     }
                     rowIndex++;
@@ -164,7 +170,60 @@ public class GlobalObject : Singleton<GlobalObject>
         {
             print($"An error occurred: {ex.Message}");
         }
-        
+    }
+
+    public void LoadHumanlikeUpperBodyTransitionRule()
+    {
+        if (!File.Exists(upperBodyTransitionRulePath))
+        {
+            print("UpperBodyTransitionRule file not found!");
+            return;
+        }
+
+        try
+        {
+            using (var stream = File.Open(upperBodyTransitionRulePath, FileMode.Open, FileAccess.Read))
+            using (var reader = ExcelReaderFactory.CreateReader(stream))
+            {
+                var dataSet = reader.AsDataSet();
+                var dataTable = dataSet.Tables[0];
+                object[] rowValues; 
+                int columnIndex;
+                string cellValue;
+                string[] values;
+                bool onAirOutcome, onGroundOutcome;
+
+                // Prepare a 2D array to hold the TransitionRule objects
+                upperBodyTransitionRules = new TransitionRule[dataTable.Rows.Count - 1][];
+
+                // Extract column and row names
+                var rows = dataTable.AsEnumerable().Skip(1).ToArray();
+
+                int rowIndex = 0;
+                foreach (var row in rows)
+                {
+                    upperBodyTransitionRules[rowIndex] = new TransitionRule[dataTable.Columns.Count - 1];
+                    rowValues = row.ItemArray;
+                    columnIndex = 0;
+                    foreach (var cell in rowValues.Skip(1)) // Skip the first cell (row header)
+                    {
+                        cellValue = cell?.ToString();
+                        values = cellValue.Split(','); // Split the cell value by comma
+
+                        onAirOutcome = values[0].Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
+                        onGroundOutcome = values[1].Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
+
+                        upperBodyTransitionRules[rowIndex][columnIndex] = new TransitionRule(onAirOutcome, onGroundOutcome);
+                        columnIndex++;
+                    }
+                    rowIndex++;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            print($"An error occurred: {ex.Message}");
+        }
     }
 
     void OnEnable()
