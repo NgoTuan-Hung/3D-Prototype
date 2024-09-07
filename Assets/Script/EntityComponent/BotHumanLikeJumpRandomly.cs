@@ -26,6 +26,7 @@ public class BotHumanLikeJumpRandomly : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (freeze) return;
         if (canExecuteBotJump && customMonoBehavior.HumanLikeJumpableObject.CurrentJumpCount < customMonoBehavior.HumanLikeJumpableObject.JumpCount)
         {
             if (Random.value < jumpChancePerInterval)
@@ -40,6 +41,7 @@ public class BotHumanLikeJumpRandomly : MonoBehaviour
 
     IEnumerator DoubleJump()
     {
+        while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
         yield return new WaitForSeconds(customMonoBehavior.HumanLikeJumpableObject.JumpDelay + Random.Range(0f, jumpInterval - customMonoBehavior.HumanLikeJumpableObject.JumpDelay));
 
         if (Random.value < doubleJumpChance)
@@ -50,8 +52,13 @@ public class BotHumanLikeJumpRandomly : MonoBehaviour
 
     IEnumerator JumpInterval()
     {
+        while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
         canExecuteBotJump = false;
         yield return new WaitForSeconds(jumpInterval);
         canExecuteBotJump = true;
     }
+
+    private bool freeze = false;
+    public void Freeze() => freeze = true;
+    public void UnFreeze() => freeze = false;
 }

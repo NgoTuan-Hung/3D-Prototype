@@ -5,7 +5,17 @@ using UnityEngine;
 public class BuffAndNegativeEffect : MonoBehaviour
 {
     private CustomMonoBehavior customMonoBehavior;
-    public enum Effect {Freeze, Burn, Stun, Heal}
+    public enum Effect 
+    {
+        Freeze = 0, 
+        Burn = 1 << 0, 
+        SelfBurn = 1 << 1,
+        Wet = 1 << 2,
+        Stun = 1 << 3, 
+        Heal = 1 << 4,
+    }
+
+    public int currentEffect = 0;
     public enum DurationType {Once, OverTime}
     private bool isFreezing = false;
     private bool isBurning = false;
@@ -20,6 +30,12 @@ public class BuffAndNegativeEffect : MonoBehaviour
     {
         switch (effect)
         {
+            case Effect.Freeze:
+                if (CheckHavingEffectBit(Effect.Burn) || CheckHavingEffectBit(Effect.SelfBurn)) return;
+                break;
+            case Effect.Burn:
+                if (CheckHavingEffectBit(Effect.Wet)) return;
+                break;
             default: break;
         }
     }
@@ -41,5 +57,20 @@ public class BuffAndNegativeEffect : MonoBehaviour
         }
 
 
+    }
+
+    public bool CheckHavingEffectBit(Effect effect)
+    {
+        return (currentEffect & (int)effect) != 0;
+    }
+
+    public void RemoveEffectBit(Effect effect)
+    {
+        currentEffect &= ~(int)effect;
+    }
+
+    public void ApplyEffectBit(Effect effect)
+    {
+        currentEffect |= (int)effect;
     }
 }

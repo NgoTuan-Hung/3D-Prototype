@@ -2,7 +2,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CustomMonoBehavior), typeof(CanUseSkill))]
-class UseSkillWheneverPossible : EntityAction
+class BotUseSkillWheneverPossible : EntityAction
 {
     private float useSkillChanceRequired = 50f;
     public override void Awake()
@@ -15,9 +15,12 @@ class UseSkillWheneverPossible : EntityAction
         base.Start();
     }
 
+    private bool canUseSkill = true;
+
     void FixedUpdate()
     {
-        UseAnySkill();
+        if (freeze) return;
+        if (canUseSkill) UseAnySkill();
     }
 
     void UseAnySkill()
@@ -88,4 +91,8 @@ class UseSkillWheneverPossible : EntityAction
             // skill.finishSkillDelegate += () => CustomMonoBehavior.BotHumanLikeSimpleMoveToTarget.CanRotate = true;
         }
     }
+
+    private bool freeze = false;
+    public void Freeze() => freeze = true;
+    public void UnFreeze() => freeze = false;
 }

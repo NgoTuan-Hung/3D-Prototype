@@ -24,6 +24,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private BotHumanLikeLookAtTarget botHumanLikeLookAtTarget;
     private BotHumanLikeAttackWhenInRange botHumanLikeAttackWhenInRange;
     private BotHumanLikeJumpRandomly botHumanLikeJumpRandomly;
+    private BotUseSkillWheneverPossible botUseSkillWheneverPossible; 
     private CanUseSkill canUseSkill;
     private new Camera camera;
     private GameObject cameraPoint;
@@ -37,6 +38,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private SwordSkillThousandSword swordSkillThousandSword;
     private LightingRain lightingRain;
     private FlameRider flameRider;
+    private bool botUseSkillWheneverPossibleBool = false;
     private bool canUseSkillBool = false;
     private bool botHumanLikeJumpRandomlyBool = false;
     private bool humanLikeLookableBool = false;
@@ -105,6 +107,8 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public FlameRider FlameRider { get => flameRider; set => flameRider = value; }
     public CustomMonoBehaviorState CustomMonoBehaviorState1 { get => customMonoBehaviorState; set => customMonoBehaviorState = value; }
     public SkinnedMeshRenderer MainSkinnedMeshRenderer { get => mainSkinnedMeshRenderer; set => mainSkinnedMeshRenderer = value; }
+    internal BotUseSkillWheneverPossible BotUseSkillWheneverPossible { get => botUseSkillWheneverPossible; set => botUseSkillWheneverPossible = value; }
+    public bool BotUseSkillWheneverPossibleBool { get => botUseSkillWheneverPossibleBool; set => botUseSkillWheneverPossibleBool = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -115,7 +119,12 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         if (TryGetComponent<Rigidbody>(out rigidbody)) rigidbodyBool = true;
         if (TryGetComponent<Animator>(out animator)) animatorBool = true;
         if (TryGetComponent<RotatableObject>(out rotatableObject)) rotatableObjectBool = true;
-        if (TryGetComponent<HumanLikeAnimatorBrain>(out humanLikeAnimatorBrain)) humanLikeAnimatorBrainBool = true;
+        if (TryGetComponent<HumanLikeAnimatorBrain>(out humanLikeAnimatorBrain))
+        {
+            humanLikeAnimatorBrainBool = true;
+            FreezeDelegateMethod += () => humanLikeAnimatorBrain.Freeze();
+            UnFreezeDelegateMethod += () => humanLikeAnimatorBrain.UnFreeze();
+        }
         if (TryGetComponent<HumanLikeMovable>(out humanLikeMovable)) humanLikeMovableBool = true;
         if (TryGetComponent<HumanLikeLookable>(out humanLikeLookable)) humanLikeLookableBool = true;
         if (TryGetComponent<HumanLikeJumpableObject>(out humanLikeJumpableObject)) humanLikeJumpableObjectBool = true;
@@ -123,6 +132,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         if (TryGetComponent<BotHumanLikeLookAtTarget>(out botHumanLikeLookAtTarget)) botHumanLikeLookAtTargetBool = true;
         if (TryGetComponent<BotHumanLikeAttackWhenInRange>(out botHumanLikeAttackWhenInRange)) botHumanLikeAttackWhenInRangeBool = true;
         if (TryGetComponent<BotHumanLikeJumpRandomly>(out botHumanLikeJumpRandomly)) botHumanLikeJumpRandomlyBool = true;
+        if (TryGetComponent<BotUseSkillWheneverPossible>(out botUseSkillWheneverPossible)) botUseSkillWheneverPossibleBool = true;
         if (TryGetComponent<CanUseSkill>(out canUseSkill)) canUseSkillBool = true;
 
         if ((skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject) != null) skillCastOriginPointBool = true;
@@ -135,7 +145,35 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         }
         else
         {
-            
+            if (botHumanLikeAttackWhenInRangeBool)
+            {
+                FreezeDelegateMethod += () => botHumanLikeAttackWhenInRange.Freeze();
+                UnFreezeDelegateMethod += () => botHumanLikeAttackWhenInRange.UnFreeze();
+            }
+
+            if (botHumanLikeJumpRandomlyBool)
+            {
+                FreezeDelegateMethod += () => botHumanLikeJumpRandomly.Freeze();
+                UnFreezeDelegateMethod += () => botHumanLikeJumpRandomly.UnFreeze();
+            }
+
+            if (botHumanLikeLookAtTargetBool)
+            {
+                FreezeDelegateMethod += () => botHumanLikeLookAtTarget.Freeze();
+                UnFreezeDelegateMethod += () => botHumanLikeLookAtTarget.UnFreeze();
+            }
+
+            if (botHumanLikeSimpleMoveToTargetBool)
+            {
+                FreezeDelegateMethod += () => botHumanLikeSimpleMoveToTarget.Freeze();
+                UnFreezeDelegateMethod += () => botHumanLikeSimpleMoveToTarget.UnFreeze();
+            }
+
+            if (botUseSkillWheneverPossibleBool)
+            {
+                FreezeDelegateMethod += () => botUseSkillWheneverPossible.Freeze();
+                UnFreezeDelegateMethod += () => botUseSkillWheneverPossible.UnFreeze();
+            }
         }
 
         cameraPoint = transform.Find("CameraPoint").gameObject;
@@ -147,6 +185,18 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         freeObjectPool ??= new ObjectPool(freeObjectPrefab, 20, new PoolArgument(typeof(GameObject), PoolArgument.WhereComponent.Self));
 
         DeactivateAllSkill();
+        FreezeDelegateMethod += () =>
+        {
+            skeletonSwordSkillNonstopThrust.Freeze();
+            lightingRain.Freeze();
+            flameRider.Freeze();
+        };
+        UnFreezeDelegateMethod += () =>
+        {
+            skeletonSwordSkillNonstopThrust.UnFreeze();
+            lightingRain.UnFreeze();
+            flameRider.UnFreeze();
+        };
     }
 
     public void DeactivateAllSkill()
@@ -198,5 +248,19 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public void StopCustomonobehaviorState(CustomMonoBehaviorState state)
     {
         customMonoBehaviorState = CustomMonoBehaviorState.Available;
+    }
+
+    public delegate void FreezeDelegate();
+    public FreezeDelegate FreezeDelegateMethod;
+    public void Freeze()
+    {
+        FreezeDelegateMethod?.Invoke();
+    }
+
+    public delegate void UnFreezeDelegate();
+    public UnFreezeDelegate UnFreezeDelegateMethod;
+    public void UnFreeze()
+    {
+        UnFreezeDelegateMethod?.Invoke();
     }
 }

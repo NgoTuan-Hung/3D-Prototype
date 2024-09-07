@@ -13,6 +13,9 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     public enum LookMode {LookAtTarget, FreeLook, LookAroundTarget}
     private LookMode lookMode;
     public bool IsLookingAtTarget { get => isLookingAtTarget; set => isLookingAtTarget = value; }
+    public bool CanLookAroundTarget { get => canLookAroundTarget; set => canLookAroundTarget = value; }
+    public bool CanChangeFreeDirection { get => canChangeFreeDirection; set => canChangeFreeDirection = value; }
+    public bool CanFreeDirectionEyeLook { get => canFreeDirectionEyeLook; set => canFreeDirectionEyeLook = value; }
 
     private void Awake()
     {
@@ -34,6 +37,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (freeze) return;
         LookDelegateMethod?.Invoke();
     }
 
@@ -93,10 +97,13 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     private Coroutine changeFreeDirectionCoroutine;
     [SerializeField] private float moveEyeTime = 0.5f;
     private Vector3 previousEyeDirection;
+    private bool canChangeFreeDirection = true;
     public IEnumerator ChangeFreeDirection()
     {
         while (true)
         {
+            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+
             /* Change direction every specified interval */
             if (CoroutineWrapper.CheckCoroutineNotNull(freeDirectionEyeLookCoroutine)) StopCoroutine(freeDirectionEyeLookCoroutine);
             /* Pick random object and set its position and rotation similar to the camera point */
@@ -122,11 +129,14 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     }
 
     private Coroutine freeDirectionEyeLookCoroutine;
+    private bool canFreeDirectionEyeLook = true;
     public IEnumerator FreeDirectionEyeLook(Vector3 newEyeDirection)
     {
         float passedTime = 0;
         while (true)
         {
+            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+
             /* move the temp eye along us and lerp our real eye along the position.
             The position is calculated based on the vector relative to our position */
             tempEye.transform.position = customMonoBehavior.CameraPoint.transform.position;
@@ -151,11 +161,13 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     }
 
     public Coroutine lookAroundTargetCoroutine;
+    private bool canLookAroundTarget = true;
     public IEnumerator LookAroundTarget()
     {
         Vector3 newEyePosition;
         while (true)
         {
+            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
             yield return new WaitForSeconds(Time.fixedDeltaTime);
             /* Make a temp object look at our target, and the new direction of our eye will be the left or right of
             that temp object */
@@ -165,4 +177,9 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
             customMonoBehavior.HumanLikeLookable.EyeAt.transform.position = newEyePosition;
         }
     }
+
+    private bool freeze = false;
+    public void Freeze() => freeze = true;
+
+    public void UnFreeze() => freeze = false;
 }

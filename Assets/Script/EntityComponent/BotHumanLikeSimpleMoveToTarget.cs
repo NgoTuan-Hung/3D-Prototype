@@ -86,24 +86,6 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         }
     }
 
-    public void MoveForwardOnly()
-    {
-        if (walkToPatternBlock || runToPatternBlock) return;
-        if (Random.value < 0.5f) walkToPatternCoroutine = StartCoroutine(WalkToPattern(new Vector3(0, 0, 1), Random.Range(0.1f, 1f)));
-        else runToPatternCoroutine = StartCoroutine(RunToPattern(new Vector3(0, 0, 1), Random.Range(0.1f, 1f)));
-    }
-
-    public void StopMode(MoveMode moveMode)
-    {
-        switch (moveMode)
-        {
-            case MoveMode.MoveToTargetMindlessly:
-                canChangeModeEveryXSecond = true;
-                break;
-            default: return;
-        }
-    }
-
     public Coroutine changeBetweenTwoDefaultModeEveryXSecondCoroutine;
     public void InitDefaultBehavior()
     {
@@ -121,10 +103,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     {
         while (true)
         {
-            while (!canChangeModeEveryXSecond)
-            {
-                yield return new WaitForSeconds(Time.fixedDeltaTime);
-            }
+            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
 
             if (Random.value < modeMovingToTargetWithCautionChance) ChangeMode(MoveMode.MoveToTargetWithCaution);
             else ChangeMode(MoveMode.FreeMove);
@@ -139,6 +118,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         else if (distanceToTarget < maxAcceptableDistance) zone = 2;
         else zone = 3;
 
+        if (freeze) return;
         if (canMove) MoveDelegateMethod?.Invoke();
     }
 
@@ -198,12 +178,14 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     }
 
     private bool walkToPatternBlock = false;
+    private bool canWalkToPattern = true;
     public IEnumerator WalkToPattern(Vector3 direction, float duration)
     {
         walkToPatternBlock = true;
         float passedTime = 0;
         while (true)
         {
+            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
             customMonoBehavior.HumanLikeMovable.Move(direction);
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);
@@ -225,13 +207,17 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     public int Zone { get => zone; set => zone = value; }
     public bool CanChangeMode { get => canChangeModeEveryXSecond; set => canChangeModeEveryXSecond = value; }
     public MoveMode MoveMode1 { get => moveMode; set => moveMode = value; }
+    public bool CanRunToPattern { get => canRunToPattern; set => canRunToPattern = value; }
+    public bool CanWalkOrRunWithCondition { get => canWalkOrRunWithCondition; set => canWalkOrRunWithCondition = value; }
 
+    private bool canRunToPattern = true;
     public IEnumerator RunToPattern(Vector3 direction, float duration)
     {
         runToPatternBlock = true;
         float passedTime = 0;
         while (true)
         {
+            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
             customMonoBehavior.HumanLikeMovable.Run(direction);
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);
@@ -241,6 +227,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         runToPatternBlock = false;
     }
 
+    private bool canWalkOrRunWithCondition = true;
     public IEnumerator WalkOrRunWithCondition(Vector3 direction, float walkChance, Func<bool> condition)
     {
         /* Walk or run in direction while condition is true */
@@ -249,6 +236,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         /* This loop run every frame until the condition is true */
         while (true)
         {
+            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
             if (condition()) 
             {
                 InitDefaultBehavior();
@@ -268,6 +256,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     }
 
     private bool customModeWithConditionTimeOut = false;
+    private bool canCustomModeWithCondition = true;
     public IEnumerator CustomModeWithCondition(bool conditionBool, Func<bool> condition, bool timerBool, float timer, Action customMode, float interval)
     {
         StopAllMovement();
@@ -276,6 +265,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         {
             while (true)
             {
+                while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
                 if (condition()) 
                 {
                     break;
@@ -291,6 +281,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
             StartCoroutine(CustomModeWithConditionTimer(timer));
             while (customModeWithConditionTimeOut)
             {
+                while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
                 customMode();
                 yield return new WaitForSeconds(interval);
             }
@@ -304,6 +295,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         float passedTime = 0;
         while (true)
         {
+            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
             yield return new WaitForSeconds(Time.fixedDeltaTime);
             passedTime += Time.fixedDeltaTime;
             if (passedTime > totalTime)
@@ -321,4 +313,9 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         runToPatternBlock = false;
         walkToPatternBlock = false;
     }
+
+    private bool freeze = false;
+    public void Freeze() => freeze = true;
+
+    public void UnFreeze() => freeze = false;
 }

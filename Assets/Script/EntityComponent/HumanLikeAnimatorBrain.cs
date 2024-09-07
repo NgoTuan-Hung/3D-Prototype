@@ -248,6 +248,16 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
     {
         StopState(State.Land);
     }
+
+    public void Freeze()
+    {
+        customMonoBehavior.Animator.speed = 0;
+    }
+
+    public void UnFreeze()
+    {
+        customMonoBehavior.Animator.speed = 1;
+    }
 }
 
 public class TransitionRule

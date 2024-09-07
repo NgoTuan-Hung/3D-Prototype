@@ -19,6 +19,7 @@ public class SkillBase : MonoBehaviour
     private bool upperBodyCheckForAnimationTransition;
     [SerializeField] private float executionTimeAfterAnimationFrame;
     [SerializeField] private float useSkillChance;
+    protected bool freeze = false;
     public ObjectPool WeaponPool { get => weaponPool; set => weaponPool = value; }
     public SubSkillRequiredParameter SubSkillRequiredParameter { get => subSkillRequiredParameter; set => subSkillRequiredParameter = value; }
     public RecommendedAIBehavior RecommendedAIBehavior { get => recommendedAIBehavior; set => recommendedAIBehavior = value; }
@@ -62,6 +63,9 @@ public class SkillBase : MonoBehaviour
     {
         
     }
+
+    public void Freeze () => freeze = true;
+    public void UnFreeze () => freeze = false;
 }
 
 public class SubSkillRequiredParameter

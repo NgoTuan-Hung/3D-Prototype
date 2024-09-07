@@ -55,7 +55,15 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
     private Coroutine timeoutCoroutine;
     public IEnumerator ExecuteAfterAnimationFrame(SubSkillParameter subSkillParameter)
     {
-        yield return new WaitForSeconds(ExecutionTimeAfterAnimationFrame);
+        float totalTime = 0;
+        while (true)
+        {
+            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+
+            totalTime += Time.fixedDeltaTime;
+            if (totalTime >= ExecutionTimeAfterAnimationFrame) break;
+        }
 
         if (CanUse)
         {

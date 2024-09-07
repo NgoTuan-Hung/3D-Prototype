@@ -20,6 +20,7 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
 
     private void FixedUpdate() 
     {
+        if (freeze) return;
         if (customMonoBehavior.BotHumanLikeSimpleMoveToTarget.Zone == 2 && customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget)
         {
             if (canAttack && customMonoBehavior.HumanLikeAnimatorBrain.CheckTransitionUpper(State.Attack) && customMonoBehavior.CustomMonoBehaviorState1 == CustomMonoBehavior.CustomMonoBehaviorState.Available) Attack();
@@ -27,6 +28,9 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
     }
 
     private Coroutine walkOrRunWithConditionCoroutine;
+
+    public bool CanAttack { get => canAttack; set => canAttack = value; }
+
     private void Attack()
     {
         if (Random.value < attackChancePerInterval)
@@ -55,8 +59,13 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
 
     public IEnumerator ResetAttack()
     {
+        while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
         canAttack = false;
         yield return new WaitForSeconds(attackInterval);
         canAttack = true;
     }
+
+    private bool freeze = false;
+    public void Freeze() => freeze = true;
+    public void UnFreeze() => freeze = false;
 }
