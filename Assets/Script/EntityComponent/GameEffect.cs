@@ -195,4 +195,16 @@ public class GameEffect : MonoBehaviour
             followDelegate?.Invoke();
         }
     }
+
+    public void PlayVFX()
+    {
+        visualEffect.Play();
+        if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();
+    }
+
+    public void PlayParticleSystem()
+    {
+        particleSystem.Play();
+        if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();
+    }
 }

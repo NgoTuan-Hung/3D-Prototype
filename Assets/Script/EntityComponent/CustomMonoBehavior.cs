@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BuffAndNegativeEffect))]
 [RequireComponent(typeof(SkeletonSwordSkillNonstopThrust), typeof(SwordSkillSummonBigSword), typeof(SwordSkillThousandSword))]
 [RequireComponent(typeof(LightingRain), typeof(FlameRider))]
 public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
@@ -16,6 +17,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private Animator animator;
     private GameObject skillCastOriginPoint;
     private SkinnedMeshRenderer mainSkinnedMeshRenderer;
+    private Material mainMaterial;
     private HumanLikeJumpableObject humanLikeJumpableObject;
     private HumanLikeAnimatorBrain humanLikeAnimatorBrain;
     private HumanLikeMovable humanLikeMovable;
@@ -38,6 +40,8 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private SwordSkillThousandSword swordSkillThousandSword;
     private LightingRain lightingRain;
     private FlameRider flameRider;
+    private BuffAndNegativeEffect buffAndNegativeEffect;
+    private bool buffAndNegativeEffectBool = false;
     private bool botUseSkillWheneverPossibleBool = false;
     private bool canUseSkillBool = false;
     private bool botHumanLikeJumpRandomlyBool = false;
@@ -109,6 +113,9 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public SkinnedMeshRenderer MainSkinnedMeshRenderer { get => mainSkinnedMeshRenderer; set => mainSkinnedMeshRenderer = value; }
     internal BotUseSkillWheneverPossible BotUseSkillWheneverPossible { get => botUseSkillWheneverPossible; set => botUseSkillWheneverPossible = value; }
     public bool BotUseSkillWheneverPossibleBool { get => botUseSkillWheneverPossibleBool; set => botUseSkillWheneverPossibleBool = value; }
+    public BuffAndNegativeEffect BuffAndNegativeEffect { get => buffAndNegativeEffect; set => buffAndNegativeEffect = value; }
+    public bool BuffAndNegativeEffectBool { get => buffAndNegativeEffectBool; set => buffAndNegativeEffectBool = value; }
+    public Material MainMaterial { get => mainMaterial; set => mainMaterial = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -116,26 +123,14 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         curentHealth = maxHealth;
         allyTags.Add(gameObject.tag);
 
-        if (TryGetComponent<Rigidbody>(out rigidbody)) rigidbodyBool = true;
-        if (TryGetComponent<Animator>(out animator)) animatorBool = true;
-        if (TryGetComponent<RotatableObject>(out rotatableObject)) rotatableObjectBool = true;
-        if (TryGetComponent<HumanLikeAnimatorBrain>(out humanLikeAnimatorBrain))
-        {
-            humanLikeAnimatorBrainBool = true;
-            FreezeDelegateMethod += () => humanLikeAnimatorBrain.Freeze();
-            UnFreezeDelegateMethod += () => humanLikeAnimatorBrain.UnFreeze();
-        }
-        if (TryGetComponent<HumanLikeMovable>(out humanLikeMovable)) humanLikeMovableBool = true;
-        if (TryGetComponent<HumanLikeLookable>(out humanLikeLookable)) humanLikeLookableBool = true;
-        if (TryGetComponent<HumanLikeJumpableObject>(out humanLikeJumpableObject)) humanLikeJumpableObjectBool = true;
-        if (TryGetComponent<BotHumanLikeSimpleMoveToTarget>(out botHumanLikeSimpleMoveToTarget)) botHumanLikeSimpleMoveToTargetBool = true;
-        if (TryGetComponent<BotHumanLikeLookAtTarget>(out botHumanLikeLookAtTarget)) botHumanLikeLookAtTargetBool = true;
-        if (TryGetComponent<BotHumanLikeAttackWhenInRange>(out botHumanLikeAttackWhenInRange)) botHumanLikeAttackWhenInRangeBool = true;
-        if (TryGetComponent<BotHumanLikeJumpRandomly>(out botHumanLikeJumpRandomly)) botHumanLikeJumpRandomlyBool = true;
-        if (TryGetComponent<BotUseSkillWheneverPossible>(out botUseSkillWheneverPossible)) botUseSkillWheneverPossibleBool = true;
-        if (TryGetComponent<CanUseSkill>(out canUseSkill)) canUseSkillBool = true;
+        PopulateComponent();
 
-        if ((skillCastOriginPoint = transform.Find("SkillCastOriginPoint").gameObject) != null) skillCastOriginPointBool = true;
+        Transform skillCastOriginPointTransform = transform.Find("SkillCastOriginPoint");
+        if (skillCastOriginPointTransform != null)
+        {
+            skillCastOriginPointBool = true;
+            skillCastOriginPoint = skillCastOriginPointTransform.gameObject;
+        }
 
         if (entityType.Equals("Player"))
         {
@@ -180,6 +175,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         lookAtConstraintObjectParent = transform.Find("LookAtConstraintObjectParent").gameObject;
         lookAtConstraintObject = transform.Find("LookAtConstraintObject").gameObject;
         mainSkinnedMeshRenderer = transform.Find("MainMesh").GetComponent<SkinnedMeshRenderer>();
+        mainMaterial = mainSkinnedMeshRenderer.material;
 
         GameObject freeObjectPrefab = Resources.Load("FreeObject") as GameObject;
         freeObjectPool ??= new ObjectPool(freeObjectPrefab, 20, new PoolArgument(typeof(GameObject), PoolArgument.WhereComponent.Self));
@@ -262,5 +258,28 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public void UnFreeze()
     {
         UnFreezeDelegateMethod?.Invoke();
+    }
+
+    public void PopulateComponent()
+    {
+        if (TryGetComponent<Rigidbody>(out rigidbody)) rigidbodyBool = true;
+        if (TryGetComponent<Animator>(out animator)) animatorBool = true;
+        if (TryGetComponent<RotatableObject>(out rotatableObject)) rotatableObjectBool = true;
+        if (TryGetComponent<HumanLikeAnimatorBrain>(out humanLikeAnimatorBrain))
+        {
+            humanLikeAnimatorBrainBool = true;
+            FreezeDelegateMethod += () => humanLikeAnimatorBrain.Freeze();
+            UnFreezeDelegateMethod += () => humanLikeAnimatorBrain.UnFreeze();
+        }
+        if (TryGetComponent<HumanLikeMovable>(out humanLikeMovable)) humanLikeMovableBool = true;
+        if (TryGetComponent<HumanLikeLookable>(out humanLikeLookable)) humanLikeLookableBool = true;
+        if (TryGetComponent<HumanLikeJumpableObject>(out humanLikeJumpableObject)) humanLikeJumpableObjectBool = true;
+        if (TryGetComponent<BotHumanLikeSimpleMoveToTarget>(out botHumanLikeSimpleMoveToTarget)) botHumanLikeSimpleMoveToTargetBool = true;
+        if (TryGetComponent<BotHumanLikeLookAtTarget>(out botHumanLikeLookAtTarget)) botHumanLikeLookAtTargetBool = true;
+        if (TryGetComponent<BotHumanLikeAttackWhenInRange>(out botHumanLikeAttackWhenInRange)) botHumanLikeAttackWhenInRangeBool = true;
+        if (TryGetComponent<BotHumanLikeJumpRandomly>(out botHumanLikeJumpRandomly)) botHumanLikeJumpRandomlyBool = true;
+        if (TryGetComponent<BotUseSkillWheneverPossible>(out botUseSkillWheneverPossible)) botUseSkillWheneverPossibleBool = true;
+        if (TryGetComponent<CanUseSkill>(out canUseSkill)) canUseSkillBool = true;
+        if (TryGetComponent<BuffAndNegativeEffect>(out buffAndNegativeEffect)) buffAndNegativeEffectBool = true;
     }
 }

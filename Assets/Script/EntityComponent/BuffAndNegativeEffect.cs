@@ -5,6 +5,7 @@ using UnityEngine;
 public class BuffAndNegativeEffect : MonoBehaviour
 {
     private CustomMonoBehavior customMonoBehavior;
+    private ObjectPool freezeEffectPool;
     public enum Effect 
     {
         Freeze = 0, 
@@ -24,6 +25,8 @@ public class BuffAndNegativeEffect : MonoBehaviour
     private void Awake() 
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
+        GameObject freezeEffectPrefab = Resources.Load("Effect/Freeze") as GameObject;
+        freezeEffectPool = new ObjectPool(freezeEffectPrefab, 10, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
     }
 
     public void ApplyEffect(Effect effect, DurationType durationType, float duration = 0, float delay = 0)
@@ -32,6 +35,8 @@ public class BuffAndNegativeEffect : MonoBehaviour
         {
             case Effect.Freeze:
                 if (CheckHavingEffectBit(Effect.Burn) || CheckHavingEffectBit(Effect.SelfBurn)) return;
+                ApplyEffectBit(effect);
+                StartCoroutine(ApplyFreezing(duration));
                 break;
             case Effect.Burn:
                 if (CheckHavingEffectBit(Effect.Wet)) return;
@@ -45,6 +50,13 @@ public class BuffAndNegativeEffect : MonoBehaviour
         float time = 0;
         isFreezing = true;
 
+        customMonoBehavior.Freeze();
+        customMonoBehavior.MainSkinnedMeshRenderer.material = GlobalObject.Instance.freezeMaterial;
+        GameEffect freezeEffect = freezeEffectPool.PickOne().GameEffect;
+        freezeEffect.transform.position = transform.position;
+        freezeEffect.VisualEffect.SetSkinnedMeshRenderer("SkinnedMeshRenderer", customMonoBehavior.MainSkinnedMeshRenderer);
+        freezeEffect.VisualEffect.Play();
+
         while (isFreezing)
         {
             yield return new WaitForSeconds(Time.fixedDeltaTime);
@@ -56,7 +68,11 @@ public class BuffAndNegativeEffect : MonoBehaviour
             }
         }
 
-
+        customMonoBehavior.UnFreeze();
+        customMonoBehavior.MainSkinnedMeshRenderer.material = customMonoBehavior.MainMaterial;
+        freezeEffect.gameObject.SetActive(false);
+        RemoveEffectBit(Effect.Freeze);
+        freezeEffect.VisualEffect.Stop();
     }
 
     public bool CheckHavingEffectBit(Effect effect)

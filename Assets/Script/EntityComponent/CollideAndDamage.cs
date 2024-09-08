@@ -5,8 +5,6 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-
-[ExecuteInEditMode]
 public class CollideAndDamage : MonoBehaviour 
 {
     [SerializeField] private float colliderDamage = 0f;
@@ -19,6 +17,12 @@ public class CollideAndDamage : MonoBehaviour
     private List<BoxCollider> boxColliders = new List<BoxCollider>();
     [SerializeField] private List<DynamicCollisionData> dynamicCollisionDatas = new List<DynamicCollisionData>();
     [SerializeField] private bool isDynamic = false;
+    public enum InflictEffect {None, Freeze};
+    [SerializeField] private InflictEffect inflictEffect = InflictEffect.None;
+    [SerializeField] private float inflictEffectDuration = 0f;
+    [SerializeField] private float inflictEffectChance = 0f;
+    public delegate void InflictEffectDelegate(CustomMonoBehavior customMonoBehavior);
+    public InflictEffectDelegate inflictEffectDelegate;
     public delegate void OnTriggerEnterDelegate(Collider other);
     public delegate void OnTriggerStayDelegate(Collider other);
     public delegate void OntriggerStayOnceDelegate();
@@ -29,6 +33,9 @@ public class CollideAndDamage : MonoBehaviour
     public float ColliderDamage { get => colliderDamage; set => colliderDamage = value; }
     public float BaseColliderDamage { get => baseColliderDamage; set => baseColliderDamage = value; }
     public List<string> CollideExcludeTags { get => collideExcludeTags; set => collideExcludeTags = value; }
+    public float InflictEffectDuration { get => inflictEffectDuration; set => inflictEffectDuration = value; }
+    public float InflictEffectChance { get => inflictEffectChance; set => inflictEffectChance = value; }
+    public bool IsDynamic { get => isDynamic; set => isDynamic = value; }
 
     public void Awake()
     {
@@ -40,14 +47,19 @@ public class CollideAndDamage : MonoBehaviour
             dynamicCollisionDatas[i].ColliderDefaultSize = boxColliders[i].size;
         }
 
+        ChooseInflictEffect();
         if (colliderType == ColliderType.Single)
         {
             onTriggerEnterDelegate += (Collider other) => 
             {
                 if (!collideExcludeTags.Contains(other.gameObject.tag))
                 {
-                    Debug.Log("CollideAndDamage: " + other.gameObject.name);
-                    GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
+                    CustomMonoBehavior collideWithCustomMonoBehavior = GlobalObject.Instance.GetCustomMonoBehavior(other.gameObject);
+                    if (collideWithCustomMonoBehavior != null)
+                    {
+                        collideWithCustomMonoBehavior.UpdateHealth(colliderDamage);
+                        inflictEffectDelegate?.Invoke(collideWithCustomMonoBehavior);
+                    }
                 }
             };
         }
@@ -63,7 +75,12 @@ public class CollideAndDamage : MonoBehaviour
                 )
                 {
                     // need more work
-                    GlobalObject.Instance.UpdateCustomonoBehaviorHealth(colliderDamage, other.gameObject);
+                    CustomMonoBehavior collideWithCustomMonoBehavior = GlobalObject.Instance.GetCustomMonoBehavior(other.gameObject);
+                    if (collideWithCustomMonoBehavior != null)
+                    {
+                        collideWithCustomMonoBehavior.UpdateHealth(colliderDamage);
+                        inflictEffectDelegate?.Invoke(collideWithCustomMonoBehavior);
+                    }
                 }
             };
         }
@@ -76,7 +93,7 @@ public class CollideAndDamage : MonoBehaviour
             StartCoroutine(CollisionTimer());
         };
 
-        if (isDynamic) StartDynamicCollider();
+        if (isDynamic) boxColliders.ForEach((boxCollider) => {boxCollider.enabled = false;});
     }
 
 
@@ -124,6 +141,7 @@ public class CollideAndDamage : MonoBehaviour
     {
         for (int i=0;i<boxColliders.Count;i++)
         {
+            boxColliders[i].enabled = true;
             StartCoroutine(StartDynamicCollider(i));
         }
     }
@@ -160,11 +178,13 @@ public class CollideAndDamage : MonoBehaviour
         {
             ResetDynamicCollider(i);
             StartCoroutine(DynamicColliderCycle(i));
+            if (j == dynamicCollisionDatas[i].Cycle - 1) break;
             yield return new WaitForSeconds(dynamicCollisionDatas[i].CycleLifeTime + dynamicCollisionDatas[i].StartDelayTime);
         }
 
         yield return new WaitForSeconds(dynamicCollisionDatas[i].CycleLifeTime);
         ResetDynamicCollider(i);
+        boxColliders[i].enabled = false;
     }
 
     public IEnumerator DynamicColliderCycle(int i)
@@ -199,6 +219,26 @@ public class CollideAndDamage : MonoBehaviour
     {
         boxColliders[i].center = dynamicCollisionDatas[i].ColliderDefaultCenter;
         boxColliders[i].size = dynamicCollisionDatas[i].ColliderDefaultSize;
+    }
+
+    public void ChooseInflictEffect()
+    {
+        switch (inflictEffect)
+        {
+            case InflictEffect.Freeze:
+                inflictEffectDelegate = (CustomMonoBehavior customMonoBehavior) => 
+                {
+                    if (UnityEngine.Random.Range(0f, 1f) <= inflictEffectChance)
+                    {
+                        customMonoBehavior.BuffAndNegativeEffect.ApplyEffect
+                        (
+                            BuffAndNegativeEffect.Effect.Freeze, BuffAndNegativeEffect.DurationType.Once, inflictEffectDuration
+                        );
+                    }
+                };
+                break;
+            default: break;
+        }
     }
 }
 

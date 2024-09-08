@@ -70,7 +70,7 @@ public class LightingRain : SkillBase
 
             lightingRainEffect.transform.position = subSkillParameter.Target.transform.position + position.Vector3;
             lightingRainEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
-            lightingRainEffect.ParticleSystem.Play();
+            lightingRainEffect.PlayParticleSystem();
 
             yield return new WaitForSeconds(particleSystemTimeEnd.FloatValue);
             lightingRainEffect.gameObject.SetActive(false);

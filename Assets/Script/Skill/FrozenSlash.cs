@@ -43,29 +43,38 @@ public class FrozenSlash : SkillBase
         iceReaperEffect.transform.position = transform.position;
         GameEffect scytheSlashEffect = scytheSlashEffectPool.PickOne().GameEffect;
         scytheSlashEffect.transform.position = new Vector3(999, 999, 999);
+        scytheSlashEffect.VisualEffect.Stop();
         GameEffect scytheSlashEffect2 = scytheSlashEffectPool.PickOne().GameEffect;
         scytheSlashEffect2.transform.position = new Vector3(999, 999, 999);
+        scytheSlashEffect2.VisualEffect.Stop();
         GameEffect scytheSlashEffect3 = scytheSlashEffectPool.PickOne().GameEffect;
         scytheSlashEffect3.transform.position = new Vector3(999, 999, 999);
+        scytheSlashEffect3.VisualEffect.Stop();
         iceReaperEffect.animationEvent1Delegate = () =>
         {
             scytheSlashEffect.transform.position = transform.position + new Vector3(-0.88f, 1.625f, 1.08f);
             scytheSlashEffect.transform.rotation = Quaternion.Euler(50, 31, -108);
-            scytheSlashEffect.VisualEffect.Play();
+            scytheSlashEffect.CollideAndDamage.InflictEffectDuration = 1.5f;
+            scytheSlashEffect.CollideAndDamage.InflictEffectChance = 0.3f;
+            scytheSlashEffect.PlayVFX();
         };
 
         iceReaperEffect.animationEvent2Delegate = () =>
         {
             scytheSlashEffect2.transform.position = transform.position + new Vector3(1.59f, 0.09f, 0.35f);
             scytheSlashEffect2.transform.rotation = Quaternion.Euler(352.85f, 349.6f, 57f);
-            scytheSlashEffect2.VisualEffect.Play();
+            scytheSlashEffect2.CollideAndDamage.InflictEffectDuration = 1.5f;
+            scytheSlashEffect2.CollideAndDamage.InflictEffectChance = 0.3f;
+            scytheSlashEffect2.PlayVFX();
         };
 
         iceReaperEffect.animationEvent3Delegate = () =>
         {
             scytheSlashEffect3.transform.position = transform.position + new Vector3(-0.46f, 0.68f, -0.66f);
             scytheSlashEffect3.transform.rotation = Quaternion.Euler(12.57f, 312.8f, 291.17f);
-            scytheSlashEffect3.VisualEffect.Play();
+            scytheSlashEffect3.CollideAndDamage.InflictEffectDuration = 3f;
+            scytheSlashEffect3.CollideAndDamage.InflictEffectChance = 0.7f;
+            scytheSlashEffect3.PlayVFX();
         };
 
         iceReaperEffect.animationEvent4Delegate = () =>

@@ -30,6 +30,7 @@ public class GlobalObject : Singleton<GlobalObject>
     [SerializeField] private string upperBodyTransitionRulePath;
     public TransitionRule[][] LowerBodyTransitionRules { get => lowerBodyTransitionRules; set => lowerBodyTransitionRules = value; }
     public TransitionRule[][] UpperBodyTransitionRules { get => upperBodyTransitionRules; set => upperBodyTransitionRules = value; }
+    public Material freezeMaterial;
 
     private void Awake() 
     {
