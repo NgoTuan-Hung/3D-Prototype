@@ -806,7 +806,7 @@ MonoBehaviour:
   positionMode: 0
   spawnMode: 0
   mode: 2
-  placementMode: 0
+  placementMode: 2
   surfaceCoordinates: 1
   sourceMesh: 1
   skinnedTransform: 2
@@ -865,7 +865,7 @@ MonoBehaviour:
   - {fileID: 527}
   - {fileID: 531}
   m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
+  m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_MasterSlot: {fileID: 522}
   m_MasterData:

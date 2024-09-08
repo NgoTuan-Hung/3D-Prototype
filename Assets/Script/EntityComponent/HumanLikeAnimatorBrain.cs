@@ -17,6 +17,7 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
     public State currentUpperBodyState;
     public State defaultUpperBodyState = State.Idle;
     public TransitionRule[][] upperBodyTransitionRules;
+    private bool freeze = false;
 
     public bool ChangeState(State newState)
     {
@@ -194,6 +195,7 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
     public float acceptableGroundDistance = 0.05f;
     public void GroundCheck()
     {
+        if (freeze) return;
         onAir = false;
         for (int i=0;i<groundChecks.Count;i++)
         {
@@ -251,11 +253,13 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
 
     public void Freeze()
     {
+        freeze = true;
         customMonoBehavior.Animator.speed = 0;
     }
 
     public void UnFreeze()
     {
+        freeze = false;
         customMonoBehavior.Animator.speed = 1;
     }
 }

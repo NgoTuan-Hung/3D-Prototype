@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3427123013261035182
+--- !u!1 &1754129152316608532
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,38 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7755251584404860191}
-  - component: {fileID: 5427346073657801037}
+  - component: {fileID: 5787304052591235907}
+  - component: {fileID: 3623353052117366666}
   m_Layer: 0
-  m_Name: Freeze
+  m_Name: BreakFreeze
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7755251584404860191
+--- !u!4 &5787304052591235907
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3427123013261035182}
+  m_GameObject: {fileID: 1754129152316608532}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8898592857191422141}
+  - {fileID: 8134954968816678848}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5427346073657801037
+--- !u!114 &3623353052117366666
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3427123013261035182}
+  m_GameObject: {fileID: 1754129152316608532}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 929a7dae32a09a1429a0c539a3f5114e, type: 3}
@@ -47,9 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 0}
   disableAfterTime: 0
-  disableTime: 0
+  disableTime: 2
   animators: []
---- !u!1 &4841419868770743444
+--- !u!1 &1936378953186477429
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,40 +57,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8898592857191422141}
-  - component: {fileID: 5739478593749911979}
-  - component: {fileID: 3611922083226424822}
+  - component: {fileID: 8134954968816678848}
+  - component: {fileID: 2130275688963243545}
+  - component: {fileID: 838496926487983552}
   m_Layer: 0
-  m_Name: Freeze
+  m_Name: VFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8898592857191422141
+--- !u!4 &8134954968816678848
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4841419868770743444}
+  m_GameObject: {fileID: 1936378953186477429}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7755251584404860191}
+  m_Father: {fileID: 5787304052591235907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!2083052967 &5739478593749911979
+--- !u!2083052967 &2130275688963243545
 VisualEffect:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4841419868770743444}
+  m_GameObject: {fileID: 1936378953186477429}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: bf7904049f284a34d80d78e4ffc29e88, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 1f0a1c77c12625e47b9d3abc1306d78f, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -118,22 +118,19 @@ VisualEffect:
       m_Array: []
     m_NamedObject:
       m_Array:
-      - m_Value: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
-        m_Name: Mesh
-        m_Overridden: 1
       - m_Value: {fileID: 0}
-        m_Name: New SkinnedMeshRenderer
+        m_Name: SkinnedMeshRenderer
         m_Overridden: 1
     m_Bool:
       m_Array: []
---- !u!73398921 &3611922083226424822
+--- !u!73398921 &838496926487983552
 VFXRenderer:
   serializedVersion: 1
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4841419868770743444}
+  m_GameObject: {fileID: 1936378953186477429}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0

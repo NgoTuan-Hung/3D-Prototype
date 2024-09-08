@@ -6,6 +6,7 @@ public class BuffAndNegativeEffect : MonoBehaviour
 {
     private CustomMonoBehavior customMonoBehavior;
     private ObjectPool freezeEffectPool;
+    private ObjectPool breakFreezeEffectPool;
     public enum Effect 
     {
         Freeze = 0, 
@@ -27,6 +28,8 @@ public class BuffAndNegativeEffect : MonoBehaviour
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
         GameObject freezeEffectPrefab = Resources.Load("Effect/Freeze") as GameObject;
         freezeEffectPool = new ObjectPool(freezeEffectPrefab, 10, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
+        GameObject breakFreezeEffectPrefab = Resources.Load("Effect/BreakFreeze") as GameObject;
+        breakFreezeEffectPool = new ObjectPool(breakFreezeEffectPrefab, 10, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
     }
 
     public void ApplyEffect(Effect effect, DurationType durationType, float duration = 0, float delay = 0)
@@ -53,8 +56,9 @@ public class BuffAndNegativeEffect : MonoBehaviour
         customMonoBehavior.Freeze();
         customMonoBehavior.MainSkinnedMeshRenderer.material = GlobalObject.Instance.freezeMaterial;
         GameEffect freezeEffect = freezeEffectPool.PickOne().GameEffect;
-        freezeEffect.transform.position = transform.position;
         freezeEffect.VisualEffect.SetSkinnedMeshRenderer("SkinnedMeshRenderer", customMonoBehavior.MainSkinnedMeshRenderer);
+        freezeEffect.gameObject.transform.position = Vector3.zero;
+        freezeEffect.gameObject.transform.parent = transform;
         freezeEffect.VisualEffect.Play();
 
         while (isFreezing)
@@ -70,9 +74,20 @@ public class BuffAndNegativeEffect : MonoBehaviour
 
         customMonoBehavior.UnFreeze();
         customMonoBehavior.MainSkinnedMeshRenderer.material = customMonoBehavior.MainMaterial;
+        freezeEffect.transform.parent = null;
         freezeEffect.gameObject.SetActive(false);
         RemoveEffectBit(Effect.Freeze);
         freezeEffect.VisualEffect.Stop();
+        GameEffect breakFreezeEffect = breakFreezeEffectPool.PickOne().GameEffect;
+        breakFreezeEffect.VisualEffect.SetSkinnedMeshRenderer("SkinnedMeshRenderer", customMonoBehavior.MainSkinnedMeshRenderer);
+        breakFreezeEffect.VisualEffect.Play();
+        StartCoroutine(disableAfterTimeCoroutine(2, breakFreezeEffect.gameObject));
+    }
+
+    public IEnumerator disableAfterTimeCoroutine(float time, GameObject gameObject)
+    {
+        yield return new WaitForSeconds(time);
+        gameObject.SetActive(false);
     }
 
     public bool CheckHavingEffectBit(Effect effect)
