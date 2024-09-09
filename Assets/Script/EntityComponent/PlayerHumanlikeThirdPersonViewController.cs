@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerThirdPersonViewController : MonoBehaviour 
+public class PlayerHumanlikeThirdPersonViewController : ExtensibleMonobehavior 
 {
     private CustomMonoBehavior customMonoBehavior;
 
@@ -11,6 +11,7 @@ public class PlayerThirdPersonViewController : MonoBehaviour
 
     private void FixedUpdate() 
     {
+        if (Freeze1) return;
         customMonoBehavior.CanRotateThisFrame = false;
         customMonoBehavior.CameraPointToCameraVector = customMonoBehavior.CameraPoint.transform.position - customMonoBehavior.Camera.transform.position;
         customMonoBehavior.CameraPoint.transform.rotation = Quaternion.LookRotation(new Vector3(customMonoBehavior.CameraPointToCameraVector.x, 0, customMonoBehavior.CameraPointToCameraVector.z));

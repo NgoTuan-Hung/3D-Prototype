@@ -31,6 +31,7 @@ public class GlobalObject : Singleton<GlobalObject>
     public TransitionRule[][] LowerBodyTransitionRules { get => lowerBodyTransitionRules; set => lowerBodyTransitionRules = value; }
     public TransitionRule[][] UpperBodyTransitionRules { get => upperBodyTransitionRules; set => upperBodyTransitionRules = value; }
     public Material freezeMaterial;
+    public GameObject player;
 
     private void Awake() 
     {

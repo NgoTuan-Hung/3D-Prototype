@@ -57,8 +57,6 @@ public class BuffAndNegativeEffect : MonoBehaviour
         customMonoBehavior.MainSkinnedMeshRenderer.material = GlobalObject.Instance.freezeMaterial;
         GameEffect freezeEffect = freezeEffectPool.PickOne().GameEffect;
         freezeEffect.VisualEffect.SetSkinnedMeshRenderer("SkinnedMeshRenderer", customMonoBehavior.MainSkinnedMeshRenderer);
-        freezeEffect.gameObject.transform.position = Vector3.zero;
-        freezeEffect.gameObject.transform.parent = transform;
         freezeEffect.VisualEffect.Play();
 
         while (isFreezing)
@@ -74,7 +72,6 @@ public class BuffAndNegativeEffect : MonoBehaviour
 
         customMonoBehavior.UnFreeze();
         customMonoBehavior.MainSkinnedMeshRenderer.material = customMonoBehavior.MainMaterial;
-        freezeEffect.transform.parent = null;
         freezeEffect.gameObject.SetActive(false);
         RemoveEffectBit(Effect.Freeze);
         freezeEffect.VisualEffect.Stop();

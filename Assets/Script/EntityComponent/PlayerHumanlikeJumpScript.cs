@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-public class OKJumpScript : MonoBehaviour
+public class PlayerHumanlikeJumpScript : ExtensibleMonobehavior
 {
     private CustomMonoBehavior customMonoBehavior;
 
@@ -12,7 +12,13 @@ public class OKJumpScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Freeze1) return;
+        Jump();
+    }
+
+    private void Jump()
+    {
+        if (customMonoBehavior.PlayerInputSystem.Control.Jump.IsPressed())
         {
             customMonoBehavior.HumanLikeJumpableObject.Jump();
         }

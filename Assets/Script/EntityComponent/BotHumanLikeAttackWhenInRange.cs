@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CustomMonoBehavior))]
-public class BotHumanLikeAttackWhenInRange : MonoBehaviour
+public class BotHumanLikeAttackWhenInRange : ExtensibleMonobehavior
 {
     private CustomMonoBehavior customMonoBehavior;
 
@@ -20,7 +20,7 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
 
     private void FixedUpdate() 
     {
-        if (freeze) return;
+        if (Freeze1) return;
         if (customMonoBehavior.BotHumanLikeSimpleMoveToTarget.Zone == 2 && customMonoBehavior.BotHumanLikeLookAtTarget.IsLookingAtTarget)
         {
             if (canAttack && customMonoBehavior.HumanLikeAnimatorBrain.CheckTransitionUpper(State.Attack) && customMonoBehavior.CustomMonoBehaviorState1 == CustomMonoBehavior.CustomMonoBehaviorState.Available) Attack();
@@ -59,13 +59,9 @@ public class BotHumanLikeAttackWhenInRange : MonoBehaviour
 
     public IEnumerator ResetAttack()
     {
-        while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+        while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
         canAttack = false;
         yield return new WaitForSeconds(attackInterval);
         canAttack = true;
     }
-
-    private bool freeze = false;
-    public void Freeze() => freeze = true;
-    public void UnFreeze() => freeze = false;
 }

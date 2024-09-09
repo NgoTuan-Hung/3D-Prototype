@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CustomMonoBehavior), typeof(HumanLikeAnimatorBrain), typeof(HumanLikeJumpableObject))]
-public class BotHumanLikeJumpRandomly : MonoBehaviour
+public class BotHumanLikeJumpRandomly : ExtensibleMonobehavior
 {
     private CustomMonoBehavior customMonoBehavior;
 
@@ -26,7 +26,7 @@ public class BotHumanLikeJumpRandomly : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (freeze) return;
+        if (Freeze1) return;
         if (canExecuteBotJump && customMonoBehavior.HumanLikeJumpableObject.CurrentJumpCount < customMonoBehavior.HumanLikeJumpableObject.JumpCount)
         {
             if (Random.value < jumpChancePerInterval)
@@ -41,7 +41,7 @@ public class BotHumanLikeJumpRandomly : MonoBehaviour
 
     IEnumerator DoubleJump()
     {
-        while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+        while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
         yield return new WaitForSeconds(customMonoBehavior.HumanLikeJumpableObject.JumpDelay + Random.Range(0f, jumpInterval - customMonoBehavior.HumanLikeJumpableObject.JumpDelay));
 
         if (Random.value < doubleJumpChance)
@@ -52,13 +52,9 @@ public class BotHumanLikeJumpRandomly : MonoBehaviour
 
     IEnumerator JumpInterval()
     {
-        while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+        while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
         canExecuteBotJump = false;
         yield return new WaitForSeconds(jumpInterval);
         canExecuteBotJump = true;
     }
-
-    private bool freeze = false;
-    public void Freeze() => freeze = true;
-    public void UnFreeze() => freeze = false;
 }

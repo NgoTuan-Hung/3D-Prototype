@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CustomMonoBehavior), typeof(HumanLikeLookable))]
-public class BotHumanLikeLookAtTarget : MonoBehaviour
+public class BotHumanLikeLookAtTarget : ExtensibleMonobehavior
 {
     private static ObjectPool freeObjectPool;
     private CustomMonoBehavior customMonoBehavior;
@@ -20,7 +20,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     private void Awake()
     {
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
-        customMonoBehavior.Target = GameObject.Find("Player");
+        customMonoBehavior.Target = GlobalObject.Instance.player;
         changeFreeDirectionCoroutine = customMonoBehavior.NullCoroutine();
         freeDirectionEyeLookCoroutine = customMonoBehavior.NullCoroutine();
         lookAroundTargetCoroutine = customMonoBehavior.NullCoroutine();
@@ -37,7 +37,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (freeze) return;
+        if (Freeze1) return;
         LookDelegateMethod?.Invoke();
     }
 
@@ -102,7 +102,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
     {
         while (true)
         {
-            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+            while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
 
             /* Change direction every specified interval */
             if (CoroutineWrapper.CheckCoroutineNotNull(freeDirectionEyeLookCoroutine)) StopCoroutine(freeDirectionEyeLookCoroutine);
@@ -135,7 +135,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         float passedTime = 0;
         while (true)
         {
-            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+            while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
 
             /* move the temp eye along us and lerp our real eye along the position.
             The position is calculated based on the vector relative to our position */
@@ -167,7 +167,7 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
         Vector3 newEyePosition;
         while (true)
         {
-            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+            while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
             yield return new WaitForSeconds(Time.fixedDeltaTime);
             /* Make a temp object look at our target, and the new direction of our eye will be the left or right of
             that temp object */
@@ -177,9 +177,4 @@ public class BotHumanLikeLookAtTarget : MonoBehaviour
             customMonoBehavior.HumanLikeLookable.EyeAt.transform.position = newEyePosition;
         }
     }
-
-    private bool freeze = false;
-    public void Freeze() => freeze = true;
-
-    public void UnFreeze() => freeze = false;
 }

@@ -27,6 +27,10 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private BotHumanLikeAttackWhenInRange botHumanLikeAttackWhenInRange;
     private BotHumanLikeJumpRandomly botHumanLikeJumpRandomly;
     private BotUseSkillWheneverPossible botUseSkillWheneverPossible; 
+    private PlayerHumanlikeAttackable playerHumanlikeAttackable;
+    private PlayerHumanlikeJumpScript playerHumanlikeJumpScript;
+    private PlayerHumanlikeMoveScript playerHumanlikeMoveScript;
+    private PlayerHumanlikeThirdPersonViewController playerHumanlikeThirdPersonViewController;
     private CanUseSkill canUseSkill;
     private new Camera camera;
     private GameObject cameraPoint;
@@ -41,6 +45,15 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     private LightingRain lightingRain;
     private FlameRider flameRider;
     private BuffAndNegativeEffect buffAndNegativeEffect;
+    private PlayerInputSystem playerInputSystem;
+    public delegate void OnEnableDelegate();
+    public OnEnableDelegate OnEnableDelegateMethod;
+    public delegate void OnDisableDelegate();
+    public OnDisableDelegate OnDisableDelegateMethod;
+    private bool playerHumanlikeAttackableBool = false;
+    private bool playerHumanlikeJumpScriptBool = false;
+    private bool playerHumanlikeMoveScriptBool = false;
+    private bool playerHumanlikeThirdPersonViewControllerBool = false;
     private bool buffAndNegativeEffectBool = false;
     private bool botUseSkillWheneverPossibleBool = false;
     private bool canUseSkillBool = false;
@@ -116,6 +129,15 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     public BuffAndNegativeEffect BuffAndNegativeEffect { get => buffAndNegativeEffect; set => buffAndNegativeEffect = value; }
     public bool BuffAndNegativeEffectBool { get => buffAndNegativeEffectBool; set => buffAndNegativeEffectBool = value; }
     public Material MainMaterial { get => mainMaterial; set => mainMaterial = value; }
+    public PlayerInputSystem PlayerInputSystem { get => playerInputSystem; set => playerInputSystem = value; }
+    public PlayerHumanlikeAttackable PlayerHumanlikeAttackable { get => playerHumanlikeAttackable; set => playerHumanlikeAttackable = value; }
+    public PlayerHumanlikeJumpScript PlayerHumanlikeJumpScript { get => playerHumanlikeJumpScript; set => playerHumanlikeJumpScript = value; }
+    public PlayerHumanlikeMoveScript PlayerHumanlikeMoveScript { get => playerHumanlikeMoveScript; set => playerHumanlikeMoveScript = value; }
+    public PlayerHumanlikeThirdPersonViewController PlayerHumanlikeThirdPersonViewController { get => playerHumanlikeThirdPersonViewController; set => playerHumanlikeThirdPersonViewController = value; }
+    public bool PlayerHumanlikeAttackableBool { get => playerHumanlikeAttackableBool; set => playerHumanlikeAttackableBool = value; }
+    public bool PlayerHumanlikeJumpScriptBool { get => playerHumanlikeJumpScriptBool; set => playerHumanlikeJumpScriptBool = value; }
+    public bool PlayerHumanlikeMoveScriptBool { get => playerHumanlikeMoveScriptBool; set => playerHumanlikeMoveScriptBool = value; }
+    public bool PlayerHumanlikeThirdPersonViewControllerBool { get => playerHumanlikeThirdPersonViewControllerBool; set => playerHumanlikeThirdPersonViewControllerBool = value; }
 
     // Start is called before the first frame update
     public void Awake()
@@ -134,41 +156,18 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
 
         if (entityType.Equals("Player"))
         {
+            GlobalObject.Instance.player = gameObject;
             camera = Camera.main;
             cameraBool = true;
             isControlByPlayer = true;
+            playerInputSystem = new PlayerInputSystem();
+            OnEnableDelegateMethod += () => playerInputSystem.Control.Enable();
+            OnDisableDelegateMethod += () => playerInputSystem.Control.Disable();
+            HandleFreezeForPlayer();
         }
         else
         {
-            if (botHumanLikeAttackWhenInRangeBool)
-            {
-                FreezeDelegateMethod += () => botHumanLikeAttackWhenInRange.Freeze();
-                UnFreezeDelegateMethod += () => botHumanLikeAttackWhenInRange.UnFreeze();
-            }
-
-            if (botHumanLikeJumpRandomlyBool)
-            {
-                FreezeDelegateMethod += () => botHumanLikeJumpRandomly.Freeze();
-                UnFreezeDelegateMethod += () => botHumanLikeJumpRandomly.UnFreeze();
-            }
-
-            if (botHumanLikeLookAtTargetBool)
-            {
-                FreezeDelegateMethod += () => botHumanLikeLookAtTarget.Freeze();
-                UnFreezeDelegateMethod += () => botHumanLikeLookAtTarget.UnFreeze();
-            }
-
-            if (botHumanLikeSimpleMoveToTargetBool)
-            {
-                FreezeDelegateMethod += () => botHumanLikeSimpleMoveToTarget.Freeze();
-                UnFreezeDelegateMethod += () => botHumanLikeSimpleMoveToTarget.UnFreeze();
-            }
-
-            if (botUseSkillWheneverPossibleBool)
-            {
-                FreezeDelegateMethod += () => botUseSkillWheneverPossible.Freeze();
-                UnFreezeDelegateMethod += () => botUseSkillWheneverPossible.UnFreeze();
-            }
+            HandleFreezeForBot();
         }
 
         cameraPoint = transform.Find("CameraPoint").gameObject;
@@ -279,7 +278,80 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
         if (TryGetComponent<BotHumanLikeAttackWhenInRange>(out botHumanLikeAttackWhenInRange)) botHumanLikeAttackWhenInRangeBool = true;
         if (TryGetComponent<BotHumanLikeJumpRandomly>(out botHumanLikeJumpRandomly)) botHumanLikeJumpRandomlyBool = true;
         if (TryGetComponent<BotUseSkillWheneverPossible>(out botUseSkillWheneverPossible)) botUseSkillWheneverPossibleBool = true;
+        if (TryGetComponent<PlayerHumanlikeAttackable>(out playerHumanlikeAttackable)) playerHumanlikeAttackableBool = true;
+        if (TryGetComponent<PlayerHumanlikeJumpScript>(out playerHumanlikeJumpScript)) playerHumanlikeJumpScriptBool = true;
+        if (TryGetComponent<PlayerHumanlikeMoveScript>(out playerHumanlikeMoveScript)) playerHumanlikeMoveScriptBool = true;
+        if (TryGetComponent<PlayerHumanlikeThirdPersonViewController>(out playerHumanlikeThirdPersonViewController)) playerHumanlikeThirdPersonViewControllerBool = true;
         if (TryGetComponent<CanUseSkill>(out canUseSkill)) canUseSkillBool = true;
         if (TryGetComponent<BuffAndNegativeEffect>(out buffAndNegativeEffect)) buffAndNegativeEffectBool = true;
+    }
+
+    public void HandleFreezeForBot()
+    {
+        if (botHumanLikeAttackWhenInRangeBool)
+        {
+            FreezeDelegateMethod += () => botHumanLikeAttackWhenInRange.Freeze();
+            UnFreezeDelegateMethod += () => botHumanLikeAttackWhenInRange.UnFreeze();
+        }
+
+        if (botHumanLikeJumpRandomlyBool)
+        {
+            FreezeDelegateMethod += () => botHumanLikeJumpRandomly.Freeze();
+            UnFreezeDelegateMethod += () => botHumanLikeJumpRandomly.UnFreeze();
+        }
+
+        if (botHumanLikeLookAtTargetBool)
+        {
+            FreezeDelegateMethod += () => botHumanLikeLookAtTarget.Freeze();
+            UnFreezeDelegateMethod += () => botHumanLikeLookAtTarget.UnFreeze();
+        }
+
+        if (botHumanLikeSimpleMoveToTargetBool)
+        {
+            FreezeDelegateMethod += () => botHumanLikeSimpleMoveToTarget.Freeze();
+            UnFreezeDelegateMethod += () => botHumanLikeSimpleMoveToTarget.UnFreeze();
+        }
+
+        if (botUseSkillWheneverPossibleBool)
+        {
+            FreezeDelegateMethod += () => botUseSkillWheneverPossible.Freeze();
+            UnFreezeDelegateMethod += () => botUseSkillWheneverPossible.UnFreeze();
+        }
+    }
+
+    public void HandleFreezeForPlayer()
+    {
+        if (playerHumanlikeAttackableBool)
+        {
+            FreezeDelegateMethod += () => playerHumanlikeAttackable.Freeze();
+            UnFreezeDelegateMethod += () => playerHumanlikeAttackable.UnFreeze();
+        }
+
+        if (playerHumanlikeJumpScriptBool)
+        {
+            FreezeDelegateMethod += () => playerHumanlikeJumpScript.Freeze();
+            UnFreezeDelegateMethod += () => playerHumanlikeJumpScript.UnFreeze();
+        }
+
+        if (playerHumanlikeMoveScriptBool)
+        {
+            FreezeDelegateMethod += () => playerHumanlikeMoveScript.Freeze();
+            UnFreezeDelegateMethod += () => playerHumanlikeMoveScript.UnFreeze();
+        }
+
+        if (playerHumanlikeThirdPersonViewControllerBool)
+        {
+            FreezeDelegateMethod += () => playerHumanlikeThirdPersonViewController.Freeze();
+            UnFreezeDelegateMethod += () => playerHumanlikeThirdPersonViewController.UnFreeze();
+        }
+    }
+    private void OnEnable() 
+    {
+        OnEnableDelegateMethod?.Invoke();
+    }
+
+    private void OnDisable() 
+    {
+        OnDisableDelegateMethod?.Invoke();
     }
 }

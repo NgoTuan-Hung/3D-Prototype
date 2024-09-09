@@ -210,7 +210,7 @@ public class HumanLikeAnimatorBrain : MonoBehaviour
     }
 
     public enum AddEventForClipOfStateTimeType {Start, End, Value}
-    public void AddEventForClipOfState(String functionName, State state, AddEventForClipOfStateTimeType timeType, float timeValue)
+    public void AddEventForClipOfState(String functionName, State state, AddEventForClipOfStateTimeType timeType, float timeValue = 0)
     {
         string clipName = state switch
         {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AttackableObject : MonoBehaviour 
+public class PlayerHumanlikeAttackable : ExtensibleMonobehavior
 {
     public CustomMonoBehavior customMonoBehavior;
 
@@ -9,12 +9,18 @@ public class AttackableObject : MonoBehaviour
         customMonoBehavior = GetComponent<CustomMonoBehavior>();
     }
 
+    private void Start() 
+    {
+        customMonoBehavior.HumanLikeAnimatorBrain.AddEventForClipOfState("StopAttack", State.Attack, HumanLikeAnimatorBrain.AddEventForClipOfStateTimeType.End);
+    }
+
     private void FixedUpdate() 
     {
-        if (Input.GetKey(KeyCode.Mouse0)) Attack();
-        if (Input.GetKey(KeyCode.Alpha1)) CastSpellShort();
-        if (Input.GetKey(KeyCode.Alpha2)) CastSpellMiddle();
-        if (Input.GetKey(KeyCode.Alpha3)) CastSpellLong();
+        if (Freeze1) return;
+        Attack();
+        // if (Input.GetKey(KeyCode.Alpha1)) CastSpellShort();
+        // if (Input.GetKey(KeyCode.Alpha2)) CastSpellMiddle();
+        // if (Input.GetKey(KeyCode.Alpha3)) CastSpellLong();
     }
 
     public bool canAttack = true;
@@ -22,7 +28,8 @@ public class AttackableObject : MonoBehaviour
     {
         if (canAttack)
         {
-            if (customMonoBehavior.HumanLikeAnimatorBrain.ChangeState(State.Attack)) {canAttack = false;}
+            if (customMonoBehavior.PlayerInputSystem.Control.Attack.IsPressed())
+                if (customMonoBehavior.HumanLikeAnimatorBrain.ChangeState(State.Attack)) {canAttack = false;}
         }
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CustomMonoBehavior), typeof(BotHumanLikeLookAtTarget))]
-public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour 
+public class BotHumanLikeSimpleMoveToTarget : ExtensibleMonobehavior 
 {
     private CustomMonoBehavior customMonoBehavior;
     private int zone;
@@ -103,7 +103,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
     {
         while (true)
         {
-            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+            while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
 
             if (Random.value < modeMovingToTargetWithCautionChance) ChangeMode(MoveMode.MoveToTargetWithCaution);
             else ChangeMode(MoveMode.FreeMove);
@@ -118,7 +118,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         else if (distanceToTarget < maxAcceptableDistance) zone = 2;
         else zone = 3;
 
-        if (freeze) return;
+        if (Freeze1) return;
         if (canMove) MoveDelegateMethod?.Invoke();
     }
 
@@ -185,7 +185,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         float passedTime = 0;
         while (true)
         {
-            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+            while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
             customMonoBehavior.HumanLikeMovable.Move(direction);
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);
@@ -217,7 +217,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         float passedTime = 0;
         while (true)
         {
-            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+            while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
             customMonoBehavior.HumanLikeMovable.Run(direction);
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);
@@ -236,7 +236,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         /* This loop run every frame until the condition is true */
         while (true)
         {
-            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+            while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
             if (condition()) 
             {
                 InitDefaultBehavior();
@@ -265,7 +265,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         {
             while (true)
             {
-                while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+                while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
                 if (condition()) 
                 {
                     break;
@@ -281,7 +281,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
             StartCoroutine(CustomModeWithConditionTimer(timer));
             while (customModeWithConditionTimeOut)
             {
-                while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+                while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
                 customMode();
                 yield return new WaitForSeconds(interval);
             }
@@ -295,7 +295,7 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         float passedTime = 0;
         while (true)
         {
-            while (freeze) yield return new WaitForSeconds(Time.fixedDeltaTime);
+            while (Freeze1) yield return new WaitForSeconds(Time.fixedDeltaTime);
             yield return new WaitForSeconds(Time.fixedDeltaTime);
             passedTime += Time.fixedDeltaTime;
             if (passedTime > totalTime)
@@ -313,9 +313,4 @@ public class BotHumanLikeSimpleMoveToTarget : MonoBehaviour
         runToPatternBlock = false;
         walkToPatternBlock = false;
     }
-
-    private bool freeze = false;
-    public void Freeze() => freeze = true;
-
-    public void UnFreeze() => freeze = false;
 }
