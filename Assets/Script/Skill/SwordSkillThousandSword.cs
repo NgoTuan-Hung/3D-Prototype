@@ -98,7 +98,7 @@ class SwordSkillThousandSword : SkillBase
         Transform swordWeaponParent = swordWeapon.transform.parent;
         swordWeapon.FlyingTrail.enabled = true;
         swordWeapon.CollideAndDamage.ColliderDamage = 20f;
-        swordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
+        swordWeapon.CollideAndDamage.ExcludeTags = CustomMonoBehavior.AllyTags;
         swordWeapon.Animator.SetBool("ThousandSword", true);
 
         Vector3 targetVector; 

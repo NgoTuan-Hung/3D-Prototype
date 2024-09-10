@@ -57,7 +57,7 @@ class SkeletonSwordSkillCharge : SkillBase
 
         PoolObject poolObject = WeaponPool.PickOne();
         SkeletonSwordWeapon skeletonSwordWeapon = (SkeletonSwordWeapon)poolObject.Weapon;
-        skeletonSwordWeapon.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
+        skeletonSwordWeapon.CollideAndDamage.ExcludeTags = CustomMonoBehavior.AllyTags;
         Transform skeletonSwordWeaponParent = skeletonSwordWeapon.transform.parent;
 
         skeletonSwordWeapon.CollideAndDamage.ColliderDamage = 20f;

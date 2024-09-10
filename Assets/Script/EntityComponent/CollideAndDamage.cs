@@ -5,12 +5,11 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-public class CollideAndDamage : MonoBehaviour 
+public class CollideAndDamage : ExtensibleMonobehavior
 {
     [SerializeField] private float colliderDamage = 0f;
     [SerializeField] private float baseColliderDamage = 0f;
     [SerializeField] private float collisionDelayTime = 0.1f;
-    [SerializeField] private List<string> collideExcludeTags = new List<string>();
     public enum ColliderType {Single, Multiple};
     [SerializeField] private ColliderType colliderType = ColliderType.Single;
     private BinarySearchTree<CollisionData> binarySearchTree = new BinarySearchTree<CollisionData>();
@@ -32,13 +31,13 @@ public class CollideAndDamage : MonoBehaviour
     private ParticleSystemEvent particleSystemEvent;
     public float ColliderDamage { get => colliderDamage; set => colliderDamage = value; }
     public float BaseColliderDamage { get => baseColliderDamage; set => baseColliderDamage = value; }
-    public List<string> CollideExcludeTags { get => collideExcludeTags; set => collideExcludeTags = value; }
     public float InflictEffectDuration { get => inflictEffectDuration; set => inflictEffectDuration = value; }
     public float InflictEffectChance { get => inflictEffectChance; set => inflictEffectChance = value; }
     public bool IsDynamic { get => isDynamic; set => isDynamic = value; }
 
     public void Awake()
     {
+        ExcludeTags = new List<string>();
         boxColliders.AddRange(GetComponents<BoxCollider>());
 
         if (boxColliders.Count != 0) for (int i=0;i<boxColliders.Count;i++)
@@ -52,7 +51,7 @@ public class CollideAndDamage : MonoBehaviour
         {
             onTriggerEnterDelegate += (Collider other) => 
             {
-                if (!collideExcludeTags.Contains(other.gameObject.tag))
+                if (!ExcludeTags.Contains(other.gameObject.tag))
                 {
                     CustomMonoBehavior collideWithCustomMonoBehavior = GlobalObject.Instance.GetCustomMonoBehavior(other.gameObject);
                     if (collideWithCustomMonoBehavior != null)
@@ -71,7 +70,7 @@ public class CollideAndDamage : MonoBehaviour
                 if
                 (
                     CheckCollidable(other.gameObject)
-                    && !collideExcludeTags.Contains(other.gameObject.tag)
+                    && !ExcludeTags.Contains(other.gameObject.tag)
                 )
                 {
                     // need more work

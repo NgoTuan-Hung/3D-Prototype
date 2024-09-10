@@ -19,6 +19,9 @@ public class GameEffect : MonoBehaviour
     [SerializeField] private List<Animator> animators = new List<Animator>();
     private Animator animator;
     private bool animatorBool = false;
+    private TargetChecker targetChecker;
+    private bool targetCheckerBool = false;
+    
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
     internal ParticleSystemEvent ParticleSystemEvent { get => particleSystemEvent; set => particleSystemEvent = value; }
     public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
@@ -30,6 +33,9 @@ public class GameEffect : MonoBehaviour
     public float DisableTime { get => disableTime; set => disableTime = value; }
     public Animator Animator { get => animator; set => animator = value; }
     public bool TravelToDirectionBool { get => travelToDirectionBool; set => travelToDirectionBool = value; }
+    public TargetChecker TargetChecker { get => targetChecker; set => targetChecker = value; }
+    public bool TargetCheckerBool { get => targetCheckerBool; set => targetCheckerBool = value; }
+    public bool AnimatorBool { get => animatorBool; set => animatorBool = value; }
 
     void Awake()
     {
@@ -51,6 +57,7 @@ public class GameEffect : MonoBehaviour
         if ((visualEffect = GetComponentInChildren<VisualEffect>()) != null) visualEffectBool = true;
         if ((collideAndDamage = GetComponentInChildren<CollideAndDamage>()) != null) collideAndDamageBool = true;
         if ((animator = GetComponent<Animator>()) != null) animatorBool = true;
+        if ((targetChecker = GetComponentInChildren<TargetChecker>()) != null) targetCheckerBool = true;
     }
 
     void OnEnable()
@@ -147,6 +154,22 @@ public class GameEffect : MonoBehaviour
     {
         animationEvent4Delegate?.Invoke();
         animationEvent4Delegate = null;
+    }
+
+    public delegate void AnimationEvent5Delegate();
+    public AnimationEvent5Delegate animationEvent5Delegate;
+    public void AnimationEvent5()
+    {
+        animationEvent5Delegate?.Invoke();
+        animationEvent5Delegate = null;
+    }
+
+    public delegate void AnimationEvent6Delegate();
+    public AnimationEvent6Delegate animationEvent6Delegate;
+    public void AnimationEvent6()
+    {
+        animationEvent6Delegate?.Invoke();
+        animationEvent6Delegate = null;
     }
 
     public delegate void OnDisableDelegate();

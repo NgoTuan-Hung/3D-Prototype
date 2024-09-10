@@ -8,10 +8,10 @@ using UnityEngine;
 [RequireComponent(typeof(LightingRain), typeof(FlameRider))]
 public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
 {
-    [SerializeField] private String entityType;
+    [SerializeField] private string entityType;
     [SerializeField] private float maxHealth = 100;
     [SerializeField] private float curentHealth;
-    [SerializeField] private List<String> allyTags = new List<string>();
+    [SerializeField] private List<string> allyTags = new List<string>();
     new protected Rigidbody rigidbody;
     private RotatableObject rotatableObject;
     private Animator animator;
@@ -144,6 +144,7 @@ public class CustomMonoBehavior : MonoBehaviour, IComparable<CustomMonoBehavior>
     {
         curentHealth = maxHealth;
         allyTags.Add(gameObject.tag);
+        
 
         PopulateComponent();
 

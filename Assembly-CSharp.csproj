@@ -179,21 +179,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\VFX\Burning\FireBurn1.shader" />
-    <None Include="Assets\Material\Test\Fun\ToonRamp\NiloOutlineUtil.hlsl" />
+    <None Include="Assets\Material\Test\Fun\Toon\NiloOutlineUtil.hlsl" />
     <None Include="Assets\Script\Other\OldScript\OldCode.txt" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\SRPCommon\TextMesh Pro\Resources\Fonts &amp; Materials\TMP_Node.hlsl" />
     <None Include="Assets\Packages\ExcelDataReader.DataSet.3.7.0\lib\netstandard2.1\ExcelDataReader.DataSet.xml" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\Common\Subgraphs\PseudoSubsurface.hlsl" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Feature Examples\SRPCommon\Scripts\Resources\SamplesSelectionUXML.uxml" />
-    <None Include="Assets\Material\Test\Fun\ToonRamp\SimpleURPToonLitOutlineExample_Shared.hlsl" />
-    <None Include="Assets\Material\Test\Fun\ToonRamp\NiloInvLerpRemap.hlsl" />
+    <None Include="Assets\Material\Test\Fun\Toon\SimpleURPToonLitOutlineExample_Shared.hlsl" />
+    <None Include="Assets\Material\Test\Fun\Toon\NiloInvLerpRemap.hlsl" />
     <None Include="Assets\Import\BOXOPHOBIC\Skybox Cubemap Extended\Core\Shaders\Skybox Cubemap Extended.shader" />
     <None Include="Assets\Packages\ExcelDataReader.DataSet.3.7.0\lib\netstandard2.1\ExcelDataReader.DataSet.dll" />
-    <None Include="Assets\Material\Test\Fun\ToonRamp\SimpleURPToonLitOutlineExample_LightingEquation.hlsl" />
+    <None Include="Assets\Material\Test\Fun\Toon\SimpleURPToonLitOutlineExample_LightingEquation.hlsl" />
     <None Include="Assets\Material\Test\Fun\Trail.shader" />
     <None Include="Assets\Shader\Effect\BigSword\DissolveNoise.shader" />
     <None Include="Assets\Material\Effect\BigSword\energy.shader" />
     <None Include="Assets\Morph\MorphChar\death fire\GhostShader.shader" />
+    <None Include="Assets\Material\Test\Fun\Shader\Shadervariant\ShaderKeyword.shader" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Feature Examples\SRPCommon\Scripts\Resources\SamplesSelectionUSS.uss" />
     <None Include="Assets\Shader\Effect\BigSword\Add_Fresnel.shader" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\SRPCommon\Scripts\Resources\SamplesSelectionUXML.uxml" />
@@ -205,8 +206,9 @@
     <None Include="Assets\Material\Test\Fun\Shader\Hologram.shader" />
     <None Include="Assets\Material\Test\Fun\Metalball.shader" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\Common\Subgraphs\SampleReflectionProbes.hlsl" />
-    <None Include="Assets\Material\Test\Fun\ToonRamp\SimpleURPToonLitOutlineExample.shader" />
-    <None Include="Assets\Material\Test\Fun\ToonRamp\NiloZOffset.hlsl" />
+    <None Include="Assets\Material\Test\Fun\Toon\SimpleURPToonLitOutlineExample.shader" />
+    <None Include="Assets\Material\Test\Fun\Toon\NiloZOffset.hlsl" />
+    <None Include="Assets\Material\Test\Fun\Shader\Shadervariant\Shadervariant.shader" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Feature Examples\Custom Lighting\PBR\SampleReflectionProbes.hlsl" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\SRPCommon\Scripts\Resources\SamplesSelectionUSS.uss" />
     <None Include="Assets\Samples\Shader Graph\14.0.11\Production Ready Shaders\Common\Subgraphs\CustomLighting.hlsl" />

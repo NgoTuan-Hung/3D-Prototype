@@ -109,7 +109,7 @@ class SkeletonSwordSkillNonstopThrust : SkillBase
     public void AnimationEvent1DelegateParam(GameEffect thrustingEffect, GameEffect skeletonThrustingEffect)
     {
         thrustingEffect.transform.position = skeletonThrustingEffect.transform.position + new Vector3(0, 1, 0);
-        thrustingEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
+        thrustingEffect.CollideAndDamage.ExcludeTags = CustomMonoBehavior.AllyTags;
         thrustingEffect.transform.rotation = skeletonThrustingEffect.transform.rotation;
         thrustingEffect.VisualEffect.Play();
         triggerActionWithConditionCoroutine = thrustingEffect.TriggerActionWithCondition(false, null, 0, true, 5f, () => thrustingEffect.gameObject.SetActive(false));

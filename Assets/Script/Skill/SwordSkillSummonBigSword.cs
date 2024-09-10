@@ -112,7 +112,7 @@ class SwordSkillSummonBigSword : SkillBase
         GameEffect gameEffect = poolObjectEffect.GameEffect;
         gameEffect.ParticleSystemEvent.particleSystemEventDelegate += () => poolObjectEffect.GameObject.SetActive(false);
 
-        gameEffect.CollideAndDamage.CollideExcludeTags = CustomMonoBehavior.AllyTags;
+        gameEffect.CollideAndDamage.ExcludeTags = CustomMonoBehavior.AllyTags;
         gameEffect.transform.position = transform.position;
         gameEffect.transform.rotation = Quaternion.Euler(new Vector3(0, skillCastAngle, 0));
         
