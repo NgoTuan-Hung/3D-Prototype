@@ -52,6 +52,7 @@ MonoBehaviour:
   disableAfterTime: 0
   disableTime: 0
   animators: []
+  moveTowardTargetSpeed: 0.06
 --- !u!114 &8784452492723613510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +68,6 @@ MonoBehaviour:
   colliderDamage: 0
   baseColliderDamage: 0
   collisionDelayTime: 0.1
-  collideExcludeTags: []
   colliderType: 0
   dynamicCollisionDatas:
   - cycle: 1
@@ -259,6 +259,7 @@ MonoBehaviour:
   inflictEffect: 1
   inflictEffectDuration: 0
   inflictEffectChance: 0
+  spawnImpactEffect: 1
   valid: 1
 --- !u!65 &2484263520838545300
 BoxCollider:

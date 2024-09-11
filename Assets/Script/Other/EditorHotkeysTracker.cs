@@ -12,7 +12,7 @@ public static class EditorHotkeysTracker
             var e = Event.current;
             if (e != null && e.keyCode == KeyCode.K)
             {
-                
+                OKScript.rotateToward = !OKScript.rotateToward;
             }
         };
     }

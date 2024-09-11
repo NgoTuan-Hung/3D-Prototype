@@ -7,6 +7,8 @@ public class FrozenSlash : SkillBase
     // Start is called before the first frame update
     private static ObjectPool iceReaperEffectPool;
     private static ObjectPool scytheSlashEffectPool;
+    private static ObjectPool scytheSlashEffectParticlePool;
+    private static ObjectPool scytheSlashImpactEffectPool;
     public override void Start()
     {
         AnimatorStateForSkill = State.CastSpellShort;
@@ -16,8 +18,11 @@ public class FrozenSlash : SkillBase
         GameObject iceReaperEffectPrefab = Resources.Load("Effect/FrozenSlashSkill/IceReaper") as GameObject;
         iceReaperEffectPool ??= new ObjectPool(iceReaperEffectPrefab, 10, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
         GameObject scytheSlashEffectPrefab = Resources.Load("Effect/FrozenSlashSkill/ScytheSlash") as GameObject;
-        scytheSlashEffectPool ??= new ObjectPool(scytheSlashEffectPrefab, 30, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
-
+        scytheSlashEffectPool ??= new ObjectPool(scytheSlashEffectPrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
+        GameObject scytheSlashEffectParticlePrefab = Resources.Load("Effect/FrozenSlashSkill/ScytheSlashParticle") as GameObject;
+        scytheSlashEffectParticlePool ??= new ObjectPool(scytheSlashEffectParticlePrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
+        GameObject scytheSlashImpactEffectPrefab = Resources.Load("Effect/FrozenSlashSkill/ScytheSlashImpact") as GameObject;
+        scytheSlashImpactEffectPool ??= new ObjectPool(scytheSlashImpactEffectPrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
     }
 
     public override void Awake() 
@@ -41,49 +46,80 @@ public class FrozenSlash : SkillBase
     {
         GameEffect iceReaperEffect = iceReaperEffectPool.PickOne().GameEffect;
         iceReaperEffect.transform.position = transform.position;
-        GameEffect scytheSlashEffect = scytheSlashEffectPool.PickOne().GameEffect;
-        scytheSlashEffect.transform.position = new Vector3(999, 999, 999);
-        scytheSlashEffect.VisualEffect.Stop();
-        GameEffect scytheSlashEffect2 = scytheSlashEffectPool.PickOne().GameEffect;
-        scytheSlashEffect2.transform.position = new Vector3(999, 999, 999);
-        scytheSlashEffect2.VisualEffect.Stop();
-        GameEffect scytheSlashEffect3 = scytheSlashEffectPool.PickOne().GameEffect;
-        scytheSlashEffect3.transform.position = new Vector3(999, 999, 999);
-        scytheSlashEffect3.VisualEffect.Stop();
-        iceReaperEffect.animationEvent1Delegate = () =>
-        {
-            scytheSlashEffect.transform.position = transform.position + new Vector3(-0.88f, 1.625f, 1.08f);
-            scytheSlashEffect.transform.rotation = Quaternion.Euler(50, 31, -108);
-            scytheSlashEffect.CollideAndDamage.InflictEffectDuration = 1.5f;
-            scytheSlashEffect.CollideAndDamage.InflictEffectChance = 0.3f;
-            scytheSlashEffect.PlayVFX();
-        };
+        iceReaperEffect.TargetChecker.ExcludeTags = new List<string> {"Team1"};
 
-        iceReaperEffect.animationEvent2Delegate = () =>
-        {
-            scytheSlashEffect2.transform.position = transform.position + new Vector3(1.59f, 0.09f, 0.35f);
-            scytheSlashEffect2.transform.rotation = Quaternion.Euler(352.85f, 349.6f, 57f);
-            scytheSlashEffect2.CollideAndDamage.InflictEffectDuration = 1.5f;
-            scytheSlashEffect2.CollideAndDamage.InflictEffectChance = 0.3f;
-            scytheSlashEffect2.PlayVFX();
-        };
+        List<PoolObject> scytheSlashEffectPoolObjects = scytheSlashEffectPool.Pick(3),
+        scytheSlashEffectParticlePoolObjects = scytheSlashEffectParticlePool.Pick(3),
+        scytheSlashImpactEffectPoolObjects = scytheSlashImpactEffectPool.Pick(3);
 
-        iceReaperEffect.animationEvent3Delegate = () =>
-        {
-            scytheSlashEffect3.transform.position = transform.position + new Vector3(-0.46f, 0.68f, -0.66f);
-            scytheSlashEffect3.transform.rotation = Quaternion.Euler(12.57f, 312.8f, 291.17f);
-            scytheSlashEffect3.CollideAndDamage.InflictEffectDuration = 3f;
-            scytheSlashEffect3.CollideAndDamage.InflictEffectChance = 0.7f;
-            scytheSlashEffect3.PlayVFX();
-        };
+        List<GameEffect> scytheSlashEffects = new List<GameEffect>(3),
+        scytheSlashEffectParticles = new List<GameEffect>(3),
+        scytheSlashImpactEffects = new(3);
 
-        iceReaperEffect.animationEvent4Delegate = () =>
+        for (int i=0;i<3;i++)
         {
-            iceReaperEffect.gameObject.SetActive(false);
-            scytheSlashEffect.gameObject.SetActive(false);
-            scytheSlashEffect2.gameObject.SetActive(false);
-            scytheSlashEffect3.gameObject.SetActive(false);
-        };
+            scytheSlashEffects.Add(scytheSlashEffectPoolObjects[i].GameEffect);
+            scytheSlashEffectParticles.Add(scytheSlashEffectParticlePoolObjects[i].GameEffect);
+            scytheSlashImpactEffects.Add(scytheSlashImpactEffectPoolObjects[i].GameEffect);
+        }
+
+        scytheSlashEffects[0].transform.position = scytheSlashEffects[1].transform.position = scytheSlashEffects[2].transform.position = new Vector3(999, 999, 999);
+        scytheSlashEffects[0].VisualEffect.Stop();
+        scytheSlashEffects[1].VisualEffect.Stop();
+        scytheSlashEffects[2].VisualEffect.Stop();
+        scytheSlashEffectParticles[0].transform.position = scytheSlashEffectParticles[1].transform.position = scytheSlashEffectParticles[2].transform.position = new Vector3(999, 999, 999);
+        scytheSlashEffectParticles[0].VisualEffect.Stop();
+        scytheSlashEffectParticles[1].VisualEffect.Stop();
+        scytheSlashEffectParticles[2].VisualEffect.Stop();
+        scytheSlashImpactEffects[0].transform.position = scytheSlashImpactEffects[1].transform.position = scytheSlashImpactEffects[2].transform.position = new Vector3(999, 999, 999);
+        scytheSlashImpactEffects[0].VisualEffect.Stop();
+        scytheSlashImpactEffects[1].VisualEffect.Stop();
+        scytheSlashImpactEffects[2].VisualEffect.Stop();
+
+        EffectEvent3(scytheSlashImpactEffects[0], scytheSlashEffects[0]);
+        EffectEvent3(scytheSlashImpactEffects[1], scytheSlashEffects[1]);
+        EffectEvent3(scytheSlashImpactEffects[2], scytheSlashEffects[2]);
+        iceReaperEffect.animationEvent1Delegate = () => EffectEvent(scytheSlashEffects[0], scytheSlashEffectParticles[0], iceReaperEffect, new Vector3(-0.88f, 1.625f, 1.08f), new Vector3(50, 31, -108), 1.5f, 0.3f);
+        iceReaperEffect.animationEvent2Delegate = () => EffectEvent(scytheSlashEffects[1], scytheSlashEffectParticles[1], iceReaperEffect, new Vector3(1.59f, 0.09f, 0.35f), new Vector3(352.85f, 349.6f, 57), 1.5f, 0.3f);        
+        iceReaperEffect.animationEvent3Delegate = () => EffectEvent(scytheSlashEffects[2], scytheSlashEffectParticles[2], iceReaperEffect, new Vector3(-0.46f, 0.68f, -0.66f), new Vector3(12.57f, 312.8f, 291.17f), 3f, 0.7f);
+
+        iceReaperEffect.animationEvent4Delegate = () => EffectEvent1(scytheSlashEffects, scytheSlashEffectParticles, scytheSlashImpactEffects, iceReaperEffect);
+
+        iceReaperEffect.animationEvent5Delegate = () => EffectEvent2(iceReaperEffect, 0.283f);
+        iceReaperEffect.animationEvent6Delegate = () => EffectEvent2(iceReaperEffect, 0.233f);
+        iceReaperEffect.animationEvent7Delegate = () => EffectEvent2(iceReaperEffect, 0.316f);
+    }
+
+    public void EffectEvent(GameEffect scytheSlashEffect, GameEffect scytheSlashParticleEffect, GameEffect iceReaperEffect, Vector3 transformDirection, Vector3 rotationEuler, float inflictEffectDuration, float inflictEffectChance)
+    {
+        scytheSlashEffect.transform.position = iceReaperEffect.transform.position + iceReaperEffect.transform.TransformDirection(transformDirection);
+        scytheSlashParticleEffect.transform.position = scytheSlashEffect.transform.position;
+        scytheSlashEffect.transform.rotation = Quaternion.Euler(iceReaperEffect.transform.rotation.eulerAngles + rotationEuler);
+        scytheSlashParticleEffect.transform.rotation = scytheSlashEffect.transform.rotation;
+        scytheSlashEffect.transform.parent = iceReaperEffect.transform;
+        scytheSlashEffect.CollideAndDamage.InflictEffectDuration = inflictEffectDuration;
+        scytheSlashEffect.CollideAndDamage.InflictEffectChance = inflictEffectChance;
+        scytheSlashEffect.PlayVFX();
+        scytheSlashParticleEffect.PlayVFX();
+    }
+
+    public void EffectEvent1(List<GameEffect> scytheSLashEffects, List<GameEffect> scytheSlashParticleEffects, List<GameEffect> scytheSLashImpactEffects, GameEffect iceReaperEffect)
+    {
+        scytheSLashEffects.ForEach(scytheSlashEffect => {scytheSlashEffect.gameObject.SetActive(false); scytheSlashEffect.transform.parent = null;});
+        scytheSlashParticleEffects.ForEach(scytheSlashParticleEffect => {scytheSlashParticleEffect.gameObject.SetActive(false);});
+        scytheSLashImpactEffects.ForEach(scytheSLashImpactEffect => {scytheSLashImpactEffect.gameObject.SetActive(false);});
+        iceReaperEffect.gameObject.SetActive(false);
+    }
+
+    public void EffectEvent2(GameEffect iceReaperEffect, float rotateAndMoveValue)
+    {
+        StartCoroutine(iceReaperEffect.RotateAndMoveTowardTarget(iceReaperEffect.TargetChecker.NearestTarget.transform.position, rotateAndMoveValue));
+    }
+
+    public void EffectEvent3(GameEffect scytheSlashImpactEffect, GameEffect scytheSlashEffect)
+    {
+        scytheSlashEffect.CollideAndDamage.ImpactEffect = scytheSlashImpactEffect;
+        scytheSlashEffect.CollideAndDamage.effectActionAfterSpawnDelegate = () => scytheSlashImpactEffect.PlayVFX();
     }
 
     public IEnumerator Valid()

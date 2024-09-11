@@ -58,6 +58,13 @@ public class GameEffect : MonoBehaviour
         if ((collideAndDamage = GetComponentInChildren<CollideAndDamage>()) != null) collideAndDamageBool = true;
         if ((animator = GetComponent<Animator>()) != null) animatorBool = true;
         if ((targetChecker = GetComponentInChildren<TargetChecker>()) != null) targetCheckerBool = true;
+
+        if (collideAndDamageBool)
+        {
+            playVFXDelegate += () => {if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();};
+            playParticleSystemDelegate += () => {if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();};
+        }
+
     }
 
     void OnEnable()
@@ -172,6 +179,14 @@ public class GameEffect : MonoBehaviour
         animationEvent6Delegate = null;
     }
 
+    public delegate void AnimationEvent7Delegate();
+    public AnimationEvent7Delegate animationEvent7Delegate;
+    public void AnimationEvent7()
+    {
+        animationEvent7Delegate?.Invoke();
+        animationEvent7Delegate = null;
+    }
+
     public delegate void OnDisableDelegate();
     public OnDisableDelegate onDisableDelegate;
     void OnDisable()
@@ -219,15 +234,38 @@ public class GameEffect : MonoBehaviour
         }
     }
 
+    public delegate void PlayVFXDelegate();
+    public PlayVFXDelegate playVFXDelegate;
     public void PlayVFX()
     {
         visualEffect.Play();
-        if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();
+        playVFXDelegate?.Invoke();
     }
 
+    public delegate void PlayParticleSystemDelegate();
+    public PlayParticleSystemDelegate playParticleSystemDelegate;
     public void PlayParticleSystem()
     {
         particleSystem.Play();
-        if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();
+        playParticleSystemDelegate?.Invoke();
+    }
+
+    [SerializeField] private float moveTowardTargetSpeed = 2 * 0.03f;
+    public IEnumerator RotateAndMoveTowardTarget(Vector3 targetPosition, float duration)
+    {
+        float time = 0, rotateSpeed = Time.fixedDeltaTime / duration, t = 0;
+        Quaternion source = Quaternion.Euler(transform.rotation.eulerAngles), dest;
+        Vector3 sourcePosition = transform.position, lookAtVector = targetPosition - sourcePosition, finalMoveVector = lookAtVector.normalized * moveTowardTargetSpeed;
+
+        while (true)
+        {
+            dest = Quaternion.Lerp(source, Quaternion.LookRotation(lookAtVector), t+=rotateSpeed);
+            transform.rotation = Quaternion.Euler(0, dest.eulerAngles.y, 0);
+            transform.position += finalMoveVector;
+
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+            time += Time.fixedDeltaTime;
+            if (time >= duration) break;
+        }
     }
 }
