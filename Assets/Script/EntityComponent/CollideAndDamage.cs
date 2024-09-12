@@ -22,12 +22,8 @@ public class CollideAndDamage : ExtensibleMonobehavior
     [SerializeField] private float inflictEffectChance = 0f;
     public delegate void InflictEffectDelegate(CustomMonoBehavior customMonoBehavior);
     public InflictEffectDelegate inflictEffectDelegate;
-    [SerializeField] private bool spawnImpactEffect = false;
-    private GameEffect impactEffect;
     public delegate void SpawnImpactEffectDelegate(Collider collider);
     public SpawnImpactEffectDelegate spawnImpactEffectDelegate;
-    public delegate void EffectActionAfterSpawnDelegate();
-    public EffectActionAfterSpawnDelegate effectActionAfterSpawnDelegate;
     public delegate void OnTriggerEnterDelegate(Collider other);
     public delegate void OnTriggerStayDelegate(Collider other);
     public delegate void OntriggerStayOnceDelegate();
@@ -40,7 +36,6 @@ public class CollideAndDamage : ExtensibleMonobehavior
     public float InflictEffectDuration { get => inflictEffectDuration; set => inflictEffectDuration = value; }
     public float InflictEffectChance { get => inflictEffectChance; set => inflictEffectChance = value; }
     public bool IsDynamic { get => isDynamic; set => isDynamic = value; }
-    public GameEffect ImpactEffect { get => impactEffect; set => impactEffect = value; }
 
     public void Awake()
     {
@@ -52,12 +47,6 @@ public class CollideAndDamage : ExtensibleMonobehavior
             dynamicCollisionDatas[i].ColliderDefaultCenter = boxColliders[i].center;
             dynamicCollisionDatas[i].ColliderDefaultSize = boxColliders[i].size;
         }
-
-        if (spawnImpactEffect) spawnImpactEffectDelegate = (Collider collider) => 
-        {
-            impactEffect.transform.position = collider.ClosestPoint(transform.position);
-            effectActionAfterSpawnDelegate?.Invoke();
-        };
 
         ChooseInflictEffect();
         if (colliderType == ColliderType.Single)

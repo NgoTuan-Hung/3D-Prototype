@@ -49,18 +49,16 @@ public class FrozenSlash : SkillBase
         iceReaperEffect.TargetChecker.ExcludeTags = new List<string> {"Team1"};
 
         List<PoolObject> scytheSlashEffectPoolObjects = scytheSlashEffectPool.Pick(3),
-        scytheSlashEffectParticlePoolObjects = scytheSlashEffectParticlePool.Pick(3),
-        scytheSlashImpactEffectPoolObjects = scytheSlashImpactEffectPool.Pick(3);
+        scytheSlashEffectParticlePoolObjects = scytheSlashEffectParticlePool.Pick(3);
 
         List<GameEffect> scytheSlashEffects = new List<GameEffect>(3),
         scytheSlashEffectParticles = new List<GameEffect>(3),
-        scytheSlashImpactEffects = new(3);
+        scytheSlashImpactEffects = new();
 
         for (int i=0;i<3;i++)
         {
             scytheSlashEffects.Add(scytheSlashEffectPoolObjects[i].GameEffect);
             scytheSlashEffectParticles.Add(scytheSlashEffectParticlePoolObjects[i].GameEffect);
-            scytheSlashImpactEffects.Add(scytheSlashImpactEffectPoolObjects[i].GameEffect);
         }
 
         scytheSlashEffects[0].transform.position = scytheSlashEffects[1].transform.position = scytheSlashEffects[2].transform.position = new Vector3(999, 999, 999);
@@ -71,14 +69,10 @@ public class FrozenSlash : SkillBase
         scytheSlashEffectParticles[0].VisualEffect.Stop();
         scytheSlashEffectParticles[1].VisualEffect.Stop();
         scytheSlashEffectParticles[2].VisualEffect.Stop();
-        scytheSlashImpactEffects[0].transform.position = scytheSlashImpactEffects[1].transform.position = scytheSlashImpactEffects[2].transform.position = new Vector3(999, 999, 999);
-        scytheSlashImpactEffects[0].VisualEffect.Stop();
-        scytheSlashImpactEffects[1].VisualEffect.Stop();
-        scytheSlashImpactEffects[2].VisualEffect.Stop();
 
-        EffectEvent3(scytheSlashImpactEffects[0], scytheSlashEffects[0]);
-        EffectEvent3(scytheSlashImpactEffects[1], scytheSlashEffects[1]);
-        EffectEvent3(scytheSlashImpactEffects[2], scytheSlashEffects[2]);
+        EffectEvent3(scytheSlashEffects[0], scytheSlashImpactEffects);
+        EffectEvent3(scytheSlashEffects[1], scytheSlashImpactEffects);
+        EffectEvent3(scytheSlashEffects[2], scytheSlashImpactEffects);
         iceReaperEffect.animationEvent1Delegate = () => EffectEvent(scytheSlashEffects[0], scytheSlashEffectParticles[0], iceReaperEffect, new Vector3(-0.88f, 1.625f, 1.08f), new Vector3(50, 31, -108), 1.5f, 0.3f);
         iceReaperEffect.animationEvent2Delegate = () => EffectEvent(scytheSlashEffects[1], scytheSlashEffectParticles[1], iceReaperEffect, new Vector3(1.59f, 0.09f, 0.35f), new Vector3(352.85f, 349.6f, 57), 1.5f, 0.3f);        
         iceReaperEffect.animationEvent3Delegate = () => EffectEvent(scytheSlashEffects[2], scytheSlashEffectParticles[2], iceReaperEffect, new Vector3(-0.46f, 0.68f, -0.66f), new Vector3(12.57f, 312.8f, 291.17f), 3f, 0.7f);
@@ -116,10 +110,15 @@ public class FrozenSlash : SkillBase
         StartCoroutine(iceReaperEffect.RotateAndMoveTowardTarget(iceReaperEffect.TargetChecker.NearestTarget.transform.position, rotateAndMoveValue));
     }
 
-    public void EffectEvent3(GameEffect scytheSlashImpactEffect, GameEffect scytheSlashEffect)
+    public void EffectEvent3(GameEffect scytheSlashEffect, List<GameEffect> scytheSlashImpactEffects)
     {
-        scytheSlashEffect.CollideAndDamage.ImpactEffect = scytheSlashImpactEffect;
-        scytheSlashEffect.CollideAndDamage.effectActionAfterSpawnDelegate = () => scytheSlashImpactEffect.PlayVFX();
+        scytheSlashEffect.CollideAndDamage.spawnImpactEffectDelegate = (Collider collider) => 
+        {
+            GameEffect scytheSlashImpactEffect = scytheSlashImpactEffectPool.PickOne().GameEffect;
+            scytheSlashImpactEffects.Add(scytheSlashImpactEffect);
+            scytheSlashImpactEffect.transform.position = collider.ClosestPoint(scytheSlashEffect.transform.position);
+            scytheSlashImpactEffect.PlayVFX();
+        };
     }
 
     public IEnumerator Valid()
