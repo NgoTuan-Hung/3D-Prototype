@@ -142,3 +142,14 @@ public class CameraMovement : MonoBehaviour
 //     public GameObject GameObject { get => gameObject; set => gameObject = value; }
 //     public CustomMonoBehavior CustomMonoBehavior { get => customMonoBehavior; set => customMonoBehavior = value; }
 // }
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+if (!alreadySetOriginal)
+            {
+                alreadySetOriginal = true;
+                var main = particleSystem.main;
+                particleSystemStartSizeXMultiplierOriginal = main.startSizeXMultiplier;
+                particleSystemStartSizeYMultiplierOriginal = main.startSizeYMultiplier;
+                particleSystemStartSizeZMultiplierOriginal = main.startSizeZMultiplier;
+                particleSystemStartLifetimeOriginal = main.startLifetime.constantMax;
+            }

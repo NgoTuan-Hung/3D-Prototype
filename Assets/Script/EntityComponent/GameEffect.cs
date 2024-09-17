@@ -21,10 +21,7 @@ public class GameEffect : MonoBehaviour
     private bool animatorBool = false;
     private TargetChecker targetChecker;
     private bool targetCheckerBool = false;
-    [SerializeField] private bool needShowUp = false;
-    [SerializeField] private float showUpTime = 0.5f;
-    [SerializeField] private float showUpMaxAlphaValue = 1f;
-    [SerializeField] private string showUpAlphaProperty = "_Alpha";
+    [SerializeField] List<Material> showUpMaterials = new List<Material>();
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
     internal ParticleSystemEvent ParticleSystemEvent { get => particleSystemEvent; set => particleSystemEvent = value; }
     public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
@@ -39,23 +36,11 @@ public class GameEffect : MonoBehaviour
     public TargetChecker TargetChecker { get => targetChecker; set => targetChecker = value; }
     public bool TargetCheckerBool { get => targetCheckerBool; set => targetCheckerBool = value; }
     public bool AnimatorBool { get => animatorBool; set => animatorBool = value; }
+    public List<Material> ShowUpMaterials { get => showUpMaterials; set => showUpMaterials = value; }
 
     void Awake()
     {
-        if ((particleSystem = GetComponentInChildren<ParticleSystem>()) != null)
-        {
-            // particleSystemBool = true;
-            // if (!alreadySetOriginal)
-            // {
-            //     alreadySetOriginal = true;
-            //     var main = particleSystem.main;
-            //     particleSystemStartSizeXMultiplierOriginal = main.startSizeXMultiplier;
-            //     particleSystemStartSizeYMultiplierOriginal = main.startSizeYMultiplier;
-            //     particleSystemStartSizeZMultiplierOriginal = main.startSizeZMultiplier;
-            //     particleSystemStartLifetimeOriginal = main.startLifetime.constantMax;
-            // }
-        }
-
+        if ((particleSystem = GetComponentInChildren<ParticleSystem>()) != null) particleSystemBool = true;
         if ((particleSystemEvent = GetComponentInChildren<ParticleSystemEvent>()) != null) particleSystemEventBool = true;
         if ((visualEffect = GetComponentInChildren<VisualEffect>()) != null) visualEffectBool = true;
         if ((collideAndDamage = GetComponentInChildren<CollideAndDamage>()) != null) collideAndDamageBool = true;
@@ -67,9 +52,10 @@ public class GameEffect : MonoBehaviour
             playVFXDelegate += () => {if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();};
             playParticleSystemDelegate += () => {if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();};
         }
-
     }
 
+    public delegate void OnEnableDelegate();
+    public OnEnableDelegate OnEnableDelegateMethod = () => { };
     void OnEnable()
     {
         animators.ForEach(animators => 
