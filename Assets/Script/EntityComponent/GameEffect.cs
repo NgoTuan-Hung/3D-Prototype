@@ -21,7 +21,10 @@ public class GameEffect : MonoBehaviour
     private bool animatorBool = false;
     private TargetChecker targetChecker;
     private bool targetCheckerBool = false;
-    
+    [SerializeField] private bool needShowUp = false;
+    [SerializeField] private float showUpTime = 0.5f;
+    [SerializeField] private float showUpMaxAlphaValue = 1f;
+    [SerializeField] private string showUpAlphaProperty = "_Alpha";
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
     internal ParticleSystemEvent ParticleSystemEvent { get => particleSystemEvent; set => particleSystemEvent = value; }
     public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
