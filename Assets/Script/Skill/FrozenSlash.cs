@@ -6,6 +6,7 @@ public class FrozenSlash : SkillBase
 {
     // Start is called before the first frame update
     private static ObjectPool iceReaperEffectPool;
+    private static ObjectPool iceReaperShowupEffectPool;
     private static ObjectPool scytheSlashEffectPool;
     private static ObjectPool scytheSlashEffectParticlePool;
     private static ObjectPool scytheSlashImpactEffectPool;
@@ -17,6 +18,8 @@ public class FrozenSlash : SkillBase
         base.Start();
         GameObject iceReaperEffectPrefab = Resources.Load("Effect/FrozenSlashSkill/IceReaper") as GameObject;
         iceReaperEffectPool ??= new ObjectPool(iceReaperEffectPrefab, 10, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
+        GameObject iceReaperShowupEffectPrefab = Resources.Load("Effect/FrozenSlashSkill/IceReaperShowup") as GameObject;
+        iceReaperShowupEffectPool ??= new ObjectPool(iceReaperShowupEffectPrefab, 10, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
         GameObject scytheSlashEffectPrefab = Resources.Load("Effect/FrozenSlashSkill/ScytheSlash") as GameObject;
         scytheSlashEffectPool ??= new ObjectPool(scytheSlashEffectPrefab, 20, new PoolArgument(typeof(GameEffect), PoolArgument.WhereComponent.Self));
         GameObject scytheSlashEffectParticlePrefab = Resources.Load("Effect/FrozenSlashSkill/ScytheSlashParticle") as GameObject;
@@ -64,12 +67,13 @@ public class FrozenSlash : SkillBase
         scytheSlashParticleEffect.PlayVFX();
     }
 
-    public void EffectEvent1(List<GameEffect> scytheSLashEffects, List<GameEffect> scytheSlashParticleEffects, List<GameEffect> scytheSLashImpactEffects, GameEffect iceReaperEffect)
+    public void EffectEvent1(List<GameEffect> scytheSLashEffects, List<GameEffect> scytheSlashParticleEffects, List<GameEffect> scytheSLashImpactEffects, GameEffect iceReaperEffect, GameEffect reaperShowupEffect)
     {
         scytheSLashEffects.ForEach(scytheSlashEffect => {scytheSlashEffect.gameObject.SetActive(false); scytheSlashEffect.transform.parent = null;});
         scytheSlashParticleEffects.ForEach(scytheSlashParticleEffect => {scytheSlashParticleEffect.gameObject.SetActive(false);});
         scytheSLashImpactEffects.ForEach(scytheSLashImpactEffect => {scytheSLashImpactEffect.gameObject.SetActive(false);});
         iceReaperEffect.gameObject.SetActive(false);
+        reaperShowupEffect.gameObject.SetActive(false);
     }
 
     public void EffectEvent2(GameEffect iceReaperEffect, float rotateAndMoveValue)
@@ -96,20 +100,24 @@ public class FrozenSlash : SkillBase
 
     [SerializeField] private float reaperShowUpTime = 0.5f;
     [SerializeField] private float reaperMaxAlpha = 0.5f;
+    [SerializeField] private Vector3 showUpEffectOffset = new Vector3(0, 1f, 0);
     public IEnumerator ShowUpCoroutine(GameEffect iceReaperEffect)
     {
         float time = 0, alpha = 0, progressCalculation = reaperMaxAlpha / reaperShowUpTime;
 
-        while (time < reaperShowUpTime)
-        {
-            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        GameEffect iceReaperShowupEffect = iceReaperShowupEffectPool.PickOne().GameEffect;
+        iceReaperShowupEffect.transform.position = transform.position + showUpEffectOffset;
+        iceReaperShowupEffect.PlayVFX();
 
+        while (!(time > reaperShowUpTime))
+        {
             alpha = time * progressCalculation;
             iceReaperEffect.ShowUpMaterials.ForEach(material => 
             {
                 material.SetFloat("_Alpha", alpha);
             });
 
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
             time += Time.fixedDeltaTime;
         }
 
@@ -144,7 +152,7 @@ public class FrozenSlash : SkillBase
         iceReaperEffect.animationEvent2Delegate = () => EffectEvent(scytheSlashEffects[1], scytheSlashEffectParticles[1], iceReaperEffect, new Vector3(1.59f, 0.09f, 0.35f), new Vector3(352.85f, 349.6f, 57), 1.5f, 0.3f);        
         iceReaperEffect.animationEvent3Delegate = () => EffectEvent(scytheSlashEffects[2], scytheSlashEffectParticles[2], iceReaperEffect, new Vector3(-0.46f, 0.68f, -0.66f), new Vector3(12.57f, 312.8f, 291.17f), 3f, 0.7f);
 
-        iceReaperEffect.animationEvent4Delegate = () => EffectEvent1(scytheSlashEffects, scytheSlashEffectParticles, scytheSlashImpactEffects, iceReaperEffect);
+        iceReaperEffect.animationEvent4Delegate = () => EffectEvent1(scytheSlashEffects, scytheSlashEffectParticles, scytheSlashImpactEffects, iceReaperEffect, iceReaperShowupEffect);
 
         iceReaperEffect.animationEvent5Delegate = () => EffectEvent2(iceReaperEffect, 0.283f);
         iceReaperEffect.animationEvent6Delegate = () => EffectEvent2(iceReaperEffect, 0.233f);

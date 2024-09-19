@@ -59,7 +59,7 @@
     <UnityVersion>2022.3.41f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Users\vuvub\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.0.3\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="C:\Users\vuvub\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.0.4\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="D:\Program\Unity\Editor\2022.3.41f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="D:\Program\Unity\Editor\2022.3.41f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
@@ -169,6 +169,7 @@
     <Compile Include="Assets\Samples\Shader Graph\14.0.11\Feature Examples\Common\Scripts\Rotate.cs" />
     <Compile Include="Assets\TotalJSON\Internal\InternalTools.cs" />
     <Compile Include="Assets\Script\ObjectPool.cs" />
+    <Compile Include="Assets\Script\Other\Serializable\SerializableListString.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Settings\DeserializeSettings.cs" />
     <Compile Include="Assets\TotalJSON\Scripts\Exceptions\JSONKeyAlreadyExistsException.cs" />
     <Compile Include="Assets\Morph\Script\BinarySave.cs" />

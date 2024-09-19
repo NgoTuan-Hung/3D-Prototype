@@ -21,7 +21,10 @@ public class GameEffect : MonoBehaviour
     private bool animatorBool = false;
     private TargetChecker targetChecker;
     private bool targetCheckerBool = false;
-    [SerializeField] List<Material> showUpMaterials = new List<Material>();
+    [SerializeField] private bool useShowUpMaterial = false;
+    [SerializeField] private List<Renderer> showUpRenderers;
+    [SerializeField] private List<SerializableListString> showUpMaterialNames;
+    private List<Material> showUpMaterials;
     public ParticleSystem ParticleSystem { get => particleSystem; set => particleSystem = value; }
     internal ParticleSystemEvent ParticleSystemEvent { get => particleSystemEvent; set => particleSystemEvent = value; }
     public CollideAndDamage CollideAndDamage { get => collideAndDamage; set => collideAndDamage = value; }
@@ -51,6 +54,19 @@ public class GameEffect : MonoBehaviour
         {
             playVFXDelegate += () => {if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();};
             playParticleSystemDelegate += () => {if (collideAndDamage.IsDynamic) collideAndDamage.StartDynamicCollider();};
+        }
+
+        if (useShowUpMaterial)
+        {
+            showUpMaterials = new List<Material>();
+
+            for (int i=0;i<showUpRenderers.Count;i++)
+            {
+                List<Material> neededMaterials = new List<Material>();
+                showUpRenderers[i].GetMaterials(neededMaterials);
+                neededMaterials = neededMaterials.FindAll(material => showUpMaterialNames[i].list.Contains(material.name));
+                showUpMaterials.AddRange(neededMaterials);
+            }
         }
     }
 
